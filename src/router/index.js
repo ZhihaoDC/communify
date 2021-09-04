@@ -1,14 +1,19 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import GettingStarted from '../views/GettingStarted.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'GettingStarted',
+    component: GettingStarted
+  },
+  {
+    path: '/community-detection',
+    name: 'community-detection',
+    component: () => import('../views/community-detection.vue')
   },
   {
     path: '/about',
