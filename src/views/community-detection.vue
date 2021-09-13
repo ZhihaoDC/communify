@@ -10,10 +10,9 @@
     <div class="centered-container">
       <div class="content">
         
-        
         <InputCSV/>
         <InputMethod @change="change_method"/>
-        {{method}}
+        <p>Clase padre ha recibido:</p>{{method}}
       </div>
     </div>
   </div>
