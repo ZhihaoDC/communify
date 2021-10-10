@@ -29,6 +29,7 @@
     margin-bottom:0.2em;
     cursor: pointer;
 }
+
 .custom-button:hover{
     background-color: #42b983;
     color:aliceblue;

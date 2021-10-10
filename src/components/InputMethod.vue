@@ -6,19 +6,18 @@
             :aria-describedby="ariaDescribedby"
             name="method-selection"
             v-model="picked"
-            v-bind:value="value"
             @change="change_value"
             buttons
-            button-variant = "outline-dark"
-            pressed="false"
+            button-variant = "outline-primary"
+            size="lg"
             >
-            <b-form-radio value="louvain" > 
-                <span id="custom-card-title" >Louvain</span>
+            <b-form-radio value="louvain" class="options"> 
+                <span>Louvain</span>
                 <br>
                 <small> + rápido</small>
             </b-form-radio>
-            <b-form-radio value="girvan-newman">
-                <span id="custom-card-title">Girvan-Newman</span> 
+            <b-form-radio value="girvan-newman" class="options">
+                <span>Girvan-Newman</span> 
                 <br>
                 <small> + lento, pero exacto </small>
             </b-form-radio>
@@ -27,7 +26,6 @@
             -->
             </b-form-radio-group>
         </b-form-group>
-        <br>
         <p>Se ha seleccionado {{ picked }}</p>
     </div>
 </template>
@@ -50,10 +48,8 @@ export default {
 </script>
 
 <style scoped>
-    #method-selection{
-        margin-top:2em;
+    .options{
+        width: 50%
     }
-
-
 
 </style>

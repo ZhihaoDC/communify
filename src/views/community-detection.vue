@@ -11,8 +11,10 @@
       <div class="content">
         
         <InputCSV/>
+
         <InputMethod @change="change_method"/>
         <p>Clase padre ha recibido:</p>{{method}}
+        
       </div>
     </div>
   </div>
