@@ -1,29 +1,63 @@
 <template>
   <b-container fluid="md">
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <h2 class="header"> Bienvenido a community detection </h2>
-    <div class="centered-container">
-      <div class="content">
-        <p> La detección de comunidades en un grafo es un problema de 
-          aprendizaje automático no supervisado que muestra patrones en un grafo o red.
+    <div id="home">
+      <h1 class="header"> Herramienta para visualización de grafos </h1>
+        <p> Esta es una herramienta online para visualizar y analizar grafos.
+        Sube un archivo .csv, consigue la visualización de la red,
+        analiza su estructura y mucho más. 
+        <router-link to="/about" id="about-link">Aprende más.</router-link>
         </p>
-        <p>Una comunidad puede representar un grupo de amigos,
-          un cúmulo de individuos con intereses en común, y muchas
-          cosas más. 
+        <div class="tools">
+          <b-card-group deck>
+            <b-card
+            title="Visualize network"
+            tag="viz-network"
+            style="max-width: 15rem;"
+            class="mb-2">
+              <b-card-text>
+                Representa un grafo, cambia los nodos de color y posición
+              </b-card-text>
+              <b-button to="/community-detection" variant="primary">Go somewhere</b-button>
+            </b-card>
+
+            <b-card
+            title="Visualize network"
+            tag="viz-network"
+            style="max-width: 15rem;"
+            class="mb-2">
+              <b-card-text>
+                Representa un grafo, cambia los nodos de color y posición
+              </b-card-text>
+              <b-button to="/community-detection" variant="primary">Go somewhere</b-button>
+            </b-card>
+
+          </b-card-group>
           
-          <router-link to="/about" id="about-link">Aprende más.</router-link>
-        </p>
-        <p> En esta página podrás detectar comunidades 
-          subiendo un archivo CSV y podrás elegir los distintos
-          algoritmos de detección de comunidades. 
-        </p>
-        <router-link to="/community-detection" 
-        class="custom-button"
-        >Vamos a ello!</router-link>
-      </div>
+          <b-card-group deck>
+            <b-card
+            title="Community detection: Louvain method"
+            tag="community-detection-louvain"
+            style="max-width: 15rem;"
+            class="mb-2">
+              <b-card-text>
+                Método de Louvain. El más popular. Rápido y preciso
+              </b-card-text>
+              <b-button to="/community-detection" variant="primary">Go somewhere</b-button>
+            </b-card>
+
+            <b-card
+            title="Community detection: Girvan-Newman method"
+            tag="community-detection-girvan-newman"
+            style="max-width: 15rem;"
+            class="mb-2">
+              <b-card-text>
+                Método de Girvan-Newman. Más lento y menos conocido.
+              </b-card-text>
+              <b-button to="/community-detection" variant="primary">Go somewhere</b-button>
+              </b-card>
+            </b-card-group>
+          </div>
     </div>
-  </div>
   </b-container>
 </template>
 
