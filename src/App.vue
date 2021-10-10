@@ -1,11 +1,12 @@
 <template>
   <div id="app">
-
-    <div id="nav">
-      <router-link to="/">Getting Started</router-link> |
-      <router-link to="/community-detection"> Detectar comunidades </router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <b-navbar type="dark" variant="dark">
+      <b-navbar-nav>
+        <b-navbar-brand to="/">network.ly</b-navbar-brand>
+        <b-nav-item to="/community-detection"> Detectar comunidades </b-nav-item>
+        <b-nav-item to="/about"> About </b-nav-item>
+      </b-navbar-nav>
+    </b-navbar>
     
     <router-view/>
 
@@ -35,5 +36,6 @@
     }
   }
 }
+
 
 </style>
