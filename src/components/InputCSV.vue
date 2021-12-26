@@ -1,86 +1,143 @@
 <template>
   <div class="content-item">
-    <!-- Introducir archivo (barra)
-      <div class="centered_container">
-        <div class="file-upload">
-        <b-form-file
-          placeholder="Elige un archivo"
-          drop-placeholder="Suelta el archivo aquí..."
-          accept=".csv"
-          size="lg"
-        ></b-form-file>
-        </div>
-      </div>
-      <small>o arastra hasta aqui</small>
-    -->
-    <small>Pon el cursor encima del siguiente botón para ver el formato</small>
-    <br/>
-    <label for="file-upload" class="custom-button" id="upload-button"
-    v-bind:class="{'file_selected': file}"
-    v-b-popover.hover.right="'El contenido debe de ser una lista de enlaces (de la siguiente forma):‎‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎'+
-      '╔════════╤═══════╤══════╗\n'+
-      '║‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‏‏‎‎‎nodo_1‏‏‎‏‏‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‎‏‏‎ ‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎nodo_2‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‎‏‏‎‎peso‏‏‎ ‎‏‏‎ ‏‏‎ ‎‎‏‏‎ ‎║\n'+
-      '╠════════╪═══════╪══════╣\n'+
-      '║‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎‎ ‎foo‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‏‎‎│‏‏‎ ‏‏‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎ ‎‎‏‏‎ ‎bar‏‏‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎ ‎‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎4‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‎║\n'+
-      '╟────────┼───────┼──────╢\n'+
-      '║‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎ ‎‎‏‏‎bar‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎│‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‎cat‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎│‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‏‏‎ ‎ ‎‏‏‎ ‎3‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‎║\n'+
-      '╟────────┼───────┼──────╢\n'+
-      '║‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎ ‎‎‎‎cat‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‎‎│‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎dog‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎‎‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎1‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‎‏‏‎║\n'+
-      '╚════════╧═══════╧══════╝'" title="Formato del csv"> 
-        <span> {{ file ? 'Archivo seleccionado: '+ file.name : 'Seleccionar un archivo (.csv)' }} 
-          <small>{{ file ? '('+ bytesToSize(file.size) +')' : ''}}</small>
-        </span>
-      </label>
-      <b-form-file 
+    <label
+      for="file-upload"
+      class="upload-button"
+      v-bind:class="{ file_selected: file }"
+      v-b-popover.hover.right="
+        'El contenido debe de ser una lista de enlaces (de la siguiente forma):‎‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎' +
+        '╔════════╤═══════╤══════╗\n' +
+        '║‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‏‏‎‎‎nodo_1‏‏‎‏‏‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‎‏‏‎ ‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎nodo_2‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‎‏‏‎‎peso‏‏‎ ‎‏‏‎ ‏‏‎ ‎‎‏‏‎ ‎║\n' +
+        '╠════════╪═══════╪══════╣\n' +
+        '║‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎‎ ‎foo‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‏‎‎│‏‏‎ ‏‏‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎ ‎‎‏‏‎ ‎bar‏‏‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎ ‎‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎4‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‎║\n' +
+        '╟────────┼───────┼──────╢\n' +
+        '║‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎ ‎‎‏‏‎bar‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎│‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‎cat‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎│‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‏‏‎ ‎ ‎‏‏‎ ‎3‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‎║\n' +
+        '╟────────┼───────┼──────╢\n' +
+        '║‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎ ‎‎‎‎cat‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‎‎│‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎dog‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎‎‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎1‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‎‏‏‎║\n' +
+        '╚════════╧═══════╧══════╝'
+      "
+      title="Formato del csv"
+    >
+      <span>
+        {{
+          file
+            ? "Archivo seleccionado: " + file.name
+            : "Seleccionar un archivo (.csv)"
+        }}
+        <small>{{ file ? "(" + bytesToSize(file.size) + ")" : "" }}</small>
+      </span>
+    </label>
+    <b-form-file
       id="file-upload"
       plain
       v-model="file"
       accept=".csv"
       required="required"
-      ></b-form-file>
-      <br>
+      enctype="multipart/form-data"
+    ></b-form-file>
+    <br />
+    <small>
+      Pon el cursor encima del botón anterior para ver el formato del .csv
+    </small>
+    <br />
+    <br/>
+    <b-button
+      type="submit"
+      variant="primary"
+      class="w-25 content-item submit-button"
+      v-bind:disabled="!file"
+      value="Visualizar"
+      v-on:click="submit_file()"
+    >
+      Visualizar
+    </b-button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'InputCSV',
+  name: "InputCSV",
+  props: ['selectedMethod'],
+  data() {
+    return {
+      file: null,
+      method: this.selectedMethod
+    };
+  },
+  
 
-  data(){
-    return{
-      file: null
+  methods: {
+    bytesToSize(bytes) {
+      var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+      if (bytes == 0) return "0 Byte";
+      var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+      return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
+    },
+    submit_file(){
+      const axios = require('axios')
+      let formData = new FormData()
+      formData.append('file', this.file)
+
+      axios.post('./community-detection/'+this.method,
+        formData,
+        {
+          headers:{
+            'Content-Type':'multipart/form-data'
+          }
+        }
+      ).then(function(){
+        console.log('Exito')
+      })
+      .catch(function(){
+        console.log('Error')
+      })
     }
   },
-
-  methods:{
-    bytesToSize(bytes) {
-    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes == 0) 
-      return '0 Byte';
-    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
-    }
-  }
-}
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 input[type="file"] {
-    display: none;
+  display: none;
 }
 
-#file-upload{
-  align-items:center;
-  width:60%;
+#file-upload {
+  align-items: center;
+  width: 60%;
 }
 
-.file_selected{
-   background-color: #42b983;
-   color:aliceblue;
+.upload-button {
+  display: inline-block;
+  color: aliceblue;
+  background: #42b983;
+  font-size: x-large;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 0.7em 1em;
+  margin-bottom: 0.2em;
+  cursor: pointer;
 }
 
-#upload-button{
-  margin-bottom:0em;
+.upload-button:hover {
+  background-color: #050517;
+  color: aliceblue;
+  text-decoration: none;
+}
+
+
+.submit-button{
+  font-size: large;
+  border: 1px solid #ccc;
+}
+.submit-button:disabled{
+  background-color: #c0c2c8;
+  border: 1px solid #ccc;
+  cursor:not-allowed;
+;
+}
+
+.file_selected {
+  background-color: #050517;
+  color: aliceblue;
 }
 </style>
