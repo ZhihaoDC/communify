@@ -1,19 +1,27 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import GettingStarted from '../views/GettingStarted.vue'
+import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'GettingStarted',
-    component: GettingStarted
+    name: 'home',
+    component: Home
   },
   {
     path: '/community-detection',
-    name: 'community-detection',
-    component: () => import('../views/community-detection.vue')
+    name: 'Community-detection',
+    component: () => import('../views/Community-detection.vue')
+  },
+  {
+    path: '/community-detection/:method/experiment',
+    name: 'ExperimentVisualization',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import( '../views/ExperimentVisualization.vue')
   },
   {
     path: '/about',

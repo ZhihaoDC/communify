@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { store } from "../main.js"
 export default {
   name: "InputCSV",
   props: ['selectedMethod'],
@@ -64,8 +65,6 @@ export default {
       method: this.selectedMethod
     };
   },
-  
-
   methods: {
     bytesToSize(bytes) {
       var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
@@ -73,21 +72,24 @@ export default {
       var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
       return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
     },
-    submit_file(){
+    async submit_file(){
       const axios = require('axios')
       let formData = new FormData()
       formData.append('file', this.file)
 
-      axios.post('./community-detection/'+this.method,
+      await axios.post('http://localhost:5000/community-detection/'+this.method,
         formData,
         {
           headers:{
             'Content-Type':'multipart/form-data'
           }
         }
-      ).then(function(){
-        console.log('Exito')
-      })
+      ).then(response =>{
+        store.setLastComputedExperiment(response.data)
+        console.log(store)
+        this.$router.push('/community-detection/' + this.method + '/experiment')
+      }
+      )
       .catch(function(){
         console.log('Error')
       })

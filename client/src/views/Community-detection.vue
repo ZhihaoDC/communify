@@ -17,7 +17,7 @@
 import InputCSV from "@/components/InputCSV.vue";
 export default {
   components: { InputCSV },
-  name: "community-detection",
+  name: "Community-detection",
 };
 </script>
 

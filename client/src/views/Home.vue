@@ -49,7 +49,7 @@
 // @ is an alias to /src
 
 export default {
-  name: 'GettingStarted',
+  name: 'Home',
 }
 </script>
 
@@ -63,6 +63,5 @@ export default {
     color: #42b983;
     text-decoration: none;
   }
-
 
 </style>
