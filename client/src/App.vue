@@ -3,7 +3,10 @@
     <b-navbar type="dark" variant="dark">
       <b-navbar-nav>
         <b-navbar-brand to="/">network.ly</b-navbar-brand>
-        <b-nav-item to="/community-detection"> Detectar comunidades </b-nav-item>
+        <b-nav-item-dropdown text="Detección de comunidades">
+          <b-dropdown-item to="/community-detection/louvain">Método de Louvain</b-dropdown-item>
+          <b-dropdown-item to="/community-detection/girvan-newman">Método de Girvan-Newman</b-dropdown-item>
+        </b-nav-item-dropdown>
         <b-nav-item to="/about"> About </b-nav-item>
       </b-navbar-nav>
     </b-navbar>

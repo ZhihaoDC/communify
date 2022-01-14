@@ -1,10 +1,10 @@
 <template>
   <b-container fluid="md">
     <div class="community-detection">
-      <h1 class="header">Detección de comunidades</h1>
+      <h1 class="header">Detección de comunidades: Louvain</h1>
       <h4>
-        Selecciona un archivo .csv que contenga una lista de enlaces 
-        y elige el método de detección de comunidades que desees.
+        Método basado en la medida de modularidad, que mide la diferencia en 
+        densidad de las interconexiones intra-comunidad e inter-comunidad.
       </h4>
       <div class="content">
         <InputCSV selectedMethod="louvain"/>
@@ -17,19 +17,9 @@
 import InputCSV from "@/components/InputCSV.vue";
 export default {
   components: { InputCSV },
-  name: "Community-detection",
+  name: "ExpLouvain",
 };
 </script>
 
 <style scoped>
-.choices {
-  width: 100%;
-  display: inline-block;
-}
-
-.choice {
-  margin-left: 0.5em;
-  margin-right: 0.5em;
-  border: 1px solid #ccc;
-}
 </style>

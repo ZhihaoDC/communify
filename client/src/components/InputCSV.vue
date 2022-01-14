@@ -86,7 +86,6 @@ export default {
         }
       ).then(response =>{
         store.setLastComputedExperiment(response.data)
-        console.log(store)
         this.$router.push('/community-detection/' + this.method + '/experiment')
       }
       )

@@ -9,35 +9,32 @@
         <b-card-group deck>
           <b-card
           title="Detección de comunidades: método de Louvain"
-          tag="community-detection-louvain"
           style="max-width: 25rem;"
           class="mb-3">
             <b-card-text>
               Método de Louvain. El más popular. Rápido y preciso
             </b-card-text>
-            <b-button block to="/community-detection" variant="primary">Ir</b-button>
+            <b-button block to="/community-detection/louvain" variant="primary">Ir</b-button>
           </b-card>
 
           <b-card
           title="Detección de comunidades: método de Girvan-Newman"
-          tag="community-detection-girvan-newman"
           style="max-width: 25rem;"
           class="mb-3">
             <b-card-text>
               Método de Girvan-Newman. Más lento y menos conocido.
             </b-card-text>
-            <b-button block to="/community-detection" variant="primary">Ir</b-button>
+            <b-button block to="/community-detection/girvan-newman" variant="primary">Ir</b-button>
           </b-card>
 
           <b-card
           title="Visualización: Representar grafo o red"
-          tag="viz-network"
           style="max-width: 25rem;"
           class="mb-3">
             <b-card-text>
               Representa un grafo, cambia los nodos de color y posición
             </b-card-text>
-            <b-button block to="/community-detection" variant="primary">Ir</b-button>
+            <b-button block to="/network-visualization" variant="primary">Ir</b-button>
           </b-card>
         </b-card-group>
       </div>

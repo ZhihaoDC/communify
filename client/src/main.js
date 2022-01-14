@@ -10,14 +10,14 @@ import './assets/css/main.css';
 
 Vue.config.productionTip = false
 
-export var store = Vue.observable({
+export var store = {
   state: {
     lastComputedExperiment: Object
   },
   setLastComputedExperiment(lastComputedExperiment){
     this.state.lastComputedExperiment = lastComputedExperiment
   }
-})
+}
 
 
 new Vue({
