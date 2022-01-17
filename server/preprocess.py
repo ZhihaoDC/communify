@@ -1,4 +1,4 @@
-from pandas import DataFrame, read_csv
+from pandas import DataFrame, Series, read_csv
 
 from networkx import from_pandas_edgelist, get_node_attributes
 from networkx.relabel import convert_node_labels_to_integers
@@ -7,6 +7,7 @@ from networkx.readwrite.json_graph import node_link_data
 
 from matplotlib.cm import get_cmap
 from matplotlib.colors import rgb2hex
+import networkx as nx
 
 
 #Prepare file, return networkx graph
@@ -19,22 +20,23 @@ def preprocess_network(file):
     #Generate graph (take first two columns)
     graph = from_pandas_edgelist(edge_list, 
                                     source=edge_list.columns[0], 
-                                    target=edge_list.columns[1])
-
+                                    target=edge_list.columns[1], 
+                                    edge_attr=['weight'])
     graph = convert_node_labels_to_integers(graph, first_label=0, label_attribute='label')
 
     return graph
 
 
-#Preprocess community detection results for front-end consumption
-def preprocess_json(graph, communities):
-    colors = get_community_colors(graph, communities)
-    set_node_attributes(graph, colors, name='color')
+#Convert graph to json 
+def preprocess_json(graph, communities=None):
+
+    if communities is not None:
+        colors = get_community_colors(graph, communities)
+        set_node_attributes(graph, colors, name='color')
+        set_node_attributes(graph, communities, name='group')
 
     degrees = dict(graph.degree)
     set_node_attributes(graph, degrees, name='value')
-    
-    set_node_attributes(graph, communities, name='group')
 
     labels = dict(get_node_attributes(graph,"label"))
     set_node_attributes(graph, labels, name='title')
@@ -60,5 +62,12 @@ def get_community_colors(graph, community):
 
 	for node in graph.nodes:
 		colors.update({node: rgb2hex(cmap(community[node]))})
-
+    
 	return colors
+
+
+def remap_communities(communities):
+    """"Remap community identifier by count"""
+    comms_sort = Series(communities.values()).value_counts()
+    reorder_map = dict(zip(comms_sort.index, list(comms_sort.reset_index().index)))
+    return Series(communities.values()).map(reorder_map)

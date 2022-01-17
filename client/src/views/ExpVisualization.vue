@@ -62,6 +62,37 @@ export default {
           },
           configure: {
             filter: function (option, path) {
+              
+              if(option === "physics"){
+                return true;
+              }
+              if(option === "solver"){
+                return true;
+              }
+              if(option === "forceAtlas2Based"){
+                return true;
+              }
+              if(option === "gravitationalConstant"){
+                return true;
+              }
+              if(option === "centralGravity"){
+                return true;
+              }
+              if(option === "springLength  "){
+                return true;
+              }
+              if(option === "springConstant"){
+                return true;
+              }
+              if(option === "damping"){
+                return true;
+              }
+              if(option === "avoidOverlap"){
+                return true;
+              }
+              if(option === "nodeDistance"){
+                return true;
+              }
               if (option === "inherit") {
                 return true;
               }
@@ -72,9 +103,6 @@ export default {
                 return true;
               }
               if (option === "hideEdgesOnDrag") {
-                return true;
-              }
-              if (option === "hideNodesOnDrag") {
                 return true;
               }
               return false;

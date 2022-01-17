@@ -244,7 +244,8 @@ def Louvain(graph):
 
   graph = graph.copy()
 
-  nx.set_edge_attributes(graph, 1, name='weight')
+  if not nx.get_edge_attributes(graph, "weight"):
+    nx.set_edge_attributes(graph, 1, name='weight')
 
   n = graph.number_of_nodes()
   m = graph.size('weight')
