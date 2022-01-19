@@ -1,6 +1,6 @@
-# communify
+# network.ly
 
-## Project setup
+## Project frontend setup
 ```
 npm install
 ```
@@ -22,3 +22,9 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Project backend setup 
+```
+cd network.ly/server/src
+flask run
+```
