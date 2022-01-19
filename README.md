@@ -1,3 +1,6 @@
+![build](https://github.com/ZhihaoDC/prueba/actions/workflows/test-backend.yml/badge.svg)
+
+
 # network.ly
 
 ## Project frontend setup
