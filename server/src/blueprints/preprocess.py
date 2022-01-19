@@ -16,6 +16,7 @@ def preprocess_network(file):
     #Prepare dataframe
     edge_list = read_csv(file)
     edge_list.columns = edge_list.columns.str.lower()
+    # edge_list = edge_list.filter(['from', 'to', 'source', 'taget'],axis='columns')
     
     #Generate graph (take first two columns)
     graph = from_pandas_edgelist(edge_list, 
@@ -56,7 +57,7 @@ def get_community_colors(graph, community):
 	Draws the graph using colors as community identifier
 	"""
 	num_comms = len(set(community.values()))
-	cmap = get_cmap('tab10', max(community.values()) + 1)
+	cmap = get_cmap('tab20', max(community.values()) + 1)
 	# norm = matplotlib.colors.Normalize(vmin=0, vmax=num_comms)
 	colors = dict()
 

@@ -2,11 +2,10 @@ from flask import request, Blueprint
 from flask.json import jsonify
 
 from networkx.algorithms.community.quality import modularity as nx_modularity
-import preprocess
-# import server.scripts.louvain as louvain #custom module
-import sys
-sys.path.append("../server/scripts/")
-import louvain
+import src.blueprints.preprocess as preprocess 
+
+#import custom module
+from src.scripts import louvain
 
 
 louvainController = Blueprint('louvainController', __name__)

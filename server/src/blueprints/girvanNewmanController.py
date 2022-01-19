@@ -1,10 +1,9 @@
 from flask import request, Blueprint
 from flask.json import jsonify
-import preprocess as preprocess
+import src.blueprints.preprocess as preprocess
 
-import sys
-sys.path.append("../server/scripts/")
-import girvan_newman as gn
+#Import custom module
+import src.scripts.girvan_newman as gn
 
 girvanNewmanController = Blueprint('girvanNewmanController', __name__)
 

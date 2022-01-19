@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-import preprocess
+import src.blueprints.preprocess as preprocess 
 
 networkVisualizationController = Blueprint('networkVisualizationController', __name__)
 
@@ -12,3 +12,4 @@ def visualize_network():
     graph_json = preprocess.preprocess_json(graph)
 
     return jsonify({'graph': graph_json})
+    
