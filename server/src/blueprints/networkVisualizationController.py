@@ -5,11 +5,13 @@ networkVisualizationController = Blueprint('networkVisualizationController', __n
 
 @networkVisualizationController.route('/community-detection/network-visualization', methods=['POST'])
 def visualize_network():
-    file = request.files['file']
+    try:
+        file = request.files['file']
 
-    graph = preprocess.preprocess_network(file)
+        graph = preprocess.preprocess_network(file)
 
-    graph_json = preprocess.preprocess_json(graph)
+        graph_json = preprocess.preprocess_json(graph)
 
-    return jsonify({'graph': graph_json})
-    
+        return jsonify({'graph': graph_json}), 200
+    except:
+        return jsonify({"errorMessage": "Invalid .csv format"}), 500

@@ -1,6 +1,6 @@
 <template>
   <b-container fluid="md">
-    <h3 class="header">Visualización</h3>
+    <h1 class="header">Visualización</h1>
     <div id="wrapper">
       <div class="visualization" ref="plot"></div>
       <div id="loadingBar" ref="loadingBar">

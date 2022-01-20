@@ -10,20 +10,23 @@ girvanNewmanController = Blueprint('girvanNewmanController', __name__)
 #Main method
 @girvanNewmanController.route("/community-detection/girvan-newman", methods=['POST'])
 def apply_girvan_newman():
-    file = request.files['file']
-    print("Archivo recibido!")
+    try:
+        file = request.files['file']
+        print("Archivo recibido!")
 
-    #Preprocess network from file
-    graph = preprocess.preprocess_network(file)
+        #Preprocess network from file
+        graph = preprocess.preprocess_network(file)
 
-    #Apply girvan-newman method
-    dendrogram, modularity = gn.Girvan_Newman_2004(graph)
-    GN_communities = gn.dendrogram_to_community(dendrogram)
+        #Apply girvan-newman method
+        dendrogram, modularity = gn.Girvan_Newman_2004(graph)
+        GN_communities = gn.dendrogram_to_community(dendrogram)
 
-    graph_json = preprocess.preprocess_json(graph, GN_communities)
+        graph_json = preprocess.preprocess_json(graph, GN_communities)
 
-    return jsonify(
-                    {'graph': graph_json,
-                    'communities': GN_communities,
-                    'modularity': modularity}
-                    )
+        return jsonify(
+                        {'graph': graph_json,
+                        'communities': GN_communities,
+                        'modularity': modularity}
+                        ), 200
+    except:
+        return jsonify({"errorMessage": "Invalid .csv format"}), 500

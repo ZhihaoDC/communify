@@ -1,3 +1,4 @@
+from ctypes import FormatError
 from pandas import DataFrame, Series, read_csv
 
 from networkx import from_pandas_edgelist, get_node_attributes
@@ -12,20 +13,22 @@ import networkx as nx
 
 #Prepare file, return networkx graph
 def preprocess_network(file):
-    
-    #Prepare dataframe
-    edge_list = read_csv(file)
-    edge_list.columns = edge_list.columns.str.lower()
-    # edge_list = edge_list.filter(['from', 'to', 'source', 'taget'],axis='columns')
-    
-    #Generate graph (take first two columns)
-    graph = from_pandas_edgelist(edge_list, 
-                                    source=edge_list.columns[0], 
-                                    target=edge_list.columns[1], 
-                                    edge_attr=['weight'])
-    graph = convert_node_labels_to_integers(graph, first_label=0, label_attribute='label')
+    try:
+        #Prepare dataframe
+        edge_list = read_csv(file)
+        edge_list.columns = edge_list.columns.str.lower()
+        # edge_list = edge_list.filter(['from', 'to', 'source', 'taget'],axis='columns')
+        
+        #Generate graph (take first two columns)
+        graph = from_pandas_edgelist(edge_list, 
+                                        source=edge_list.columns[0], 
+                                        target=edge_list.columns[1], 
+                                        edge_attr=['weight'])
+        graph = convert_node_labels_to_integers(graph, first_label=0, label_attribute='label')
 
-    return graph
+        return graph
+    except:
+        raise FormatError("Incorrect .csv format")
 
 
 #Convert graph to json 

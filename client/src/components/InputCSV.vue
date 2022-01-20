@@ -5,9 +5,9 @@
       class="upload-button"
       v-bind:class="{ file_selected: file }"
       v-b-popover.hover.right="
-        'El contenido debe de ser una lista de enlaces (de la siguiente forma):‎‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎' +
+        'El contenido debe de ser una lista de enlaces (de la siguiente forma):‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ '+
         '╔════════╤═══════╤══════╗\n' +
-        '║‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‏‏‎‎‎nodo_1‏‏‎‏‏‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‎‏‏‎ ‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎nodo_2‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‎‏‏‎‎peso‏‏‎ ‎‏‏‎ ‏‏‎ ‎‎‏‏‎ ‎║\n' +
+        '║‎ ‎ ‎ ‎ ‎ ‎ ‎ from ‎ ‎ ‎ ‎ ‎ │‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ to ‎ ‎ ‎ ‎ ‎ ‎ ‎│ ‏ ‎ weight ‎ ‎║\n' +
         '╠════════╪═══════╪══════╣\n' +
         '║‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎‎ ‎foo‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‏‎‎│‏‏‎ ‏‏‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎ ‎‎‏‏‎ ‎bar‏‏‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎ ‎‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎4‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‎║\n' +
         '╟────────┼───────┼──────╢\n' +
@@ -34,23 +34,27 @@
       accept=".csv"
       required="required"
       enctype="multipart/form-data"
+      @input="check_form()"
     ></b-form-file>
     <br />
     <small>
       Pon el cursor encima del botón anterior para ver el formato del .csv
     </small>
-    <br />
+    <br/>
+    <small class="error" v-if="error.length > 0">{{error}}</small>
     <br/>
     <b-button
       type="submit"
       variant="primary"
       class="w-25 content-item submit-button"
-      v-bind:disabled="!file"
+      v-bind:disabled="!(file && error.length===0)"
       value="Visualizar"
-      v-on:click="submit_file()"
+      v-on:click="submit_file(file)"
     >
       Visualizar
     </b-button>
+    
+    
   </div>
 </template>
 
@@ -62,21 +66,24 @@ export default {
   data() {
     return {
       file: null,
-      method: this.selectedMethod
+      method: this.selectedMethod,
+      error: "",
     };
   },
   methods: {
-    bytesToSize(bytes) {
-      var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-      if (bytes == 0) return "0 Byte";
-      var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-      return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
+    check_form(){
+      this.error = ""
+      if (this.file){
+        if (this.file['type'] != "text/csv"){
+          this.error = "El formato debe ser .csv"
+        }
+      }
     },
+
     async submit_file(){
       const axios = require('axios')
       let formData = new FormData()
       formData.append('file', this.file)
-
       await axios.post('http://localhost:5000/community-detection/'+this.method,
         formData,
         {
@@ -84,15 +91,26 @@ export default {
             'Content-Type':'multipart/form-data'
           }
         }
-      ).then(response =>{
-        store.setLastComputedExperiment(response.data)
-        this.$router.push('/community-detection/' + this.method + '/experiment')
-      }
-      )
-      .catch(function(){
-        console.log('Error')
-      })
-    }
+        ).then(response =>{
+          if (response.status === 200){
+            store.setLastComputedExperiment(response.data)        
+            this.$router.push('/community-detection/' + this.method + '/experiment')
+          }        
+        })
+        .catch(error =>{
+          console.log(error.response)
+          if (error.response.status == 500){
+            this.error='Formato erróneo'
+          }
+        })
+    },
+
+    bytesToSize(bytes) {
+      var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+      if (bytes == 0) return "0 Byte";
+      var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+      return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
+    },
   },
 };
 </script>
@@ -140,5 +158,9 @@ input[type="file"] {
 .file_selected {
   background-color: #050517;
   color: aliceblue;
+}
+
+.error{
+  color:red;
 }
 </style>
