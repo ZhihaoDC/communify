@@ -32,7 +32,8 @@ def apply_louvain():
         return jsonify({
                         'graph': graph_json,
                         'communities': last_community,
-                        'modularity': modularity
+                        'modularity': modularity,
+                        'algorithm': 'Louvain'
                     }), 200
     except:
         return jsonify({"errorMessage": "Invalid .csv format"}), 500

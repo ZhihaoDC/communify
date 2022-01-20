@@ -26,7 +26,8 @@ def apply_girvan_newman():
         return jsonify(
                         {'graph': graph_json,
                         'communities': GN_communities,
-                        'modularity': modularity}
-                        ), 200
+                        'modularity': modularity,
+                        'algorithm' : 'Girvan-Newman'
+                        }), 200
     except:
         return jsonify({"errorMessage": "Invalid .csv format"}), 500

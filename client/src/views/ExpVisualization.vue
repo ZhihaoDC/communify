@@ -1,6 +1,9 @@
 <template>
   <b-container fluid="md">
-    <h1 class="header">Visualización</h1>
+    <h2 class="header" v-if="experiment.algorithm">
+      Visualización de la red con el algoritmo de {{ experiment.algorithm }}
+    </h2>
+    <h2 class="header" v-else>Visualización de la red (sin algoritmo)</h2>
     <div id="wrapper">
       <div class="visualization" ref="plot"></div>
       <div id="loadingBar" ref="loadingBar">
@@ -165,7 +168,8 @@ export default {
 .visualization {
   height: 30em;
   width: 100%;
-  border: grey 1px solid;
+  border: grey 1.5px solid;
+  border-radius: 10px
 }
 .options {
   margin-left:auto;
