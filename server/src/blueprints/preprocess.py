@@ -1,4 +1,3 @@
-from ctypes import FormatError
 from pandas import DataFrame, Series, read_csv
 
 from networkx import from_pandas_edgelist, get_node_attributes
