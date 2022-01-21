@@ -1,11 +1,11 @@
 <template>
   <b-container fluid="md">
     <div class="community-detection">
-      <h1 class="header">Visualización de redes o grafos</h1>
+      <h1 id="header">Visualización de redes o grafos</h1>
       <h4>
         Visualiza la red, cambia los nodos de posición, color y físicas.
       </h4>
-      <div class="content">
+      <div id="content">
         <InputCSV selectedMethod="network-visualization"/>
       </div>
     </div>

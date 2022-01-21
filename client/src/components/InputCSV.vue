@@ -1,5 +1,5 @@
 <template>
-  <div class="content-item">
+  <div id="content-item">
     <label
       for="file-upload"
       class="upload-button"

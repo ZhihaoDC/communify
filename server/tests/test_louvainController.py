@@ -31,7 +31,7 @@ def test_apply_louvain(client):
     response = rv.json #convert response to json
 
     assert "graph" in response
-    assert "nodes" in response["graph"]
-    assert "edges" in response["graph"]
+    assert "nodes" in response["graph"]["elements"]
+    assert "edges" in response["graph"]["elements"]
     assert "communities" in response
     assert "modularity" in response

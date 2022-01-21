@@ -1,11 +1,13 @@
 <template>
   <b-container fluid="md">
     <div class="community-detection">
-      <h1 class="header">Detección de comunidades: Girvan-Newman</h1>
+      <h1 id="header">Detección de comunidades: Girvan-Newman</h1>
       <h4>
-        Método basado en edge-betweenness. Proceso largo pero con resultados más estables.
+        Método basado en la medida de edge-betweenness. 
+        Proceso largo pero con resultados más estables.
+        Todas las ejecuciones sobre un mismo dataset dan el mismo resultado.
       </h4>
-      <div class="content">
+      <div id="content">
         <InputCSV selectedMethod="girvan-newman"/>
       </div>
     </div>

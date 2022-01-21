@@ -1,7 +1,7 @@
 <template>
   <b-container>
     <div class="parent_container">
-      <h1 class="header">Visualización</h1>
+      <h2 id="header">Visualización</h2>
       <div style="height: 30em" id="container" ref="cy"></div>
     </div>
   </b-container>
@@ -153,7 +153,7 @@ export default {
 }
 #container {
   position: relative;
-  height: 30em;
+  height: 100%;
   width: 100%;
 
   border: slategray 1px solid;

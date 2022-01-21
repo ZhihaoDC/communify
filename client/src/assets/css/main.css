@@ -5,16 +5,16 @@
     align-items:center;
   }
 
-.header{
+#header{
   margin-top:1em;
 }
 
-.content{
+#content{
   margin-top: 1em;
   margin-bottom: 1em;
 }
 
-.content-item{
+#content-item{
   margin-bottom: 1em;
 }
 

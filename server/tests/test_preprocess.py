@@ -22,7 +22,7 @@ def test_preprocess_network(csv_file):
     assert all([isinstance(i, int) for i in result.nodes()])
 
     #assert that label is a node attribute (storing old name)
-    assert all(['label' in result.nodes(data=True)[i] for i in range(result.number_of_nodes())]) 
+    assert all(['name' in result.nodes(data=True)[i] for i in range(result.number_of_nodes())]) 
 
     #assert that weight is an edge attribute
     assert all(['weight' in data for u, v, data  in result.edges(data=True)])
@@ -43,16 +43,16 @@ def test_preprocess_json(csv_file):
     result = preprocess.preprocess_json(graph, communities)
 
     assert isinstance(result, dict)
-    assert all(['color' in node for node in result['nodes']])
-    assert all(['group' in node for node in result['nodes']])
-    assert all(['value' in node for node in result['nodes']])
-    assert all(['title' in node for node in result['nodes']])
+    assert all(['name' in node['data'] for node in result['elements']['nodes']])
+    assert all(['background_color' in node['data'] for node in result['elements']['nodes']])
+    assert all(['community' in node['data'] for node in result['elements']['nodes']])
+    assert all(['degree' in node['data'] for node in result['elements']['nodes']])
 
 
 def test_preprocess_json_visualization(csv_file):
     """
     GIVEN that we have transformed our .csv file to a networkx.Graph Object for plain visualization
-    WHEN we obtain the networkx.Graph Object
+    WHEN we obtain the networkx.Graph Object and no communities
     THEN we format the Graph to have the desired attribute names
     AND we return a json of the Graph
     """
@@ -61,5 +61,5 @@ def test_preprocess_json_visualization(csv_file):
     result = preprocess.preprocess_json(graph)
 
     assert isinstance(result, dict)
-    assert all(['value' in node for node in result['nodes']])
-    assert all(['title' in node for node in result['nodes']])
+    assert all(['name' in node['data'] for node in result['elements']['nodes']])
+    assert all(['degree' in node['data'] for node in result['elements']['nodes']])
