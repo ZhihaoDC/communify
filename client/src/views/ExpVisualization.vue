@@ -1,30 +1,16 @@
 <template>
-  <b-container fluid="md">
-    <h2 class="header" v-if="experiment.algorithm">
-      Visualización de la red con el algoritmo de {{ experiment.algorithm }}
-    </h2>
-    <h2 class="header" v-else>Visualización de la red (sin algoritmo)</h2>
-    <div id="wrapper">
-      <div class="visualization" ref="plot"></div>
-      <div id="loadingBar" ref="loadingBar">
-        <div class="outerBorder">
-          <div id="text" ref="text">0%</div>
-          <div id="border" ref="border">
-            <div id="bar" ref="bar"></div>
-          </div>
-        </div>
-      </div>
+  <b-container>
+    <div class="parent_container">
+      <h1 class="header">Visualización</h1>
+      <div style="height: 30em" id="container" ref="cy"></div>
     </div>
-    <h5 class="header">(Opciones abajo)</h5>
-    <div class="options" id="optionsContainer" ref="options"></div>
   </b-container>
 </template>
 
 <script>
 import { store } from "../main.js";
-import { DataSet } from "vis-data/peer/esm/vis-data";
+import cytoscape from "cytoscape";
 //import { Network } from "vis-network/peer/esm/vis-network";
-import { Network } from "vis-network/standalone";
 
 export default {
   name: "ExpVisualization",
@@ -35,241 +21,146 @@ export default {
   },
   mounted() {
     console.log(store.state.lastComputedExperiment);
-    var self = this;
-    this.$nextTick(function () {
-      function redrawAll() {
-        var container = self.$refs.plot;
-        var options = {
-          nodes: {
-            shape: "dot",
-            scaling: {
-              min: 10,
-              max: 80,
-            },
-            font: {
-              size: 12,
-              face: "Tahoma",
-            },
+
+    console.log("HOLA");
+    let cy = cytoscape({
+      container: this.$refs.cy, // container to render in
+      style: [
+        {
+          selector: "node[background_color]",
+          style: {
+            label: "data(name)",
+            "text-valign": "center",
+            "background-color": "data(background_color)",
+            "text-outline-color": "data(background_color)",
+            "text-outline-width": 2,
           },
-          edges: {
-            color: { inherit: true },
-            width: 0.15,
-            smooth: {
-              type: "continuous",
-            },
-          },
-          interaction: {
-            hover: true,
-            zoomView: true,
-            hideEdgesOnDrag: true,
-          },
-          configure: {
-            filter: function (option, path) {
-              
-              if(option === "physics"){
-                return true;
-              }
-              if(option === "solver"){
-                return true;
-              }
-              if(option === "forceAtlas2Based"){
-                return true;
-              }
-              if(option === "gravitationalConstant"){
-                return true;
-              }
-              if(option === "centralGravity"){
-                return true;
-              }
-              if(option === "springLength  "){
-                return true;
-              }
-              if(option === "springConstant"){
-                return true;
-              }
-              if(option === "damping"){
-                return true;
-              }
-              if(option === "avoidOverlap"){
-                return true;
-              }
-              if(option === "nodeDistance"){
-                return true;
-              }
-              if (option === "inherit") {
-                return true;
-              }
-              if (option === "type" && path.indexOf("smooth") !== -1) {
-                return true;
-              }
-              if (option === "roundness") {
-                return true;
-              }
-              if (option === "hideEdgesOnDrag") {
-                return true;
-              }
-              return false;
-            },
-            container: self.$refs.options,
-            showButton: true,
-          },
-          physics: {
-            stabilization: true,
-            barnesHut: {
-              gravitationalConstant: -8000,
-              springConstant: 0.01,
-              springLength: 200,
-            },
-          },
-          height: container.clientHeight.toString(),
-          width: container.clientWidth.toString(),
-        };
-
-        var state_nodes = new DataSet(
-          store.state.lastComputedExperiment.graph.nodes
-        );
-        var state_edges = new DataSet(
-          store.state.lastComputedExperiment.graph.edges
-        );
-
-        var data = { nodes: state_nodes, edges: state_edges };
-
-        var network = new Network(container, data, options);
-
-        network.on("stabilizationProgress", function (params) {
-          var maxWidth = 496;
-          var minWidth = 20;
-          var widthFactor = params.iterations / params.total;
-          var width = Math.max(minWidth, maxWidth * widthFactor);
-
-          self.$refs.bar.style.width = width + "px";
-          self.$refs.text.innerText = Math.round(widthFactor * 100) + "%";
-        });
-        network.once("stabilizationIterationsDone", function () {
-          self.$refs.text.innerText = "100%";
-          self.$refs.bar.style.width = "496px";
-          self.$refs.loadingBar.style.opacity = 0;
-          // really clean the dom element
-          setTimeout(function () {
-            self.$refs.loadingBar.style.display = "none";
-          }, 500);
-        });
-
-        return network;
-      }
-
-      redrawAll();
+        },
+      ],
+      layout: {
+        name: "cose",
+      },
     });
+    cy.json(this.experiment.graph);
+    cy.zoom({
+      level: 10,
+    });
+
+    let options = {
+      name: "cose",
+
+      // Called on `layoutready`
+      ready: function () {},
+
+      // Called on `layoutstop`
+      stop: function () {},
+
+      // Whether to animate while running the layout
+      // true : Animate continuously as the layout is running
+      // false : Just show the end result
+      // 'end' : Animate with the end result, from the initial positions to the end positions
+      animate: true,
+
+      // Easing of the animation for animate:'end'
+      animationEasing: undefined,
+
+      // The duration of the animation for animate:'end'
+      animationDuration: undefined,
+
+      // A function that determines whether the node should be animated
+      // All nodes animated by default on animate enabled
+      // Non-animated nodes are positioned immediately when the layout starts
+      animateFilter: true,
+
+      // The layout animates only after this many milliseconds for animate:true
+      // (prevents flashing on fast runs)
+      animationThreshold: 250,
+
+      // Number of iterations between consecutive screen positions update
+      refresh: 20,
+
+      // Whether to fit the network view after when done
+      fit: true,
+
+      // Padding on fit
+      padding: 30,
+
+      // Constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+      boundingBox: undefined,
+
+      // Excludes the label when calculating node bounding boxes for the layout algorithm
+      nodeDimensionsIncludeLabels: true,
+
+      // Randomize the initial positions of the nodes (true) or use existing positions (false)
+      randomize: false,
+
+      // Extra spacing between components in non-compound graphs
+      componentSpacing: 40,
+
+      // Node repulsion (non overlapping) multiplier
+      nodeRepulsion: 2048,
+
+      // Node repulsion (overlapping) multiplier
+      nodeOverlap: 4,
+
+      // Ideal edge (non nested) length
+      idealEdgeLength: 100,
+
+      // Divisor to compute edge forces
+      edgeElasticity: 32,
+
+      // Nesting factor (multiplier) to compute ideal edge length for nested edges
+      nestingFactor: 1.2,
+
+      // Gravity force (constant)
+      gravity: 1,
+
+      // Maximum number of iterations to perform
+      numIter: 5000,
+
+      // Initial temperature (maximum node displacement)
+      initialTemp: 1000,
+
+      // Cooling factor (how the temperature is reduced between consecutive iterations
+      coolingFactor: 0.99,
+
+      // Lower temperature threshold (below this point the layout will end)
+      minTemp: 1.0,
+    };
+
+    var layout = cy.layout(options);
+    layout.run();
+    console.log(cy);
+    this.cy = cy;
   },
 };
 </script>
 
 <style scoped>
+.parent_container {
+  text-align: left;
+}
+
 .visualization {
   height: 30em;
   width: 100%;
   border: grey 1.5px solid;
-  border-radius: 10px
+  border-radius: 10px;
 }
 .options {
-  margin-left:auto;
-  margin-right:auto;
+  margin-left: auto;
+  margin-right: auto;
 }
-#loadingBar {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 30em;
-  background-color: rgba(238, 238, 238, 0.8);
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -ms-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-  opacity: 1;
-}
-
-#wrapper {
+#container {
   position: relative;
-  width: 100%;
   height: 30em;
-}
+  width: 100%;
 
-#text {
-  position: absolute;
-  top: 0px;
-  left: 530px;
-  width: 30px;
-  height: 50%;
-  margin: auto auto auto auto;
-  font-size: 22px;
-  color: #000000;
-}
-
-div.outerBorder {
-  position: relative;
-  top: 50%;
-  width: 600px;
-  height: 50px;
-  margin: auto auto auto auto;
-  border: 8px solid rgba(0, 0, 0, 0.1);
-  background: rgb(252, 252, 252); /* Old browsers */
-  background: -moz-linear-gradient(
-    top,
-    rgba(252, 252, 252, 1) 0%,
-    rgba(237, 237, 237, 1) 100%
-  ); /* FF3.6+ */
-  background: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(0%, rgba(252, 252, 252, 1)),
-    color-stop(100%, rgba(237, 237, 237, 1))
-  ); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(
-    top,
-    rgba(252, 252, 252, 1) 0%,
-    rgba(237, 237, 237, 1) 100%
-  ); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(
-    top,
-    rgba(252, 252, 252, 1) 0%,
-    rgba(237, 237, 237, 1) 100%
-  ); /* Opera 11.10+ */
-  background: -ms-linear-gradient(
-    top,
-    rgba(252, 252, 252, 1) 0%,
-    rgba(237, 237, 237, 1) 100%
-  ); /* IE10+ */
-  background: linear-gradient(
-    to bottom,
-    rgba(252, 252, 252, 1) 0%,
-    rgba(237, 237, 237, 1) 100%
-  ); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
-  border-radius: 72px;
-}
-
-#border {
-  position: absolute;
-  top: 5px;
-  left: 10px;
-  width: 500px;
-  height: 23px;
-  margin: auto auto auto auto;
+  border: slategray 1px solid;
   border-radius: 10px;
 }
 
-#bar {
-  position: absolute;
-  top: 1px;
-  left: 0px;
-  width: 20px;
-  height: 20px;
-  margin: auto auto auto auto;
-  border-radius: 11px;
-  border: 2px solid rgba(30, 30, 30, 0.05);
-  background: rgb(0, 173, 246); /* Old browsers */
+.canvas {
+  border: grey 2px solid;
 }
 </style>

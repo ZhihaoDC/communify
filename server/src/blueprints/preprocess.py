@@ -3,8 +3,7 @@ from pandas import DataFrame, Series, read_csv
 from networkx import from_pandas_edgelist, get_node_attributes
 from networkx.relabel import convert_node_labels_to_integers
 from networkx.classes.function import set_node_attributes
-from networkx.readwrite.json_graph import node_link_data
-
+from networkx.readwrite.json_graph import cytoscape_data
 from matplotlib.cm import get_cmap
 from matplotlib.colors import rgb2hex
 import networkx as nx
@@ -15,14 +14,16 @@ def preprocess_network(file):
     #Prepare dataframe
     edge_list = read_csv(file)
     edge_list.columns = edge_list.columns.str.lower()
+    # edge_list.dropna(how='any', axis='index', inplace=True)
+    edge_list['id'] = edge_list.index
     # edge_list = edge_list.filter(['from', 'to', 'source', 'taget'],axis='columns')
     
     #Generate graph (take first two columns)
     graph = from_pandas_edgelist(edge_list, 
                                     source=edge_list.columns[0], 
                                     target=edge_list.columns[1], 
-                                    edge_attr=['weight'])
-    graph = convert_node_labels_to_integers(graph, first_label=0, label_attribute='label')
+                                    edge_attr=['id','weight'])
+    graph = convert_node_labels_to_integers(graph, first_label=0, label_attribute='name')
 
     return graph
 
@@ -32,21 +33,13 @@ def preprocess_json(graph, communities=None):
 
     if communities is not None:
         colors = get_community_colors(graph, communities)
-        set_node_attributes(graph, colors, name='color')
-        set_node_attributes(graph, communities, name='group')
+        set_node_attributes(graph, colors, name='background_color')
+        set_node_attributes(graph, communities, name='community')
 
     degrees = dict(graph.degree)
-    set_node_attributes(graph, degrees, name='value')
-
-    labels = dict(get_node_attributes(graph,"label"))
-    set_node_attributes(graph, labels, name='title')
-
-    graph_json = node_link_data(graph,
-                                attrs={ 'source':'from', 
-                                        'target':'to', 
-                                        'name':'id', 
-                                        'link':'edges',
-                                        'title': 'title' })
+    set_node_attributes(graph, degrees, name='degree')
+    graph_json = dict(cytoscape_data(graph, name="name", ident="id"))
+    print(graph_json)
     return graph_json
 
 
@@ -61,7 +54,9 @@ def get_community_colors(graph, community):
 	colors = dict()
 
 	for node in graph.nodes:
-		colors.update({node: rgb2hex(cmap(community[node]))})
+		colors.update({node: "#"+rgb2hex(cmap(community[node]))[1]
+                                    +rgb2hex(cmap(community[node]))[3] 
+                                    +rgb2hex(cmap(community[node]))[5]})
     
 	return colors
 
