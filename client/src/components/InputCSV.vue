@@ -50,10 +50,11 @@
       v-bind:disabled="!(file && error.length===0)"
       value="Visualizar"
       v-on:click="submit_file(file)"
+      v-if="!submitted"
     >
       Visualizar
     </b-button>
-    
+    <b-spinner v-else variant="primary" label="Spinning" id="spinner"></b-spinner>
     
   </div>
 </template>
@@ -68,6 +69,7 @@ export default {
       file: null,
       method: this.selectedMethod,
       error: "",
+      submitted: false,
     };
   },
   methods: {
@@ -81,6 +83,7 @@ export default {
     },
 
     async submit_file(){
+      this.submitted = true
       const axios = require('axios')
       let formData = new FormData()
       formData.append('file', this.file)
@@ -101,6 +104,7 @@ export default {
           console.log(error.response)
           if (error.response.status == 500){
             this.error='Formato erróneo'
+            this.submitted=false
           }
         })
     },
@@ -130,11 +134,11 @@ input[type="file"] {
   color: aliceblue;
   background: #42b983;
   font-size: x-large;
-  border: 1px solid #ccc;
   border-radius: 10px;
   padding: 0.7em 1em;
   margin-bottom: 0.2em;
   cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
 .upload-button:hover {
@@ -143,14 +147,13 @@ input[type="file"] {
   text-decoration: none;
 }
 
-
 .submit-button{
   font-size: large;
-  border: 1px solid #ccc;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 .submit-button:disabled{
   background-color: #c0c2c8;
-  border: 1px solid #ccc;
+  border: 0.5px solid #ccc;
   cursor:not-allowed;
 ;
 }
@@ -159,8 +162,12 @@ input[type="file"] {
   background-color: #050517;
   color: aliceblue;
 }
-
 .error{
   color:red;
+}
+
+#spinner{
+ width: 3rem; 
+ height: 3rem;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <b-navbar type="dark" variant="dark">
+    <b-navbar type="dark" variant="dark"  id="nav-bar">
       <b-navbar-nav>
-        <b-navbar-brand to="/">network.ly</b-navbar-brand>
+        <b-navbar-brand id="brand" to="/">network.ly</b-navbar-brand>
         <b-nav-item-dropdown text="Detección de comunidades" ref="dropdown">
           <b-dropdown-item to="/community-detection/louvain"
             >Método de Louvain</b-dropdown-item
@@ -11,7 +11,8 @@
             >Método de Girvan-Newman</b-dropdown-item
           >
         </b-nav-item-dropdown>
-        <b-nav-item to="/about"> About </b-nav-item>
+        <b-nav-item to="/network-visualization"> Visualización </b-nav-item>
+        <b-nav-item to="/about" align="right" right> About </b-nav-item>
       </b-navbar-nav>
     </b-navbar>
     <router-view />
@@ -52,7 +53,7 @@ export default {
     color: #2c3e50;
 
     &.router-link-exact-active {
-      color: #42b983;
+      color: #046865;
     }
   }
 }
@@ -61,4 +62,11 @@ html{
   height: 100%;
 }
 
+#brand{
+  color: #FCFFF7;
+}
+
+#nav-bar{
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
 </style>

@@ -6,7 +6,6 @@ from networkx.classes.function import set_node_attributes, set_edge_attributes
 from networkx.readwrite.json_graph import cytoscape_data
 from matplotlib.cm import get_cmap
 from matplotlib.colors import rgb2hex
-import networkx as nx
 
 
 #Prepare file, return networkx graph
@@ -31,16 +30,31 @@ def preprocess_network(file):
 
 #Convert graph to json 
 def preprocess_json(graph, communities=None):
-
+    #add color to communities and label them
     if communities is not None:
         colors = get_community_colors(graph, communities)
         set_node_attributes(graph, colors, name='background_color')
         set_node_attributes(graph, communities, name='community')
-
+    
+    #add degree
     degrees = dict(graph.degree)
-    set_node_attributes(graph, degrees, name='degree')
-    set_edge_attributes(graph, [], name="id")
+    set_node_attributes(graph, degrees, name="degree")
 
+    #add node size based on degree centrality
+    MIN_NODE_SIZE = 20
+    size = {node: MIN_NODE_SIZE + degree for node, degree in degrees.items()} #add MIN_NODE_SIZE to every degree
+    set_node_attributes(graph, size, name="size")
+
+    #add font-size based on degree centrality, up lo a limit of MAX_FONT_INCREASE
+    MIN_FONT_SIZE = 12
+    MAX_DEGREE = max(degrees.values())
+    MIN_DEGREE = min(degrees.values())
+    MAX_FONT_INCREASE = 10
+    font_size = {node: MIN_FONT_SIZE + MAX_FONT_INCREASE*((degree - MIN_DEGREE)/(MAX_DEGREE - MIN_DEGREE)) for node, degree in degrees.items()} #add MIN_NODE_SIZE to every degree
+    set_node_attributes(graph, font_size, "font_size")
+
+    #set edge id (important for cytoscape usage!)
+    set_edge_attributes(graph, [], name="id")
     for u,v in graph.edges:
         graph[u][v]['id'] = str(u)+'-'+str(v)
 

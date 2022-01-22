@@ -10,31 +10,34 @@
           <b-card
           title="Detección de comunidades: método de Louvain"
           style="max-width: 25rem;"
-          class="mb-3">
+          class="mb-3"
+          id="b-card">
             <b-card-text>
               Método de Louvain. El más popular. Rápido y preciso
             </b-card-text>
-            <b-button block to="/community-detection/louvain" variant="primary">Ir</b-button>
+            <b-button block to="/community-detection/louvain" variant="primary" id="go">Ir</b-button>
           </b-card>
 
           <b-card
           title="Detección de comunidades: método de Girvan-Newman"
           style="max-width: 25rem;"
-          class="mb-3">
+          class="mb-3"
+          id="b-card">
             <b-card-text>
               Método de Girvan-Newman. Más lento y menos conocido.
             </b-card-text>
-            <b-button block to="/community-detection/girvan-newman" variant="primary">Ir</b-button>
+            <b-button block to="/community-detection/girvan-newman" variant="primary" id="go">Ir</b-button>
           </b-card>
 
           <b-card
           title="Visualización: Representar grafo o red"
           style="max-width: 25rem;"
-          class="mb-3">
+          class="mb-3"
+          id="b-card">
             <b-card-text>
               Representa un grafo, cambia los nodos de color y posición
             </b-card-text>
-            <b-button block to="/network-visualization" variant="primary">Ir</b-button>
+            <b-button block to="/network-visualization" variant="primary" id="go">Ir</b-button>
           </b-card>
         </b-card-group>
       </div>
@@ -61,4 +64,11 @@ export default {
     text-decoration: none;
   }
 
+  #b-card{
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  }
+
+  #go{
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  }
 </style>
