@@ -1,8 +1,8 @@
 <template>
-  <b-container>
+  <b-container fluid>
     <div class="parent_container">
-      <h2 id="header">Experimento: algoritmo de {{ experiment.algorithm }}</h2>
-      <div style="height: 30em" id="container" ref="cy"></div>
+      <h2 id="title"> Experimento: algoritmo de {{ experiment.algorithm }}</h2>
+      <div id="container" ref="cy"></div>
     </div>
   </b-container>
 </template>
@@ -11,7 +11,6 @@
 import { store } from "../main.js";
 import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
-//import { Network } from "vis-network/peer/esm/vis-network";
 
 export default {
   name: "ExpVisualization",
@@ -21,7 +20,7 @@ export default {
     };
   },
   mounted() {
-    console.log(store.state.lastComputedExperiment);
+    let self = this
     cytoscape.use(fcose);
     let cy = cytoscape({
       container: this.$refs.cy, // container to render in
@@ -33,8 +32,21 @@ export default {
             height: "data(size)",
             width: "data(size)",
             "text-valign": "center",
-            "background-color": "data(background_color)",
-            "text-outline-color": "data(background_color)",
+            "background-color": function(node){
+                                              if ((self.experiment.algorithm === "Louvain") | (self.experiment.algorithm==="Girvan-Newman")){
+                                                return node.data().background_color
+                                              }else{
+                                                return "#5CF"
+                                              }
+            },
+            "text-outline-color": function(node){
+                                              if ((self.experiment.algorithm === "Louvain") | (self.experiment.algorithm==="Girvan-Newman")){
+                                                return node.data().background_color
+                                              }else{
+                                                return "#fff"
+                                              }
+
+            },
             "text-outline-width": 2,
             "font-size": "data(font_size)",
           },
@@ -45,10 +57,14 @@ export default {
             visibility: "hidden",
             width: 0.5,
             "line-color": function(edge){
-              if (cy.$id(edge.data().source).data().degree > cy.$id(edge.data().target).data().degree){
-                return cy.$id(edge.data().source).data().background_color
+              if ((self.experiment.algorithm === "Louvain") | (self.experiment.algorithm==="Girvan-Newman")){
+                if (cy.$id(edge.data().source).data().degree > cy.$id(edge.data().target).data().degree){
+                  return cy.$id(edge.data().source).data().background_color
+                }else{
+                  return cy.$id(edge.data().target).data().background_color
+                }
               }else{
-                return cy.$id(edge.data().target).data().background_color
+                return "#666"
               }
             }
           },
@@ -109,10 +125,14 @@ export default {
       nodeRepulsion: 6000,
       // Ideal edge (non nested) length
       idealEdgeLength: function(edge){
-        if (cy.$id(edge.data().source).data().community === cy.$id(edge.data().target).data().community){
-          return 50
+        if (self.experiment.algorithm === "Louvain" | self.experiment.algorithm==="Girvan-Newman"){
+          if (cy.$id(edge.data().source).data().community === cy.$id(edge.data().target).data().community){
+            return 50
+          }else{
+            return 400
+          }
         }else{
-          return 400
+          return 150
         }
       },
       
@@ -154,14 +174,12 @@ export default {
       /* layout event callbacks */
       ready: () => {}, // on layoutready
       stop: function () { // on layoutstop
-        console.log("Terminado!");
         cy.style().selector("edge").style("visibility", "visible").update();
       },
     };
     //Run layout
     var layout = cy.layout(layout_options);
     layout.run();
-    console.log(cy);
     this.cy = cy;
 
     cy.animated();
@@ -177,13 +195,19 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
+
 #container {
   position: relative;
-  height: 100%;
+  height: 30em;
   width: 100%;
 
   border-radius: 10px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+#title{
+  margin-top:0.5em;
+
 }
 </style>

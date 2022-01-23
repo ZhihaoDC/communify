@@ -1,5 +1,5 @@
 from pandas import DataFrame, Series, read_csv
-
+from json import loads
 from networkx import from_pandas_edgelist, get_node_attributes
 from networkx.relabel import convert_node_labels_to_integers
 from networkx.classes.function import set_node_attributes, set_edge_attributes
@@ -9,19 +9,35 @@ from matplotlib.colors import rgb2hex
 
 
 #Prepare file, return networkx graph
-def preprocess_network(file):
+def preprocess_network(file, input_columns=None):
     #Prepare dataframe
     edge_list = read_csv(file)
     edge_list.columns = edge_list.columns.str.lower()
     # edge_list.dropna(how='any', axis='index', inplace=True)
     # edge_list['id'] = edge_list.index
     # edge_list = edge_list.filter(['from', 'to', 'source', 'taget'],axis='columns')
-    
-    #Generate graph (take first two columns)
-    graph = from_pandas_edgelist(edge_list, 
-                                    source=edge_list.columns[0], 
-                                    target=edge_list.columns[1], 
-                                    edge_attr=['weight'])
+    possible_weights = ['weight', 'weights', 'value', 'values']
+    #Generate graph
+    if input_columns:
+        graph = from_pandas_edgelist(edge_list, 
+                                        source=str(input_columns['source']).lower(), 
+                                        target=str(input_columns['target']).lower(), 
+                                        edge_attr=str(input_columns['weight']).lower())
+        print('Using weights inserted by user')
+    elif any(column in possible_weights for column in edge_list.columns):
+        is_desired_column_name =  [column in possible_weights for column in edge_list.columns]
+        desired_column_name_index = is_desired_column_name.index(True)
+        graph = from_pandas_edgelist(edge_list, 
+                                        source=edge_list.columns[0], 
+                                        target=edge_list.columns[1],
+                                        edge_attr=edge_list.columns[desired_column_name_index])
+        
+        print('Found weight-alike column in ', desired_column_name_index)
+    else:
+        graph = from_pandas_edgelist(edge_list, 
+                                        source=edge_list.columns[0], 
+                                        target=edge_list.columns[1])
+        print('No weights found')
 
     graph = convert_node_labels_to_integers(graph, first_label=0, label_attribute='name')
 

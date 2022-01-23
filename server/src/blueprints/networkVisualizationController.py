@@ -12,6 +12,6 @@ def visualize_network():
 
         graph_json = preprocess.preprocess_json(graph)
 
-        return jsonify({'graph': graph_json}), 200
+        return jsonify({'graph': graph_json, 'algorithm':'network-visualization'}), 200
     except:
         return jsonify({"errorMessage": "Invalid .csv format"}), 500

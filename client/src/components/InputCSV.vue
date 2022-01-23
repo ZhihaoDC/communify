@@ -5,9 +5,9 @@
       class="upload-button"
       v-bind:class="{ file_selected: file }"
       v-b-popover.hover.right="
-        'El contenido debe de ser una lista de enlaces (de la siguiente forma):‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ '+
+        'El contenido debe de ser una lista de enlaces (de la siguiente forma):‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ' +
         '╔════════╤═══════╤══════╗\n' +
-        '║‎ ‎ ‎ ‎ ‎ ‎ ‎ from ‎ ‎ ‎ ‎ ‎ │‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ to ‎ ‎ ‎ ‎ ‎ ‎ ‎│ ‏ ‎ weight ‎ ‎║\n' +
+        '║‎ ‎ ‎ ‎ ‎ ‎ ‎ from ‎ ‎ ‎ ‎ ‎ │‎ ‎ ‎ ‎ ‎ ‎ ‎ to ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎│ ‎ ‎ weight ‎ ║\n' +
         '╠════════╪═══════╪══════╣\n' +
         '║‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎‎ ‎foo‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‏‎‎│‏‏‎ ‏‏‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎ ‎‎‏‏‎ ‎bar‏‏‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎ ‎‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎4‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‎║\n' +
         '╟────────┼───────┼──────╢\n' +
@@ -35,78 +35,197 @@
       required="required"
       enctype="multipart/form-data"
       @input="check_form()"
+      ref="file_input"
     ></b-form-file>
     <br />
     <small>
       Pon el cursor encima del botón anterior para ver el formato del .csv
     </small>
-    <br/>
-    <small class="error" v-if="error.length > 0">{{error}}</small>
-    <br/>
+    <br />
+
+    <b-container fluid class="bv-example-row">
+      <b-form-checkbox
+      class="content-item"
+        v-model="manually_select_columns"
+        name="check-button"
+        switch
+        v-bind:disabled="!(file && error.length === 0)"
+      >
+        Seleccionar columnas manualmente (nodo_origen, nodo_destino, peso)
+      </b-form-checkbox>
+      <b-row align-h="center">
+        <b-form-group
+          class="mx-4"
+          id="content-item"
+          label="Nodo origen"
+          v-if="manually_select_columns"
+          v-slot="{ ariaDescribedby }"
+        >
+          <b-form-radio-group
+            id="source-node"
+            v-model="source"
+            :options="columns"
+            :aria-describedby="ariaDescribedby"
+            button-variant="outline-primary"
+            size="sm"
+            name="radio-btn-outline"
+            buttons
+            stacked
+          ></b-form-radio-group>
+        </b-form-group>
+
+        <b-form-group
+          id="content-item"
+          class="mx-4"
+          label="Nodo destino"
+          v-if="manually_select_columns"
+          v-slot="{ ariaDescribedby }"
+        >
+          <b-form-radio-group
+            id="target-node"
+            v-model="target"
+            :options="columns"
+            :aria-describedby="ariaDescribedby"
+            button-variant="outline-success"
+            size="sm"
+            name="radio-btn-outline"
+            buttons
+            stacked
+          ></b-form-radio-group>
+        </b-form-group>
+        <b-form-group
+          id="content-item"
+          class="mx-4"
+          label="Peso arista"
+          v-if="manually_select_columns"
+          v-slot="{ ariaDescribedby }"
+        >
+          <b-form-radio-group
+            id="weight"
+            v-model="weight"
+            :options="columns"
+            :aria-describedby="ariaDescribedby"
+            button-variant="outline-danger"
+            size="sm"
+            name="radio-btn-outline"
+            buttons
+            stacked
+          ></b-form-radio-group>
+        </b-form-group>
+      </b-row>
+    </b-container>
+    <p>
+      <small class="error" v-if="error.length > 0">{{ error }}</small>
+    </p>
     <b-button
       type="submit"
       variant="primary"
       class="w-25 content-item submit-button"
-      v-bind:disabled="!(file && error.length===0)"
+      v-bind:disabled="!(file && error.length === 0)"
       value="Visualizar"
       v-on:click="submit_file(file)"
       v-if="!submitted"
     >
       Visualizar
     </b-button>
-    <b-spinner v-else variant="primary" label="Spinning" id="spinner"></b-spinner>
-    
+    <b-spinner
+      v-else
+      variant="primary"
+      label="Spinning"
+      id="spinner"
+    ></b-spinner>
   </div>
 </template>
 
 <script>
-import { store } from "../main.js"
+import { store } from "../main.js";
 export default {
   name: "InputCSV",
-  props: ['selectedMethod'],
+  props: ["selectedMethod"],
   data() {
     return {
       file: null,
       method: this.selectedMethod,
+      manually_select_columns: false,
+      columns: [], //options
+      source: null,
+      target: null,
+      weight: null,
       error: "",
       submitted: false,
     };
   },
   methods: {
-    check_form(){
-      this.error = ""
-      if (this.file){
-        if (this.file['type'] != "text/csv"){
-          this.error = "El formato debe ser .csv"
+    check_form() {
+      //Update error
+      this.error = "";
+      this.columns = [];
+      if (this.file) {
+        if (this.file["type"] != "text/csv") {
+          this.error = "El archivo debe tener extensión .csv";
+        } else if (this.file["type"] === "text/csv") {
+          const reader = new FileReader();
+          reader.readAsText(this.file);
+          let self = this;
+          //reader.onload = e => console.log(e.target.result.split('\n')[0].split(','))
+          reader.onload = (e) => {
+            e.target.result
+              .split("\n")[0]
+              .split(",")
+              .forEach(function (column) {
+                var column_text = column.toString().replaceAll('"','')
+                self.columns.push({
+                  text: column_text,
+                  value: column_text,
+                  disabled: false,
+                });
+              });
+          };
         }
       }
     },
 
-    async submit_file(){
-      this.submitted = true
-      const axios = require('axios')
-      let formData = new FormData()
-      formData.append('file', this.file)
-      await axios.post('http://localhost:5000/community-detection/'+this.method,
-        formData,
-        {
-          headers:{
-            'Content-Type':'multipart/form-data'
+    async submit_file() {
+      this.submitted = true;
+      const axios = require("axios");
+      let formData = new FormData();
+      formData.append("file", this.file);
+      if (this.manually_select_columns){
+        var columns = JSON.stringify({"source": this.source,
+                                    "target": this.target,
+                                    "weight": this.weight})
+        const columns_blob = new Blob([columns], {
+          type: 'application/json'
+        });
+        formData.append("columns", columns_blob);
+      }
+      await axios
+        .post(
+          "http://localhost:5000/community-detection/" + this.method,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           }
-        }
-        ).then(response =>{
-          if (response.status === 200){
-            store.setLastComputedExperiment(response.data)        
-            this.$router.push('/community-detection/' + this.method + '/experiment')
-          }        
-        })
-        .catch(error =>{
-          console.log(error.response)
-          if (error.response.status == 500){
-            this.error='Formato erróneo'
-            this.submitted=false
+        )
+        .then((response) => {
+          if (response.status === 200) {
+            store.setLastComputedExperiment(response.data);
+            this.$router.push(
+              "/community-detection/" + this.method + "/experiment"
+            );
           }
         })
+        .catch((error) => {
+          console.log(error.response);
+          if (error.response.status == 500) {
+            this.error =
+              "Formato erróneo. Por favor, introduce un .csv con las columnas en orden: \n " +
+              "from, to, weight";
+            this.submitted = false;
+          }
+        });
     },
 
     bytesToSize(bytes) {
@@ -147,27 +266,26 @@ input[type="file"] {
   text-decoration: none;
 }
 
-.submit-button{
+.submit-button {
   font-size: large;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
-.submit-button:disabled{
+.submit-button:disabled {
   background-color: #c0c2c8;
   border: 0.5px solid #ccc;
-  cursor:not-allowed;
-;
+  cursor: not-allowed;
 }
 
 .file_selected {
   background-color: #050517;
   color: aliceblue;
 }
-.error{
-  color:red;
+.error {
+  color: red;
 }
 
-#spinner{
- width: 3rem; 
- height: 3rem;
+#spinner {
+  width: 3rem;
+  height: 3rem;
 }
 </style>

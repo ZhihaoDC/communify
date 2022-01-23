@@ -1,6 +1,5 @@
 <template>
-  <b-container fluid="md">
-    <div id="home">
+  <b-container fluid>
       <h1 id="header"> Bienvenido a network.ly </h1>
       <h4> Herramienta de visualización de grafos y de detección de comunidades. </h4>
       <router-link to="/about" id="about-link">Aprende más sobre la detección de comunidades</router-link>
@@ -41,7 +40,6 @@
           </b-card>
         </b-card-group>
       </div>
-    </div>
   </b-container>
 </template>
 
