@@ -14,4 +14,4 @@ def visualize_network():
 
         return jsonify({'graph': graph_json, 'algorithm':'network-visualization'}), 200
     except:
-        return jsonify({"errorMessage": "Invalid .csv format"}), 500
+        return jsonify({"errorMessage": "Invalid .csv format"}), 400

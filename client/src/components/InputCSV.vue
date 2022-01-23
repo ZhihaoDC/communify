@@ -43,7 +43,7 @@
     </small>
     <br />
 
-    <b-container fluid class="bv-example-row">
+    <b-container fluid class="bv-example-row" v-if="!submitted">
       <b-form-checkbox
       class="content-item"
         v-model="manually_select_columns"
@@ -133,6 +133,7 @@
       variant="primary"
       label="Spinning"
       id="spinner"
+      class="m-5"
     ></b-spinner>
   </div>
 </template>
