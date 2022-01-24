@@ -64,6 +64,7 @@
           <b-form-radio-group
             id="source-node"
             v-model="source"
+            v-on:change="disable(source)"
             :options="columns"
             :aria-describedby="ariaDescribedby"
             button-variant="outline-primary"
@@ -84,6 +85,7 @@
           <b-form-radio-group
             id="target-node"
             v-model="target"
+            v-on:change="disable(target)"
             :options="columns"
             :aria-describedby="ariaDescribedby"
             button-variant="outline-success"
@@ -103,6 +105,7 @@
           <b-form-radio-group
             id="weight"
             v-model="weight"
+            v-on:change="disable(weight)"
             :options="columns"
             :aria-describedby="ariaDescribedby"
             button-variant="outline-danger"
@@ -185,7 +188,10 @@ export default {
         }
       }
     },
-
+    disable(element){
+      var clicked_column = this.columns.find(clicked_column => clicked_column.text === element).disabled
+      this.columns.find(clicked_column => clicked_column.text === element).disabled = !clicked_column //switch between true or false
+    },
     async submit_file() {
       this.submitted = true;
       const axios = require("axios");

@@ -1,4 +1,4 @@
-from pandas import DataFrame, Series, read_csv
+from pandas import DataFrame, Series, read_csv, isna
 from json import loads
 from networkx import from_pandas_edgelist, get_node_attributes
 from networkx.relabel import convert_node_labels_to_integers
@@ -19,25 +19,36 @@ def preprocess_network(file, input_columns=None):
     possible_weights = ['weight', 'weights', 'value', 'values']
     #Generate graph
     if input_columns:
-        graph = from_pandas_edgelist(edge_list, 
-                                        source=str(input_columns['source']).lower(), 
-                                        target=str(input_columns['target']).lower(), 
-                                        edge_attr=str(input_columns['weight']).lower())
-        print('Using weights inserted by user')
-    elif any(column in possible_weights for column in edge_list.columns):
-        is_desired_column_name =  [column in possible_weights for column in edge_list.columns]
-        desired_column_name_index = is_desired_column_name.index(True)
-        graph = from_pandas_edgelist(edge_list, 
-                                        source=edge_list.columns[0], 
-                                        target=edge_list.columns[1],
-                                        edge_attr=edge_list.columns[desired_column_name_index])
+        if all(not isna(column) for column in input_columns.values()):
+            print(all(not isna(column) for column in input_columns.values()))
+            print('Using weights inserted by user')
+            graph = from_pandas_edgelist(edge_list, 
+                                            source=str(input_columns['source']).lower(), 
+                                            target=str(input_columns['target']).lower(), 
+                                            edge_attr=str(input_columns['weight']).lower())
+            
+        elif isna(input_columns['weight']) and (not isna(input_columns['source'])) and (not isna(input_columns['target'])):
+            graph = from_pandas_edgelist(edge_list, 
+                                            source=str(input_columns['source']).lower(), 
+                                            target=str(input_columns['target']).lower())
+            print("No weights in input")        
+        else: #input error
+            raise ValueError("Inserted values do not meet requierements")
         
-        print('Found weight-alike column in ', desired_column_name_index)
+    elif any(column in possible_weights for column in edge_list.columns): #search for column names similar to 'weight' or 'value'
+            is_desired_column_name =  [column in possible_weights for column in edge_list.columns]
+            desired_column_name_index = is_desired_column_name.index(True)
+            graph = from_pandas_edgelist(edge_list, 
+                                            source=edge_list.columns[0], 
+                                            target=edge_list.columns[1],
+                                            edge_attr=edge_list.columns[desired_column_name_index])
+        
+            print('Found weight-alike column in ', desired_column_name_index)
     else:
+        print('No weights found')
         graph = from_pandas_edgelist(edge_list, 
                                         source=edge_list.columns[0], 
                                         target=edge_list.columns[1])
-        print('No weights found')
 
     graph = convert_node_labels_to_integers(graph, first_label=0, label_attribute='name')
 

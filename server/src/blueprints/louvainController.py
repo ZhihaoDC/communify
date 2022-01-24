@@ -21,7 +21,6 @@ def apply_louvain():
             columns_file = request.files['columns']
             columns_bytes = columns_file.read().decode('utf8').replace("'",'"')
             columns_json= json.loads(columns_bytes)
-            print(columns_json)
         else:
             columns_json= None
         graph = preprocess.preprocess_network(file, columns_json)
