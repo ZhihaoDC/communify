@@ -3,7 +3,7 @@
       <h1 id="header"> Bienvenido a network.ly </h1>
       <h4> Herramienta de visualización de grafos y de detección de comunidades. </h4>
       <router-link to="/about" id="about-link">Aprende más sobre la detección de comunidades</router-link>
-      
+      <br/>
       <div class="tools">
         <b-card-group deck>
           <b-card

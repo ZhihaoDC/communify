@@ -1,8 +1,10 @@
 <template>
-  <b-container fluid>
+  <b-container fluid-width> 
+    <h2 id="header" v-if='((experiment.algorithm === "Louvain") | (experiment.algorithm === "Girvan-Newman"))'> Algoritmo de {{ experiment.algorithm }} </h2>
+    <h2 id="header" v-else> Visualización </h2>
     <div class="parent_container">
-      <h2 id="title"> Experimento: algoritmo de {{ experiment.algorithm }}</h2>
-      <div id="container" ref="cy"></div>
+      <div id="container" ref="cy">
+      </div>
     </div>
   </b-container>
 </template>
@@ -20,6 +22,7 @@ export default {
     };
   },
   mounted() {
+    console.log(this.experiment)
     let self = this
     cytoscape.use(fcose);
     let cy = cytoscape({
@@ -191,14 +194,11 @@ export default {
 .parent_container {
   text-align: left;
 }
-.options {
-  margin-left: auto;
-  margin-right: auto;
-}
 
 #container {
   position: relative;
-  height: 30em;
+  height: 100%;
+  min-height: 80vh;
   width: 100%;
 
   border-radius: 10px;

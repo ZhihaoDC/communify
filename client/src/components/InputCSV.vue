@@ -162,9 +162,9 @@ export default {
       this.error = "";
       this.columns = [];
       if (this.file) {
-        if (this.file["type"] != "text/csv") {
+        if ((this.file["type"] != "text/csv") && (this.file["type"] != 'application/vnd.ms-excel')) {
           this.error = "El archivo debe tener extensión .csv";
-        } else if (this.file["type"] === "text/csv") {
+        } else if ((this.file["type"] === "text/csv") | (this.file["type"] === 'application/vnd.ms-excel')) {
           const reader = new FileReader();
           reader.readAsText(this.file);
           let self = this;
