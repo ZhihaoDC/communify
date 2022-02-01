@@ -1,9 +1,13 @@
 .DS_Store
 node_modules
 /dist
+**__pycache__
+/server/env
+/server/Lib
 
 
 # local env files
+.venv/
 .env.local
 .env.*.local
 

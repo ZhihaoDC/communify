@@ -1,6 +1,9 @@
-# communify
+![build](https://github.com/ZhihaoDC/prueba/actions/workflows/test-backend.yml/badge.svg)
 
-## Project setup
+
+# network.ly
+
+## Project frontend setup
 ```
 npm install
 ```
@@ -22,3 +25,9 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Project backend setup 
+```
+cd network.ly/server/src
+flask run
+```
