@@ -1,0 +1,13 @@
+version: "3"
+services:
+  backend:
+    image: crazyhao/networkly-server
+    container_name: networkly-backend
+    ports:  
+      - 5000:5000
+
+  frontend:
+    image: crazyhao/networkly-client
+    container_name: networkly-frontend
+    ports:
+      - 8080:8080 

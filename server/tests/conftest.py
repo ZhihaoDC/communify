@@ -1,5 +1,5 @@
 import pytest
-from src.app import create_app
+from src import create_app
 from io import StringIO
 from csv import writer, QUOTE_NONNUMERIC
 
