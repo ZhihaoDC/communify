@@ -15,10 +15,10 @@ RUN npm install
 # copy everything to current working directory 
 COPY ./client /app/client
 
-#listen on port 8080
-EXPOSE 8080
+#listen on port 8888
+EXPOSE 8888
 
 WORKDIR /app/client
 
 # run app
-CMD ["npm", "run", "serve"]
+RUN ["npm", "run", "serve"] 
