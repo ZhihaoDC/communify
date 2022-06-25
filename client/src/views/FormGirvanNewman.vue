@@ -18,7 +18,7 @@
 import InputCSV from "@/components/InputCSV.vue";
 export default {
   components: { InputCSV },
-  name: "ExpGirvanNewman",
+  name: "GirvanNewman",
 };
 </script>
 

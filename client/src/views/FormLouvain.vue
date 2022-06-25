@@ -17,7 +17,7 @@
 import InputCSV from "@/components/InputCSV.vue";
 export default {
   components: { InputCSV },
-  name: "ExpLouvain",
+  name: "FormLouvain",
 };
 </script>
 

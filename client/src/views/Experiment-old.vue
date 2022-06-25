@@ -1,8 +1,8 @@
 <template>
-  <b-container fluid-width> 
-    <h2 id="header" v-if='((experiment.algorithm === "Louvain") | (experiment.algorithm === "Girvan-Newman"))'> Algoritmo de {{ experiment.algorithm }} </h2>
-    <h2 id="header" v-else> Visualización </h2>
+  <b-container fluid> 
     <div class="parent_container">
+      <h2 id="header" v-if='((experiment.algorithm === "Louvain") | (experiment.algorithm === "Girvan-Newman"))'> Algoritmo de {{ experiment.algorithm }} </h2>
+      <h2 id="header" v-else> Visualización </h2>
       <div id="container" ref="cy">
       </div>
     </div>
@@ -15,7 +15,7 @@ import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
 
 export default {
-  name: "ExpVisualization",
+  name: "Experiment-old",
   data: function () {
     return {
       experiment: store.state.lastComputedExperiment,
@@ -23,6 +23,7 @@ export default {
   },
   mounted() {
     console.log(this.experiment)
+    console.log("Hola 2!")
     let self = this
     cytoscape.use(fcose);
     let cy = cytoscape({
@@ -195,11 +196,24 @@ export default {
   text-align: left;
 }
 
+#no-margins {
+  position: fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  margin: 0;
+  padding: 0;
+  min-height:100vh;
+  min-width:100vh;
+}
+
 #container {
   position: relative;
   height: 100%;
   min-height: 80vh;
-  width: 100%;
+  min-width: 70%;
+  max-width: 70vw;
 
   border-radius: 10px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
@@ -207,7 +221,7 @@ export default {
 }
 
 #title{
-  margin-top:0.5em;
-
+  position:absolute;  
+  text-align: center;
 }
 </style>

@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import ExpLouvain from '../views/ExpLouvain.vue'
-import ExpVisualization from '../views/ExpVisualization'
+import FormLouvain from '../views/FormLouvain.vue'
+import Experiment from '../views/Experiment.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -13,23 +13,23 @@ const routes = [
   },
   {
     path: '/community-detection/louvain',
-    name: 'ExpLouvain',
-    component: ExpLouvain
+    name: 'FormLouvain',
+    component: FormLouvain
   },
   {
     path: '/community-detection/girvan-newman',
-    name: 'ExpGirvanNewman',
-    component: () => import('../views/ExpGirvanNewman.vue')
+    name: 'FormGirvanNewman',
+    component: () => import('../views/FormGirvanNewman.vue')
+  },
+  {
+    path: '/graph-visualization',
+    name: 'FormVisualization',
+    component: () => import( '../views/FormVisualization.vue')
   },
   {
     path: '/community-detection/:method/experiment',
-    name: 'ExpVisualization',
-    component: ExpVisualization
-  },
-  {
-    path: '/network-visualization',
-    name: 'NetworkVisualization',
-    component: () => import( '../views/NetworkVisualization.vue')
+    name: 'Experiment',
+    component: Experiment
   },
   {
     path: '/about',

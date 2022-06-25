@@ -16,7 +16,7 @@
 import InputCSV from "@/components/InputCSV.vue";
 export default {
   components: { InputCSV },
-  name: "NetworkVisualization",
+  name: "FormVisualization",
 };
 </script>
 
