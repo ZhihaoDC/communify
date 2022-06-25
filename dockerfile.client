@@ -9,16 +9,19 @@ WORKDIR /app
 # copy 'package.json' y 'package-lock.json' (if available)
 COPY package*.json ./
 
+ENV NODE_ENV=production
+
 # install project dependencies
-RUN npm install
+RUN npm install --production 
+#note: production flag reduces node_modules size
 
 # copy everything to current working directory 
 COPY ./client /app/client
 
-#listen on port 8888
-EXPOSE 8888
+#listen on port 8080
+EXPOSE 8080
 
 WORKDIR /app/client
 
 # run app
-RUN ["npm", "run", "serve"] 
+CMD ["npm", "run", "serve"] 

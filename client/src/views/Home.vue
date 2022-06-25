@@ -36,7 +36,7 @@
             <b-card-text>
               Representa un grafo, cambia los nodos de color y posición
             </b-card-text>
-            <b-button block to="/network-visualization" variant="primary" id="go">Ir</b-button>
+            <b-button block to="/graph-visualization" variant="primary" id="go">Ir</b-button>
           </b-card>
         </b-card-group>
       </div>

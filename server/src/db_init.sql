@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS USER_EXPERIMENTS;
 
 CREATE TABLE USER_EXPERIMENTS(
     user_id BIGINT(20) NOT NULL,
-    experiment_id BIGINT(20) NOT NULL,
+    experiment_id CHAR(32) NOT NULL,
     PRIMARY KEY (experiment_id),
     FOREIGN KEY (user_id) REFERENCES USERS(id)
 );
