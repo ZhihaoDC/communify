@@ -3,7 +3,7 @@ import json
 from pandas import read_csv
 from csv import writer, QUOTE_NONNUMERIC
 import networkx
-import src.blueprints.preprocess as preprocess
+import src.api.preprocess as preprocess
 
 
 def test_preprocess_network(csv_file):

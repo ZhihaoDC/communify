@@ -10,7 +10,7 @@ from matplotlib.colors import rgb2hex
 
 
 #Prepare file, return networkx graph
-def preprocess_network(file, input_columns=None):
+def file_to_network(file, input_columns=None):
     """
     Takes file contained in variable and returns a Networkx.Graph object with attributes
     either specified in input_columns or in the first two columns as (source, target).
@@ -57,7 +57,7 @@ def preprocess_network(file, input_columns=None):
 
 
 #Convert graph to json 
-def preprocess_json(graph, communities=None):
+def network_to_json(graph, communities=None):
     """
     Take Networkx.Graph object and set all possible attributes
 

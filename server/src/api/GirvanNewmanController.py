@@ -1,30 +1,38 @@
 from flask import request, Blueprint
 from flask.json import jsonify
-import src.blueprints.preprocess as preprocess
 import hashlib
+import json
+import src.api.preprocess as preprocess
+
 
 
 #Import custom module
-import src.scripts.girvan_newman as gn
+from src.community_detection.girvan_newman import girvan_newman_algorithm as gn
 
-girvanNewmanController = Blueprint('girvanNewmanController', __name__)
+GirvanNewmanController = Blueprint('GirvanNewmanController', __name__)
 
 #Main method
-@girvanNewmanController.route("/community-detection/girvan-newman", methods=['POST'])
+@GirvanNewmanController.route("/community-detection/girvan-newman", methods=['POST'])
 def apply_girvan_newman():
     try:
         file = request.files['file']
+        if (len(request.files) > 1) and ('columns' in request.files):
+            columns = request.files['columns'].read().decode('utf8').replace("'",'"')
+            columns_json= json.loads(columns)
+        else:
+            columns_json= None
 
         #Preprocess network from file
-        graph = preprocess.preprocess_network(file)
+        graph = preprocess.file_to_network(file, columns_json)
 
         #Apply girvan-newman method
         dendrogram, modularity = gn.Girvan_Newman_2004(graph)
         GN_communities = gn.dendrogram_to_community(dendrogram)
 
-        graph_json = preprocess.preprocess_json(graph, GN_communities)
+        graph_json = preprocess.network_to_json(graph, GN_communities)
 
         #Generate dataset hash identifier  
+        file.seek(0)
         md5_hash = hashlib.md5(file.read()).hexdigest() 
 
         return jsonify(

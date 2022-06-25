@@ -6,7 +6,7 @@
         Visualiza la red, cambia los nodos de posición, color y físicas.
       </h4>
       <div id="content">
-        <InputCSV selectedMethod="network-visualization"/>
+        <InputCSV selectedMethod="graph-visualization"/>
       </div>
     </div>
   </b-container>
