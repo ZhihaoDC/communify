@@ -11,6 +11,8 @@ services:
         MYSQL_DATABASE: Networkly
         MYSQL_USER: user
         MYSQL_PASSWORD: pwd12345
+        MYSQL_HOST: mysql_db
+        MYSQL_PORT: 3306
     volumes: 
         - ./server/src/:/docker-entrypoint-initdb.d
         - mysql_data:/var/lib/mysql

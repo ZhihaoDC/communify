@@ -5,9 +5,8 @@ import json
 import src.api.preprocess as preprocess
 
 
-
 #Import custom module
-from src.community_detection.girvan_newman import girvan_newman_algorithm as gn
+from src.community_detection import girvan_newman_algorithm as gn
 
 GirvanNewmanController = Blueprint('GirvanNewmanController', __name__)
 

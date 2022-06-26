@@ -1,6 +1,7 @@
+from . import app_config
 from flask import Flask
 from flask_cors import CORS
-from src.extensions import mysql
+from src.extensions.SQLAlchemy import db
 from src.api.LouvainController import LouvainController
 from src.api.GirvanNewmanController import GirvanNewmanController
 from src.api.GraphVisualizationController import GraphVisualizationController
@@ -16,13 +17,12 @@ def create_app():
     app.register_blueprint(GraphVisualizationController)
     app.register_blueprint(ExperimentsController)
 
-    app.config['MYSQL_HOST'] = 'localhost'
-    app.config['MYSQL_PORT'] = 3306
-    app.config['MYSQL_USER'] = 'user'
-    app.config['MYSQL_PASSWORD'] = 'pwd12345'
-    app.config['MYSQL_DB'] = 'Networkly'
-    
-    mysql.init_app(app)
+    app.config['SQLALCHEMY_DATABASE_URI'] = app_config.DATABASE_CONNECTION_URI
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.app_context().push()
+
+    db.init_app(app)
+    db.create_all()
 
     # enable CORS
     CORS(app, resources={r'/*': {'origins': '*'}})

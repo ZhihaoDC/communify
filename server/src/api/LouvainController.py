@@ -4,7 +4,7 @@ import json
 import hashlib
 
 #import custom modules
-from src.community_detection.louvain import louvain_algorithm as louvain
+from src.community_detection import louvain_algorithm as louvain
 import src.api.preprocess as preprocess 
 from networkx.algorithms.community.quality import modularity as nx_modularity
 
