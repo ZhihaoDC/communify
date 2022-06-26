@@ -13,7 +13,7 @@ def test_preprocess_network(csv_file):
     THEN function preprocess_network returns formatted networkx.Graph Object
     """
 
-    result = preprocess.preprocess_network(csv_file)
+    result = preprocess.file_to_network(csv_file)
 
     assert isinstance(result, networkx.Graph)
     assert not networkx.classes.function.is_empty(result)
@@ -36,11 +36,11 @@ def test_preprocess_json(csv_file):
     THEN we format the Graph to have the desired attribute names
     AND we return a json of the Graph
     """
-    graph = preprocess.preprocess_network(csv_file)
+    graph = preprocess.file_to_network(csv_file)
 
     communities = {0:1, 1:1, 2:2, 3:1, 4:3} #mock communities
 
-    result = preprocess.preprocess_json(graph, communities)
+    result = preprocess.network_to_json(graph, communities)
 
     assert isinstance(result, dict)
     assert all(['name' in node['data'] for node in result['elements']['nodes']])
@@ -56,9 +56,9 @@ def test_preprocess_json_visualization(csv_file):
     THEN we format the Graph to have the desired attribute names
     AND we return a json of the Graph
     """
-    graph = preprocess.preprocess_network(csv_file)
+    graph = preprocess.file_to_network(csv_file)
 
-    result = preprocess.preprocess_json(graph)
+    result = preprocess.network_to_json(graph)
 
     assert isinstance(result, dict)
     assert all(['name' in node['data'] for node in result['elements']['nodes']])

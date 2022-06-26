@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask.json import jsonify
-from src.models import UserExperiment
+from src.models.models import UserExperiment
 from src.services import services
 
 ExperimentsController = Blueprint('ExperimentsController', __name__)

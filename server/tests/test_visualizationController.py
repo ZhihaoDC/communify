@@ -20,7 +20,7 @@ def test_visualize_network(client):
     data = dict()
     data['file'] = (mock_csv, 'edge_list.csv')
 
-    rv = client.post('/community-detection/network-visualization',
+    rv = client.post('/community-detection/graph-visualization',
                     data= data,
                     content_type='multipart/form-data')
 

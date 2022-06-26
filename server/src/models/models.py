@@ -9,7 +9,7 @@ class UserExperiment(db.Model):
 
 class User(db.Model):
  __tablename__ = 'USERS'
- id = db.Column(db.Integer, auto_increment=True, primary_key=True)
+ id = db.Column(db.Integer, autoincrement=True, primary_key=True)
  username = db.Column(db.String(25), nullable=False)
  email = db.Column(db.String(50), nullable=False)
  firstname = db.Column(db.String(50), nullable=False)
