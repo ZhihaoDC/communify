@@ -27,7 +27,7 @@ export default {
     async submit_experiment() {
       this.submitted = false;
       const axios = require("axios");
-      await axios.post('http://localhost:5000/experiment', JSON.stringify(this.experiment), {
+      await axios.post('http://localhost:5000/save-experiment', JSON.stringify(this.experiment), {
         headers: {
           'Content-Type': 'application/json'
         }

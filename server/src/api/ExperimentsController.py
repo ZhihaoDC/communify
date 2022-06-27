@@ -1,38 +1,35 @@
 from flask import Blueprint, request
-from flask.json import jsonify
+from flask import json
 from src.models.models import UserExperiment
-from src.services import services
+from src.services import experiment_service
 
 ExperimentsController = Blueprint('ExperimentsController', __name__)
 
-@ExperimentsController.route('/experiment', methods=['POST'])
+
+@ExperimentsController.route('/save-experiment', methods=['POST'])
 def save_experiment():
     request_json = request.get_json()
     # if all(keys in request_json for keys in ['user_id', 'dataset_hash']):
     if 'dataset_hash' in request_json:
-        services.add_instance(UserExperiment, 
-                            user_id=1,
-                            experiment_id=request_json['dataset_hash']
-                            )
-        return jsonify({"successMessage": "File saved", 
-                        'Access-Control-Allow-Origin': '*'}), 200
+        experiment_service.add_instance(UserExperiment,
+                                        user_id=1,
+                                        experiment_id=request_json['dataset_hash']
+                                        )
+        return json.jsonify({"successMessage": "File saved",
+                             'Access-Control-Allow-Origin': '*'}), 200
     else:
-        return jsonify({"errorMessage": "Invalid .csv format"}), 400
+        return json.jsonify({"errorMessage": "Invalid .csv format"}), 400
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+@ExperimentsController.route('/get-experiments/<user_id>', methods=['GET'])
+def get_experiments(user_id):
+    data = experiment_service.get_all_by_user_id(
+                                                    UserExperiment,
+                                                    user_id=user_id
+                                                )
+    print(dict({k:v for k,v in data}))
+    return json.jsonify({'status': 'success',
+                        'experiments': data}), 200
 
 
 # @ExperimentsController.route('/save-experiment', methods=['POST'])
@@ -50,7 +47,7 @@ def save_experiment():
 
 #     db.connection.commit()
 
-#     return jsonify({"successMessage": "File saved", 
+#     return jsonify({"successMessage": "File saved",
 #                     'Access-Control-Allow-Origin': '*'}), 200
 #     # except:
 #     #     return jsonify({"errorMessage": "Invalid .csv format"}), 400

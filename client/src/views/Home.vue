@@ -40,14 +40,17 @@
           </b-card>
         </b-card-group>
       </div>
+      <Experiments>
+
+      </Experiments>
   </b-container>
 </template>
 
 <script>
-// @ is an alias to /src
-
+import Experiments from "@/components/Experiments.vue"
 export default {
-  name: 'Home',
+  components : {Experiments},
+  name: 'Home'
 }
 </script>
 

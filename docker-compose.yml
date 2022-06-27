@@ -61,6 +61,11 @@ services:
     ports:  
       - 5000:5000
     environment:
+      - MYSQL_DATABASE=Networkly
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=pwd12345
+      - MYSQL_HOST=mysql_db
+      - MYSQL_PORT=3306
       - FLASK_ENV=development
       - WAIT_HOSTS=mysql_db:3306,adminer:8543,redis_db:6379
       - WAIT_HOSTS_TIMEOUT=300

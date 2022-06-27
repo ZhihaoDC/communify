@@ -5,6 +5,10 @@ def get_all(model):
     data = model.query.all()
     return data
 
+def get_all_by_id(model, id):
+    data = model.query.get(id)
+    return data
+
 
 def add_instance(model, **kwargs):
     instance = model(**kwargs)
