@@ -28,20 +28,6 @@ services:
         - 8543:8080
 
 
-  # Redis
-  redis_db:
-    image: redis
-    container_name: redis_db
-    restart: always
-    environment:
-        - ALLOW_EMPTY_PASSWORD=yes
-        #- REDISCLI_AUTH=contraseña
-    volumes: 
-        - mysql_data:/data
-    ports:
-        - 6379:6379
-
-
   # Backend
   backend:
     #image: crazyhao/networkly-server
@@ -52,7 +38,6 @@ services:
     depends_on:
       - mysql_db
       - adminer
-      - redis_db
 
     #enable live reload on development
     volumes:
@@ -67,7 +52,7 @@ services:
       - MYSQL_HOST=mysql_db
       - MYSQL_PORT=3306
       - FLASK_ENV=development
-      - WAIT_HOSTS=mysql_db:3306,adminer:8543,redis_db:6379
+      - WAIT_HOSTS=mysql_db:3306,adminer:8543
       - WAIT_HOSTS_TIMEOUT=300
       - WAIT_SLEEP_INTERVAL=30
       - WAIT_HOST_CONNECT_TIMEOUT=30
