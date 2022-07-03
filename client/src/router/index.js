@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import FormLouvain from '../views/FormLouvain.vue'
 import Experiment from '../views/Experiment.vue'
+import UserExperiments from '../views/UserExperiments.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -30,6 +31,11 @@ const routes = [
     path: '/community-detection/:method/experiment',
     name: 'Experiment',
     component: Experiment
+  },
+  {
+    path: '/user-experiments',
+    name: 'UserExperiments',
+    component: UserExperiments
   },
   {
     path: '/about',

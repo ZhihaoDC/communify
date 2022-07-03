@@ -1,24 +1,18 @@
-<template>
-  <b-container fluid> 
-    <div class="parent_container">
-      <div id="container" ref="cy">
-      </div>
+<template> 
+  <div class="parent_container">
+    <div id="container" ref="cy">
     </div>
-  </b-container>
+  </div>
 </template>
 
 <script>
-import { store } from "../main.js";
+// import { store } from "../main.js";
 import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
 
 export default {
   name: "PlotNetwork",
-  data: function () {
-    return {
-      experiment: store.state.lastComputedExperiment,
-    };
-  },
+  props:['experiment'],
   mounted() {
     let self = this
     cytoscape.use(fcose);
@@ -58,6 +52,7 @@ export default {
             width: 0.5,
             "line-color": function(edge){
               if ((self.experiment.algorithm === "Louvain") | (self.experiment.algorithm==="Girvan-Newman")){
+                //take the color of highest degree node ('source' or 'target' node)
                 if (cy.$id(edge.data().source).data().degree > cy.$id(edge.data().target).data().degree){
                   return cy.$id(edge.data().source).data().background_color
                 }else{
@@ -172,8 +167,18 @@ export default {
       relativePlacementConstraint: undefined,
 
       /* layout event callbacks */
-      ready: () => {}, // on layoutready
+      ready: function() {
+        //store json into
+        const cy_json = cy.json(); // take json from cytoscape
+        self.experiment["network_json"] = cy_json["elements"]
+
+        //store thumbnail
+        const scale = 0.2
+        const thumbnail = cy.png(scale)
+        self.experiment["thumbnail"] = thumbnail
+      }, // on layoutready
       stop: function () { // on layoutstop
+        //set edges visible only when animation has stopped (for performance enhancements) 
         cy.style().selector("edge").style("visibility", "visible").update();
       },
     };
@@ -182,7 +187,22 @@ export default {
     layout.run();
     this.cy = cy;
 
+
     cy.animated();
+
+
+    // cy.ready(function() {
+    //   //store json into experiment object
+    //   const cy_json = cy.json(); // take json from cytoscape
+    //   self.experiment["network_json"] = cy_json["elements"]
+
+    //   //store thumbnail
+    //   const scale = 0.2
+    //   const thumbnail = cy.png(scale)
+    //   self.experiment["thumbnail"] = thumbnail
+    // });
+
+
   },
 };
 </script>

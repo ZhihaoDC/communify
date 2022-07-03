@@ -13,7 +13,8 @@
               >Método de Girvan-Newman</b-dropdown-item
             >
           </b-nav-item-dropdown>
-          <b-nav-item to="/network-visualization" align="right"> Visualización </b-nav-item>
+          <b-nav-item to="/graph-visualization" align="right"> Visualización </b-nav-item>
+          <b-nav-item to="/user-experiments"> Experiments </b-nav-item>
           <b-nav-item to="/about" align="right"> About </b-nav-item>
         </b-navbar-nav>
       </b-collapse>
