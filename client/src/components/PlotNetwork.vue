@@ -69,7 +69,7 @@ export default {
       hideEdgesOnViewport: true,
       wheelSensitivity: 0.7,
     });
-    cy.json(this.experiment.graph);
+    cy.json(this.experiment.graph); //read graph from json
     cy.zoom({
       level: 10,
     });
@@ -170,11 +170,12 @@ export default {
       ready: function() {
         //store json into
         const cy_json = cy.json(); // take json from cytoscape
-        self.experiment["network_json"] = cy_json["elements"]
+        self.experiment["graph"] = cy_json //update experiment info
 
         //store thumbnail
-        const scale = 0.2
-        const thumbnail = cy.png(scale)
+        const options={'scale': 0.2,
+                      'output':'blob'}
+        const thumbnail = cy.png(options)
         self.experiment["thumbnail"] = thumbnail
       }, // on layoutready
       stop: function () { // on layoutstop

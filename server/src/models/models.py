@@ -8,11 +8,12 @@ class UserExperiment(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey("USERS.id"))
     experiment_id = db.Column(db.String(32), primary_key=True)
-    creation_date = db.Column(db.Date, server_default=func.now(), nullable=False)
+    creation_date = db.Column(db.Date, default=db.func.current_timestamp(), nullable=False)
     category = db.Column(db.String(50))
     description = db.Column(db.String(300))
     network_json = db.Column(db.JSON, nullable=False)
     metrics = db.Column(db.JSON)
+    thumbnail = db.Column(db.BLOB)
     
     user = db.relationship('User')
 

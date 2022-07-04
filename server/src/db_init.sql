@@ -31,6 +31,7 @@ CREATE TABLE USER_EXPERIMENTS(
     description VARCHAR(300),
     network_json JSON NOT NULL,
     metrics JSON,
+    thumbnail BLOB,
     PRIMARY KEY (experiment_id),
     FOREIGN KEY (user_id) REFERENCES USERS(id)
 );

@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from flask import json
 from src.models.models import UserExperiment
 from src.services import experiment_service
+import base64
 
 ExperimentsController = Blueprint('ExperimentsController', __name__)
 
@@ -13,7 +14,12 @@ def save_experiment():
     if 'dataset_hash' in request_json:
         experiment_service.add_instance(UserExperiment,
                                         user_id=1,
-                                        experiment_id=request_json['dataset_hash']
+                                        experiment_id=request_json['dataset_hash'],
+                                        category=request_json['algorithm'],
+                                        metrics=request_json['metrics'],
+                                        network_json=request_json['graph'],
+                                        thumbnail=request_json['thumbnail'],
+                                        description=bytes("prueba", encoding='utf-8')
                                         )
         return json.jsonify({"successMessage": "File saved",
                              'Access-Control-Allow-Origin': '*'}), 200
@@ -24,10 +30,10 @@ def save_experiment():
 @ExperimentsController.route('/get-experiments/<user_id>', methods=['GET'])
 def get_experiments(user_id):
     data = experiment_service.get_all_by_user_id(
-                                                    UserExperiment,
-                                                    user_id=user_id
-                                                )
-    print(dict({k:v for k,v in data}))
+        UserExperiment,
+        user_id=user_id
+    )
+    print(dict({k: v for k, v in data}))
     return json.jsonify({'status': 'success',
                         'experiments': data}), 200
 

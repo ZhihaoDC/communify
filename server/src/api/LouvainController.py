@@ -39,7 +39,7 @@ def apply_louvain():
         return jsonify({    
                         'graph': graph_json,
                         'communities': last_community,
-                        'modularity': modularity,
+                        'metrics' : {'modularity': modularity},
                         'algorithm': 'Louvain',
                         'dataset_hash': md5_hash
                     }), 200
