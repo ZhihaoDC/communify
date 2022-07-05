@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import FormLouvain from '../views/FormLouvain.vue'
-import Experiment from '../views/Experiment.vue'
+import VisualizationExperiment from '../views/VisualizationExperiment.vue'
 import UserExperiments from '../views/UserExperiments.vue'
 Vue.use(VueRouter)
 
@@ -29,8 +29,8 @@ const routes = [
   },
   {
     path: '/community-detection/:method/experiment',
-    name: 'Experiment',
-    component: Experiment
+    name: 'VisualizationExperiment',
+    component: VisualizationExperiment
   },
   {
     path: '/user-experiments',

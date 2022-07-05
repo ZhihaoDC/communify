@@ -37,7 +37,7 @@ def apply_girvan_newman():
         return jsonify(
                         {'graph': graph_json,
                         'communities': GN_communities,
-                        'modularity': modularity,
+                        'metrics' : {'modularity': modularity},
                         'algorithm' : 'Girvan-Newman',
                         'dataset_hash': md5_hash
                         }), 200

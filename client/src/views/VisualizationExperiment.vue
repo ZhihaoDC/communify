@@ -12,7 +12,7 @@ import PlotNetwork from "@/components/PlotNetwork.vue";
 import PlotNetworkSave from "@/components/PlotNetworkSave.vue";
 import { store } from "../main.js";
 export default {
-    name: "Experiment",
+    name: "VisualizationExperiment",
     components: { PlotNetwork, PlotNetworkSave },
     data: function () {
         return {
