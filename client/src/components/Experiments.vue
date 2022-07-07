@@ -2,14 +2,16 @@
     <div>
         <b-card-group>
             <b-card v-for="(experiment, index) in experiments" :key="index" 
-                    :title="experiment.experiment_id"
-                    img-top>
-                <b-card-img :src="'http://localhost:5000/get-thumbnail/' + experiment.experiment_id"> </b-card-img>
+                    :title="experiment.category + ' ' + Date.parse(experiment.creation_date)"
+                    img-top
+                    img-height="50"
+                    img-width="50">
+                <b-card-img :src="'data:image/png;base64,' + experiment.thumbnail"> </b-card-img>
                 <b-card-text>
                     {{experiment.description}}
                 </b-card-text>
                 <template #footer>
-                    <small class="text-muted">Last updated 3 mins ago</small>
+                    <small class="text-muted">Created 3 mins ago</small>
                 </template>
             </b-card>
         </b-card-group>
@@ -22,13 +24,14 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios';  
 export default {
     name: "Experiments",
     data: function () {
         return {
             experiments: [],
-            user_id: 1
+            user_id: 1,
+            base64_thumbnail : ""
         };
     },
     computed: {

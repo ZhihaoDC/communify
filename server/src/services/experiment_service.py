@@ -1,5 +1,4 @@
 from src import db
-from src.services import experiment_thumbnail_service
 
 
 def get_all(model):
