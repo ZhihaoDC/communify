@@ -12,7 +12,7 @@ import fcose from "cytoscape-fcose";
 
 export default {
   name: "PlotNetwork",
-  props:['experiment'],
+  props:['experiment', 'ready'],
   mounted() {
     let self = this
     cytoscape.use(fcose);
@@ -168,19 +168,25 @@ export default {
 
       /* layout event callbacks */
       ready: function() {
-        //store json into
+        //store json into experiments
         const cy_json = cy.json(); // take json from cytoscape
         self.experiment["graph"] = cy_json //update experiment info
 
         //store thumbnail
         const options={'scale': 0.2,
-                      'output':'blob'}
+                      'output':'base64'}
         const thumbnail = cy.png(options)
         self.experiment["thumbnail"] = thumbnail
+
+        self.ready = true
+
+
       }, // on layoutready
       stop: function () { // on layoutstop
         //set edges visible only when animation has stopped (for performance enhancements) 
         cy.style().selector("edge").style("visibility", "visible").update();
+
+
       },
     };
     //Run layout

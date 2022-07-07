@@ -11,7 +11,7 @@
 
 export default {
   name: "PlotNetworkSave",
-  props:['experiment'],
+  props:['experiment', 'ready'],
   // data() {
   //   return {
   //     experiment: store.state.lastComputedExperiment,

@@ -2,8 +2,8 @@
 <b-container fluid> 
     <h2 id="header" v-if='((experiment.algorithm === "Louvain") | (experiment.algorithm === "Girvan-Newman"))'> Algoritmo de {{ experiment.algorithm }} </h2> 
     <h2 id="header" v-else> Visualización </h2> 
-    <PlotNetwork :experiment="this.experiment"></PlotNetwork>
-    <PlotNetworkSave :experiment="this.experiment"></PlotNetworkSave>
+    <PlotNetwork :experiment="this.experiment" :ready="this.ready"></PlotNetwork>
+    <PlotNetworkSave :experiment="this.experiment" :ready="this.ready"></PlotNetworkSave>
 </b-container>
 </template>
 
@@ -17,6 +17,7 @@ export default {
     data: function () {
         return {
                 experiment: store.state.lastComputedExperiment,
+                ready: false,
                 };
     },
     mounted(){

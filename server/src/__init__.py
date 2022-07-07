@@ -7,6 +7,7 @@ from src.api.LouvainController import LouvainController
 from src.api.GirvanNewmanController import GirvanNewmanController
 from src.api.GraphVisualizationController import GraphVisualizationController
 from src.api.ExperimentsController import ExperimentsController
+from src.api.ExperimentThumbnailController import ExperimentThumbnailController
 ############################################## APP #################################################
 
 
@@ -19,6 +20,7 @@ def create_app():
     app.register_blueprint(GirvanNewmanController)
     app.register_blueprint(GraphVisualizationController)
     app.register_blueprint(ExperimentsController)
+    app.register_blueprint(ExperimentThumbnailController)
 
     # Database config
     app.config['SQLALCHEMY_DATABASE_URI'] = app_config.DATABASE_CONNECTION_URI

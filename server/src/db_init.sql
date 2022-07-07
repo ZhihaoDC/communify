@@ -31,8 +31,21 @@ CREATE TABLE USER_EXPERIMENTS(
     description VARCHAR(300),
     network_json JSON NOT NULL,
     metrics JSON,
-    thumbnail BLOB,
     PRIMARY KEY (experiment_id),
-    FOREIGN KEY (user_id) REFERENCES USERS(id)
+    FOREIGN KEY (user_id) REFERENCES USERS(id) 
+    ON DELETE CASCADE
 );
+
+
+DROP TABLE IF EXISTS EXPERIMENT_THUMBNAIL;
+
+CREATE TABLE EXPERIMENT_THUMBNAIL(
+    id BIGINT(20) AUTO_INCREMENT,
+    experiment_id CHAR(32) NOT NULL,
+    thumbnail BLOB NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (experiment_id) REFERENCES USER_EXPERIMENTS(experiment_id) 
+    ON DELETE CASCADE
+);
+
 

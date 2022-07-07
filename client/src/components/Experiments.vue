@@ -1,9 +1,24 @@
 <template>
-      <div>
+    <div>
+        <b-card-group>
+            <b-card v-for="(experiment, index) in experiments" :key="index" 
+                    :title="experiment.experiment_id"
+                    img-top>
+                <b-card-img :src="'http://localhost:5000/get-thumbnail/' + experiment.experiment_id"> </b-card-img>
+                <b-card-text>
+                    {{experiment.description}}
+                </b-card-text>
+                <template #footer>
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                </template>
+            </b-card>
+        </b-card-group>
+        <!---
         <div v-for="(experiment, index) in experiments" :key="index">
           <span>{{experiment.user_id}} , {{experiment.experiment_id}}</span>
         </div>
-      </div>
+        -->
+    </div>
 </template>
 
 <script>
@@ -36,7 +51,7 @@ export default {
                     console.error(error)
                 })
 
-        }
+        },
     },
 
     mounted() {

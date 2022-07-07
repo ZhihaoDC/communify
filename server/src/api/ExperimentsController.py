@@ -1,8 +1,11 @@
 from flask import Blueprint, request
 from flask import json
 from src.models.models import UserExperiment
+from src.models.models import ExperimentThumbnail
 from src.services import experiment_service
+from src.services import experiment_thumbnail_service
 import base64
+from codecs import encode
 
 ExperimentsController = Blueprint('ExperimentsController', __name__)
 
@@ -18,9 +21,14 @@ def save_experiment():
                                         category=request_json['algorithm'],
                                         metrics=request_json['metrics'],
                                         network_json=request_json['graph'],
-                                        thumbnail=request_json['thumbnail'],
                                         description=bytes("prueba", encoding='utf-8')
                                         )
+                                        
+        experiment_thumbnail_service.save_experiment_thumbnail(ExperimentThumbnail,
+                                                                experiment_id=request_json['dataset_hash'],
+                                                                thumbnail=base64.decodebytes(encode(request_json['thumbnail']))
+                                                                )
+                                                                
         return json.jsonify({"successMessage": "File saved",
                              'Access-Control-Allow-Origin': '*'}), 200
     else:
@@ -33,7 +41,7 @@ def get_experiments(user_id):
         UserExperiment,
         user_id=user_id
     )
-    print(dict({k: v for k, v in data}))
+    # print(dict({k: v for k, v in data}))
     return json.jsonify({'status': 'success',
                         'experiments': data}), 200
 
