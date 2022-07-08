@@ -7,7 +7,7 @@ class Experiment(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey("USERS.id"))
     experiment_id = db.Column(db.String(32), primary_key=True)
-    creation_date = db.Column(db.Date, default=db.func.current_timestamp(), nullable=False)
+    creation_date = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
     network_json = db.Column(db.JSON, nullable=False)
     category = db.Column(db.String(50))
     description = db.Column(db.String(300))
@@ -22,7 +22,7 @@ class Experiment(db.Model):
         return {
             'user_id': self.user_id,
             'experiment_id': self.experiment_id,
-            'creation_date' : self.creation_date,
+            'creation_date' : self.creation_date.strftime("%Y/%m/%d, %H:%M"),
             'network_json' : self.network_json,
             'category' : self.category,
             'description' : self.description,

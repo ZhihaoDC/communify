@@ -2,7 +2,7 @@
     <div>
         <b-card-group>
             <b-card v-for="(experiment, index) in experiments" :key="index" 
-                    :title="experiment.category + ' ' + Date.parse(experiment.creation_date)"
+                    :title="experiment.category + ' ' + experiment.creation_date"
                     img-top
                     img-height="50"
                     img-width="50">
@@ -25,13 +25,13 @@
 
 <script>
 import axios from 'axios';  
+import moment from 'moment'
 export default {
     name: "Experiments",
     data: function () {
         return {
             experiments: [],
-            user_id: 1,
-            base64_thumbnail : ""
+            user_id: 1
         };
     },
     computed: {
@@ -48,6 +48,7 @@ export default {
             axios.get(url)
                 .then((response) => {
                     this.experiments = response.data.experiments
+                    
                     console.log(this.experiments)
                 })
                 .catch((error) => {
@@ -55,6 +56,9 @@ export default {
                 })
 
         },
+        parseDate(date){
+            return moment(String(date)).format('MM/DD/YYYY hh:mm')
+        }
     },
 
     mounted() {

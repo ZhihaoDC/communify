@@ -12,7 +12,7 @@ import fcose from "cytoscape-fcose";
 
 export default {
   name: "PlotNetwork",
-  props:['experiment', 'ready'],
+  props:['experiment', 'animation_finished'],
   mounted() {
     let self = this
     cytoscape.use(fcose);
@@ -168,25 +168,25 @@ export default {
 
       /* layout event callbacks */
       ready: function() {
+ 
+        
+      }, // on layoutready
+      stop: function () { // on layoutstop
+        //set edges visible only when animation has stopped (for performance enhancements) 
+        cy.style().selector("edge").style("visibility", "visible").update();
+
         //store json into experiments
         const cy_json = cy.json(); // take json from cytoscape
         self.experiment["graph"] = cy_json //update experiment info
 
+                
         //store thumbnail
         const options={'scale': 0.2,
                       'output':'base64'}
         const thumbnail = cy.png(options)
         self.experiment["thumbnail"] = thumbnail
 
-        self.ready = true
-
-
-      }, // on layoutready
-      stop: function () { // on layoutstop
-        //set edges visible only when animation has stopped (for performance enhancements) 
-        cy.style().selector("edge").style("visibility", "visible").update();
-
-
+        self.animation_finished = true
       },
     };
     //Run layout
@@ -194,21 +194,7 @@ export default {
     layout.run();
     this.cy = cy;
 
-
     cy.animated();
-
-
-    // cy.ready(function() {
-    //   //store json into experiment object
-    //   const cy_json = cy.json(); // take json from cytoscape
-    //   self.experiment["network_json"] = cy_json["elements"]
-
-    //   //store thumbnail
-    //   const scale = 0.2
-    //   const thumbnail = cy.png(scale)
-    //   self.experiment["thumbnail"] = thumbnail
-    // });
-
 
   },
 };

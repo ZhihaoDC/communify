@@ -3,6 +3,9 @@ GRANT ALL ON Networkly.* TO 'user'@'%';
 
 USE Networkly;
 
+--Global variables
+SET GLOBAL time_zone = 'Europe/Helsinki';
+
 DROP TABLE IF EXISTS USERS;
 
 CREATE TABLE USERS(
@@ -26,7 +29,7 @@ CREATE TABLE EXPERIMENTS(
     user_id BIGINT(20) NOT NULL,
     experiment_id CHAR(32) NOT NULL,
     experiment_name VARCHAR(25), 
-    creation_date DATE NOT NULL,
+    creation_date DATETIME NOT NULL,
     network_json JSON NOT NULL,
     category VARCHAR(50),
     description VARCHAR(300),
