@@ -12,7 +12,8 @@ import fcose from "cytoscape-fcose";
 
 export default {
   name: "PlotNetwork",
-  props:['experiment', 'animation_finished'],
+  props:['experiment'],
+  emits: ['animation_finished'],
   mounted() {
     let self = this
     cytoscape.use(fcose);
@@ -186,7 +187,9 @@ export default {
         const thumbnail = cy.png(options)
         self.experiment["thumbnail"] = thumbnail
 
-        self.animation_finished = true
+        // self.animation_finished = true
+        self.$emit('ready')
+
       },
     };
     //Run layout

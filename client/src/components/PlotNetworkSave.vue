@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button :disabled="this.animation_finished" @click="submit_experiment" type="submit" variant="primary" class="w-25 content-item submit-button">
+    <b-button :disabled="!activateSubmitButton" @click="submit_experiment" type="submit" variant="primary" class="w-25 content-item submit-button">
       Guardar experimento
     </b-button>
   </div>
@@ -11,13 +11,7 @@
 
 export default {
   name: "PlotNetworkSave",
-  props:['experiment', 'animation_finished'],
-  // data() {
-  //   return {
-  //     experiment: store.state.lastComputedExperiment,
-  //     submitted: false,
-  //   }
-  // },
+  props:['experiment', 'activateSubmitButton'],
   methods: {
     async submit_experiment() {
       this.submitted = false;

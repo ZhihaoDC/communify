@@ -15,11 +15,6 @@
                 </template>
             </b-card>
         </b-card-group>
-        <!---
-        <div v-for="(experiment, index) in experiments" :key="index">
-          <span>{{experiment.user_id}} , {{experiment.experiment_id}}</span>
-        </div>
-        -->
     </div>
 </template>
 

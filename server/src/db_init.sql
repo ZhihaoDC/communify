@@ -3,9 +3,6 @@ GRANT ALL ON Networkly.* TO 'user'@'%';
 
 USE Networkly;
 
---Global variables
-SET GLOBAL time_zone = 'Europe/Helsinki';
-
 DROP TABLE IF EXISTS USERS;
 
 CREATE TABLE USERS(
