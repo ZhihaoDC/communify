@@ -2,6 +2,7 @@ from flask import request, Blueprint
 from flask.json import jsonify
 import json
 import hashlib
+from werkzeug.utils import secure_filename
 
 #import custom modules
 from src.community_detection import louvain_algorithm as louvain
@@ -17,6 +18,7 @@ LouvainController = Blueprint('LouvainController', __name__)
 def apply_louvain():
     try: 
         file = request.files['file']
+        dataset_name = secure_filename(file.filename.replace(".csv", ""))
         if (len(request.files) > 1) and ('columns' in request.files):
             columns = request.files['columns'].read().decode('utf8').replace("'",'"')
             columns_json= json.loads(columns)
@@ -41,6 +43,7 @@ def apply_louvain():
                         'communities': last_community,
                         'metrics' : {'modularity': modularity},
                         'algorithm': 'Louvain',
+                        'dataset_name': dataset_name,
                         'dataset_hash': md5_hash
                     }), 200
     except:

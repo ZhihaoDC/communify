@@ -19,8 +19,9 @@ def save_experiment():
                                         network_json=request_json['graph'],
                                         category=request_json['algorithm'],
                                         metrics=request_json['metrics'],
+                                        dataset_name = request_json['dataset_name'],
                                         thumbnail= base64.decodebytes(encode(request_json['thumbnail'])),
-                                        description=bytes("prueba", encoding='utf-8') #hardcodeado
+                                        description=bytes("Descripcion introducida por el usuario", encoding='utf-8') #hardcodeado
                                         )
                                                                 
         return json.jsonify({"successMessage": "File saved",

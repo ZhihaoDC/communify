@@ -2,7 +2,8 @@
     <div>
         <b-card-group>
             <b-card v-for="(experiment, index) in experiments" :key="index" 
-                    :title="experiment.category + ' ' + experiment.creation_date"
+                    :title="getTitle(experiment.experiment_name, experiment.dataset_name)"
+                    :sub-title="parseDate(experiment.creation_date)"
                     img-top
                     img-height="50"
                     img-width="50">
@@ -51,9 +52,20 @@ export default {
                 })
 
         },
+        getTitle(experiment_name, dataset_name){
+            if (experiment_name)
+                return experiment_name 
+            else
+                return dataset_name
+                
+
+        },
         parseDate(date){
-            return moment(String(date)).format('MM/DD/YYYY hh:mm')
-        }
+            const local_date = new Date();
+            const current_date =  date + (local_date.getTimezoneOffset() * 60)
+            return moment(current_date.toString()).format('DD/MM/YYYY H:mm')
+        },
+
     },
 
     mounted() {

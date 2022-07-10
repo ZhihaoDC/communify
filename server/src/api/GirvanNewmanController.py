@@ -2,19 +2,23 @@ from flask import request, Blueprint
 from flask.json import jsonify
 import hashlib
 import json
+from werkzeug.utils import secure_filename
+
+
+#Import custom modules
 import src.api.preprocess as preprocess
-
-
-#Import custom module
 from src.community_detection import girvan_newman_algorithm as gn
 
+
 GirvanNewmanController = Blueprint('GirvanNewmanController', __name__)
+
 
 #Main method
 @GirvanNewmanController.route("/community-detection/girvan-newman", methods=['POST'])
 def apply_girvan_newman():
     try:
         file = request.files['file']
+        dataset_name = secure_filename(file.filename.replace(".csv", ""))
         if (len(request.files) > 1) and ('columns' in request.files):
             columns = request.files['columns'].read().decode('utf8').replace("'",'"')
             columns_json= json.loads(columns)
@@ -39,7 +43,8 @@ def apply_girvan_newman():
                         'communities': GN_communities,
                         'metrics' : {'modularity': modularity},
                         'algorithm' : 'Girvan-Newman',
-                        'dataset_hash': md5_hash
+                        'dataset_hash': md5_hash,
+                        'dataset_name': dataset_name
                         }), 200
     except:
         return jsonify({"errorMessage": "Invalid .csv format"}), 400
