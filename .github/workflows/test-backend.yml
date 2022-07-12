@@ -17,6 +17,13 @@ jobs:
         python -m pip install --upgrade pip
         pip3 install -r requirements.txt
     - name: Test with pytest
+      env: 
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: Networkly
+        MYSQL_USER: user
+        MYSQL_PASSWORD: pwd12345
+        MYSQL_HOST: localhost
+        MYSQL_PORT: 3306
       run: |
         pip install pytest
         pip install pytest-cov

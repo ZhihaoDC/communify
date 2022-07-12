@@ -39,10 +39,10 @@ def apply_louvain():
         md5_hash = hashlib.md5(file.read()).hexdigest()
 
         return jsonify({    
-                        'graph': graph_json,
+                        'network_json': graph_json,
                         'communities': last_community,
                         'metrics' : {'modularity': modularity},
-                        'algorithm': 'Louvain',
+                        'category': 'Louvain',
                         'dataset_name': dataset_name,
                         'dataset_hash': md5_hash
                     }), 200

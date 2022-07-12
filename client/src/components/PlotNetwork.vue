@@ -28,15 +28,15 @@ export default {
             width: "data(size)",
             "text-valign": "center",
             "background-color": function(node){
-                                              if ((self.experiment.algorithm === "Louvain") | (self.experiment.algorithm==="Girvan-Newman")){
-                                                return node.data().background_color
+                                              if ((self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){
+                                                return node.data("background_color")
                                               }else{
                                                 return "#5CF"
                                               }
             },
             "text-outline-color": function(node){
-                                              if ((self.experiment.algorithm === "Louvain") | (self.experiment.algorithm==="Girvan-Newman")){
-                                                return node.data().background_color
+                                              if ((self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){
+                                                return node.data("background_color")
                                               }else{
                                                 return "#fff"
                                               }
@@ -52,12 +52,12 @@ export default {
             visibility: "hidden",
             width: 0.5,
             "line-color": function(edge){
-              if ((self.experiment.algorithm === "Louvain") | (self.experiment.algorithm==="Girvan-Newman")){
+              if ((self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){
                 //take the color of highest degree node ('source' or 'target' node)
-                if (cy.$id(edge.data().source).data().degree > cy.$id(edge.data().target).data().degree){
-                  return cy.$id(edge.data().source).data().background_color
+                if (cy.$id(edge.data("source")).data("degree") > cy.$id(edge.data("target")).data("degree")){
+                  return cy.$id(edge.data("source")).data("background_color")
                 }else{
-                  return cy.$id(edge.data().target).data().background_color
+                  return cy.$id(edge.data("target")).data("background_color")
                 }
               }else{
                 return "#666"
@@ -68,12 +68,9 @@ export default {
       ],
 
       hideEdgesOnViewport: true,
-      wheelSensitivity: 0.7,
     });
-    cy.json(this.experiment.graph); //read graph from json
-    cy.zoom({
-      level: 10,
-    });
+    cy.json(this.experiment.network_json); //read graph from json
+    
     var layout_options = {
       name: "fcose",
 
@@ -81,14 +78,14 @@ export default {
       // - "draft" only applies spectral layout
       // - "default" improves the quality with incremental layout (fast cooling rate)
       // - "proof" improves the quality with incremental layout (slow cooling rate)
-      quality: "default",
+      quality: "proof",
       // Use random node positions at beginning of layout
       // if this is set to false, then quality option must be "proof"
-      randomize: true,
+      randomize: false,
       // Whether or not to animate the layout
       animate: true,
       // Duration of animation in ms, if enabled
-      animationDuration: 10000,
+      animationDuration: 5000,
       // Easing of animation, if enabled
       animationEasing: undefined,
       // Fit the viewport to the repositioned nodes
@@ -121,7 +118,7 @@ export default {
       nodeRepulsion: 6000,
       // Ideal edge (non nested) length
       idealEdgeLength: function(edge){
-        if (self.experiment.algorithm === "Louvain" | self.experiment.algorithm==="Girvan-Newman"){
+        if (self.experiment.category === "Louvain" | self.experiment.category==="Girvan-Newman"){
           if (cy.$id(edge.data().source).data().community === cy.$id(edge.data().target).data().community){
             return 50
           }else{
@@ -178,7 +175,8 @@ export default {
 
         //store json into experiments
         const cy_json = cy.json(); // take json from cytoscape
-        self.experiment["graph"] = cy_json //update experiment info
+        delete cy_json.style
+        self.experiment["network_json"] = cy_json //update experiment info
 
                 
         //store thumbnail

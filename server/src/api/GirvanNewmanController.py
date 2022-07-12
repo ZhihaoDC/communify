@@ -39,10 +39,10 @@ def apply_girvan_newman():
         md5_hash = hashlib.md5(file.read()).hexdigest() 
 
         return jsonify(
-                        {'graph': graph_json,
+                        {'network_json': graph_json,
                         'communities': GN_communities,
                         'metrics' : {'modularity': modularity},
-                        'algorithm' : 'Girvan-Newman',
+                        'category' : 'Girvan-Newman',
                         'dataset_hash': md5_hash,
                         'dataset_name': dataset_name
                         }), 200
