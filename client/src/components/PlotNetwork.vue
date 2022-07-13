@@ -81,7 +81,7 @@ export default {
       quality: "proof",
       // Use random node positions at beginning of layout
       // if this is set to false, then quality option must be "proof"
-      randomize: false,
+      randomize: true,
       // Whether or not to animate the layout
       animate: true,
       // Duration of animation in ms, if enabled
@@ -91,7 +91,7 @@ export default {
       // Fit the viewport to the repositioned nodes
       fit: true,
       // Padding around layout
-      padding: 30,
+      padding: 10,
       // Whether to include labels in node dimensions. Valid in "proof" quality
       nodeDimensionsIncludeLabels: true,
       // Whether or not simple nodes (non-compound nodes) are of uniform dimensions
@@ -119,7 +119,7 @@ export default {
       // Ideal edge (non nested) length
       idealEdgeLength: function(edge){
         if (self.experiment.category === "Louvain" | self.experiment.category==="Girvan-Newman"){
-          if (cy.$id(edge.data().source).data().community === cy.$id(edge.data().target).data().community){
+          if (cy.$id(edge.data("source")).data().community === cy.$id(edge.data("target")).data().community){
             return 50
           }else{
             return 400

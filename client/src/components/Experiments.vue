@@ -1,41 +1,31 @@
 <template>
-    <div>
-        <b-card-group>
-            <b-card v-for="(experiment, index) in experiments" :key="index" 
-                    :title="getTitle(experiment.experiment_name, experiment.dataset_name)"
-                    :sub-title="parseDate(experiment.creation_date)"
-                    img-top>
-                <b-card-img :src="'data:image/png;base64,' + experiment.thumbnail"> </b-card-img>
-                <b-card-text>
-                    {{experiment.description}}
-                </b-card-text>
-                <b-button
-                    type="submit"
-                    variant="primary"
-                    class="w-25 content-item submit-button"
-                    value="Visualizar"
-                    v-on:click="visualize(experiment)"
-                    v-if="!submitted"
+    <div id="experiments-container">
+        <b-card-group deck class="align-items-center justify-content-center">
+            <b-card v-for="(experiment, index) in experiments" :key="index"
+                class="mb-3" id="b-card"
+                :title="getTitle(experiment.experiment_name, experiment.dataset_name)"
+                :sub-title="parseDate(experiment.creation_date)"
                 >
-                Visualizar
+                <b-img fluid :src="'data:image/png;base64,' +  experiment.thumbnail"></b-img>
+                <b-card-text>
+                    {{ experiment.description }}
+                </b-card-text>
+                <b-button fluid class="w-50" id="go-bottom" type="submit" variant="primary" value="Visualizar"
+                    v-on:click="visualize(experiment)" v-if="!submitted">
+                    Visualizar
                 </b-button>
-                <b-spinner
-                    v-else
-                    variant="primary"
-                    label="Spinning"
-                    id="spinner"
-                    class="m-5"
-                ></b-spinner>
+                <b-spinner v-else variant="primary" label="Spinning" id="spinner" class="m-5"></b-spinner>
                 <template #footer>
                     <small class="text-muted">Created 3 mins ago</small>
                 </template>
             </b-card>
         </b-card-group>
+    
     </div>
 </template>
 
 <script>
-import axios from 'axios';  
+import axios from 'axios';
 import moment from 'moment';
 import { store } from "../main.js";
 export default {
@@ -61,7 +51,7 @@ export default {
             axios.get(url)
                 .then((response) => {
                     this.experiments = response.data.experiments
-                    
+
                     console.log(this.experiments)
                 })
                 .catch((error) => {
@@ -69,30 +59,41 @@ export default {
                 })
 
         },
-        getTitle(experiment_name, dataset_name){
+        getTitle(experiment_name, dataset_name) {
             if (experiment_name)
-                return experiment_name 
+                return experiment_name
             else
                 return dataset_name
 
         },
-        parseDate(date){
+        parseDate(date) {
             const local_date = new Date();
-            const current_date =  date + (local_date.getTimezoneOffset() * 60)
+            const current_date = date + (local_date.getTimezoneOffset() * 60)
             return moment(current_date.toString()).format('DD/MM/YYYY H:mm')
         },
-        visualize(experiment){
+        visualize(experiment) {
+            this.submitted = true
             store.setLastComputedExperiment(experiment);
             this.$router.push(
-              "/community-detection/" + experiment.category.toLowerCase() + "/experiment"
+                "/community-detection/" + experiment.category.toLowerCase() + "/experiment"
             );
-            this.submitted = true
         }
     },
 
     mounted() {
         this.getExperiments()
+    
     }
 }
 
 </script>
+
+<style scoped>
+
+#b-card {
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    min-height: 25rem;
+    max-width: 25rem;
+}
+
+</style>

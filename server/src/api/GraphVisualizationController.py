@@ -23,8 +23,8 @@ def visualize_network():
         #Generate dataset hash identifier  
         md5_hash = hashlib.md5(file.read()).hexdigest() 
 
-        return jsonify({'graph': graph_json, 
-                        'algorithm':'network-visualization', 
+        return jsonify({'network_json': graph_json, 
+                        'category':'network-visualization', 
                         'dataset_hash': md5_hash}), 200
     except:
         return jsonify({"errorMessage": "Invalid .csv format"}), 400

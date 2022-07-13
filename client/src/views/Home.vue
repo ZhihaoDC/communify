@@ -8,7 +8,6 @@
         <b-card-group deck>
           <b-card
           title="Detección de comunidades: método de Louvain"
-          style="max-width: 25rem;"
           class="mb-3"
           id="b-card">
             <b-card-text>
@@ -19,7 +18,6 @@
 
           <b-card
           title="Detección de comunidades: método de Girvan-Newman"
-          style="max-width: 25rem;"
           class="mb-3"
           id="b-card">
             <b-card-text>
@@ -30,7 +28,6 @@
 
           <b-card
           title="Visualización: Representar grafo o red"
-          style="max-width: 25rem;"
           class="mb-3"
           id="b-card">
             <b-card-text>
@@ -40,9 +37,11 @@
           </b-card>
         </b-card-group>
       </div>
-      <Experiments>
-
-      </Experiments>
+      <div>
+        <h2 id="section-header"> Experimentos </h2>
+        <Experiments></Experiments>
+      </div>
+      
   </b-container>
 </template>
 
@@ -65,8 +64,15 @@ export default {
     text-decoration: none;
   }
 
+  
+  #section-header{
+      padding-top: 2rem;
+      padding-bottom:1rem;
+  }
+
   #b-card{
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    max-width: 25rem;
   }
 
   #go{

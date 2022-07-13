@@ -1,6 +1,6 @@
 <template>
 <b-container fluid> 
-    <h2 id="header" v-if='((experiment.algorithm === "Louvain") | (experiment.algorithm === "Girvan-Newman"))'> Algoritmo de {{ experiment.algorithm }} </h2> 
+    <h2 id="header" v-if='((experiment.category === "Louvain") | (experiment.category === "Girvan-Newman"))'> Algoritmo de {{ experiment.category }} </h2> 
     <h2 id="header" v-else> Visualización </h2>  
     <PlotNetwork :experiment="experiment" @ready="animation_finished = true"></PlotNetwork>
     <PlotNetworkSave :experiment="experiment" :activateSubmitButton="animation_finished"></PlotNetworkSave>
