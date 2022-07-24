@@ -113,11 +113,12 @@ def get_community_colors(graph, community):
 	colors = dict()
 
 	for node in graph.nodes:
-		colors.update({node: "#"+rgb2hex(cmap(community[node]))[1]
-                                    +rgb2hex(cmap(community[node]))[3] 
-                                    +rgb2hex(cmap(community[node]))[5]})
+		colors.update({node: "#" + rgb2hex(cmap(community[node]))[1]
+                                + rgb2hex(cmap(community[node]))[3] 
+                                + rgb2hex(cmap(community[node]))[5]})
     
 	return colors
+
 
 
 def remap_communities(communities):

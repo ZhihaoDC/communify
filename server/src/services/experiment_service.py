@@ -7,13 +7,13 @@ def get_all(model):
 
 
 def get_all_by_user_id(model, user_id):
-    data = model.query.filter_by(user_id=user_id).all()
+    data = model.query.filter_by(user_id=user_id).order_by(model.creation_date).all()
     return [result.serialized for result in data]
 
 
 def add_instance(model, **kwargs):
     instance = model(**kwargs)
-    db.session.add(instance)
+    db.session.merge(instance)
     commit_changes()
 
 

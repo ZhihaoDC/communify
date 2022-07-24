@@ -78,7 +78,7 @@ export default {
       // - "draft" only applies spectral layout
       // - "default" improves the quality with incremental layout (fast cooling rate)
       // - "proof" improves the quality with incremental layout (slow cooling rate)
-      quality: "proof",
+      quality: "default",
       // Use random node positions at beginning of layout
       // if this is set to false, then quality option must be "proof"
       randomize: true,
@@ -119,10 +119,10 @@ export default {
       // Ideal edge (non nested) length
       idealEdgeLength: function(edge){
         if (self.experiment.category === "Louvain" | self.experiment.category==="Girvan-Newman"){
-          if (cy.$id(edge.data("source")).data().community === cy.$id(edge.data("target")).data().community){
+          if (cy.$id(edge.data().source).data().community === cy.$id(edge.data().target).data().community){
             return 50
           }else{
-            return 400
+            return 500
           }
         }else{
           return 150

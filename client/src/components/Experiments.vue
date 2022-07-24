@@ -1,6 +1,7 @@
 <template>
     <div id="experiments-container">
         <b-card-group deck class="align-items-center justify-content-center">
+
             <b-card v-for="(experiment, index) in experiments" :key="index"
                 class="mb-3" id="b-card"
                 :title="getTitle(experiment.experiment_name, experiment.dataset_name)"
@@ -10,6 +11,7 @@
                 <b-card-text>
                     {{ experiment.description }}
                 </b-card-text>
+                
                 <b-button fluid class="w-50" id="go-bottom" type="submit" variant="primary" value="Visualizar"
                     v-on:click="visualize(experiment)" v-if="!submitted">
                     Visualizar
@@ -19,6 +21,7 @@
                     <small class="text-muted">Created 3 mins ago</small>
                 </template>
             </b-card>
+
         </b-card-group>
     
     </div>
@@ -26,7 +29,6 @@
 
 <script>
 import axios from 'axios';
-import moment from 'moment';
 import { store } from "../main.js";
 export default {
     name: "Experiments",
@@ -59,6 +61,7 @@ export default {
                 })
 
         },
+
         getTitle(experiment_name, dataset_name) {
             if (experiment_name)
                 return experiment_name
@@ -66,11 +69,14 @@ export default {
                 return dataset_name
 
         },
+
         parseDate(date) {
-            const local_date = new Date();
-            const current_date = date + (local_date.getTimezoneOffset() * 60)
-            return moment(current_date.toString()).format('DD/MM/YYYY H:mm')
+            const db_date = new Date(date);
+            const local_date = new Date((db_date) - (db_date.getTimezoneOffset() * 60 * 1000))
+            const options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', seconds:'numeric', hour12: false}
+            return local_date.toLocaleString('es-ES', options)
         },
+
         visualize(experiment) {
             this.submitted = true
             store.setLastComputedExperiment(experiment);

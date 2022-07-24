@@ -8,7 +8,7 @@ class Experiment(db.Model):
     __table_args__ = {'extend_existing': True}
 
     user_id = db.Column(db.Integer, db.ForeignKey("USERS.id"))
-    experiment_id = db.Column(db.String(32), primary_key=True)
+    experiment_id = db.Column(db.String(32), primary_key=True)  
     creation_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     experiment_name = db.Column(db.String(50))
     network_json = db.Column(db.JSON, nullable=False)
@@ -29,6 +29,7 @@ class Experiment(db.Model):
         return {
             'user_id': self.user_id,
             'experiment_id': self.experiment_id,
+            'dataset_hash': self.experiment_id,
             'experiment_name': self.experiment_name,
             'creation_date': self.creation_date.strftime("%Y/%m/%d, %H:%M"),
             'network_json': self.network_json,
