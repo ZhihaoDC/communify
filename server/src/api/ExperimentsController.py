@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask import json
-from src.models.models import Experiment
-from src.services import experiment_service
+from src.models.ExperimentModel import Experiment
+from src.services import ExperimentService
 import base64
 from codecs import encode
 
@@ -13,7 +13,7 @@ def save_experiment():
     request_json = request.get_json()
     # if all(keys in request_json for keys in ['user_id', 'dataset_hash']):
     if 'dataset_hash' in request_json:
-        experiment_service.add_instance(Experiment,
+        ExperimentService.add_instance(Experiment,
                                         user_id=1,
                                         experiment_id=request_json['dataset_hash'],
                                         network_json=request_json['network_json'],
@@ -32,7 +32,7 @@ def save_experiment():
 
 @ExperimentsController.route('/get-experiments/<user_id>', methods=['GET'])
 def get_experiments(user_id):
-    data = experiment_service.get_all_by_user_id(
+    data = ExperimentService.get_all_by_user_id(
         Experiment,
         user_id=user_id
     )

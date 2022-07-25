@@ -1,6 +1,6 @@
 
 from src import db
-from sqlalchemy.sql.expression import text
+from src.models import UserModel
 import base64
 
 class Experiment(db.Model):
@@ -20,8 +20,6 @@ class Experiment(db.Model):
     
     user = db.relationship('User', passive_deletes=True)
 
-
-
     @property
     def serialized(self):
         """Return object data in serializeable format"""
@@ -38,23 +36,4 @@ class Experiment(db.Model):
             'metrics': self.metrics,
             'dataset_name': self.dataset_name,
             'thumbnail': base64.encodebytes(self.thumbnail).decode('utf-8')
-        }
-    # 'creation_date': self.creation_date.strftime("%Y/%m/%d, %H:%M"),
-   
-
-class User(db.Model):
-    __tablename__ = 'USERS'
-    __table_args__ = {'extend_existing': True}
-
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    username = db.Column(db.String(25), nullable=False)
-    email = db.Column(db.String(50), nullable=False)
-    firstname = db.Column(db.String(50), nullable=False)
-    lastname = db.Column(db.String(100))
-    profile_description = db.Column(db.String(250))
-
-    def serialize(self):
-        return{
-            "user_id": self.id,
-            "username": self.username
         }
