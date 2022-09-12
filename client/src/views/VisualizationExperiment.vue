@@ -24,14 +24,11 @@ export default {
         console.log(this.experiment)
     }
 }
-
 </script>
 
 <style scoped>
-
     #title{
     position:absolute;  
     text-align: left;
     }
-
 </style>

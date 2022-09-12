@@ -28,12 +28,12 @@ CREATE TABLE EXPERIMENTS(
     creation_date DATETIME NOT NULL,
     experiment_name VARCHAR(50), 
     network_json JSON NOT NULL,
-    category VARCHAR(50),
+    category VARCHAR(50) NOT NULL,
     description VARCHAR(300),
     metrics JSON,
     dataset_name VARCHAR(50),
     thumbnail BLOB,
-    PRIMARY KEY (experiment_id),
+    PRIMARY KEY (experiment_id, category),
     FOREIGN KEY (user_id) REFERENCES USERS(id) 
     ON DELETE CASCADE
 );

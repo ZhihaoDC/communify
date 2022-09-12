@@ -3,22 +3,22 @@
         <b-card-group deck class="align-items-center justify-content-center">
 
             <b-card v-for="(experiment, index) in experiments" :key="index"
-                class="mb-3" id="b-card"
+                class="mb-3" id="b-card"    
                 :title="getTitle(experiment.experiment_name, experiment.dataset_name)"
-                :sub-title="parseDate(experiment.creation_date)"
+                :sub-title="experiment.category"
                 >
                 <b-img fluid :src="'data:image/png;base64,' +  experiment.thumbnail"></b-img>
                 <b-card-text>
                     {{ experiment.description }}
                 </b-card-text>
                 
-                <b-button fluid class="w-50" id="go-bottom" type="submit" variant="primary" value="Visualizar"
+                <b-button fluid class="w-50 mt-auto mx-auto" type="submit" variant="primary" value="Visualizar"
                     v-on:click="visualize(experiment)" v-if="!submitted">
                     Visualizar
                 </b-button>
                 <b-spinner v-else variant="primary" label="Spinning" id="spinner" class="m-5"></b-spinner>
                 <template #footer>
-                    <small class="text-muted">Created 3 mins ago</small>
+                    <small class="text-muted">Creado el {{parseDate(experiment.creation_date)}}</small>
                 </template>
             </b-card>
 

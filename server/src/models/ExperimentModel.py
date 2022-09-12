@@ -12,7 +12,7 @@ class Experiment(db.Model):
     creation_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     experiment_name = db.Column(db.String(50))
     network_json = db.Column(db.JSON, nullable=False)
-    category = db.Column(db.String(50))
+    category = db.Column(db.String(50), primary_key=True)
     description = db.Column(db.String(300))
     metrics = db.Column(db.JSON)
     dataset_name = db.Column(db.String(50))

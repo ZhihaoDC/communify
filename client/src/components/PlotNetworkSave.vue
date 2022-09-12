@@ -1,7 +1,10 @@
 <template>
   <div>
-    <b-button :disabled="!activateSubmitButton" @click="submit_experiment" type="submit" variant="primary" class="w-25 content-item submit-button">
-      Guardar experimento
+    <b-button :disabled="!activateSubmitButton" @click="submit_experiment" type="submit" variant="primary"
+      class="w-25 content-item submit-button">
+      <span v-if="!submitted"> Guardar experimento </span>
+      <span v-else> Guardado! </span>
+      {{ submitted }}
     </b-button>
   </div>
 </template>
@@ -11,29 +14,28 @@
 
 export default {
   name: "PlotNetworkSave",
-  props:['experiment', 'activateSubmitButton'],
+  props: ['experiment', 'activateSubmitButton'],
   methods: {
     async submit_experiment() {
       this.submitted = false;
       const axios = require("axios");
-      await axios.post('http://localhost:5000/save-experiment', JSON.stringify(this.experiment), {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      await axios.post('http://localhost:5000/save-experiment',
+        JSON.stringify(this.experiment),
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
         .then((response) => {
           if (response.status === 200) {
             this.submitted = true
-            console.log("Exito")
           }
         })
         .catch((error) => {
           console.log(error.response);
           if (error.response.status == 500) {
-            this.error_msg =
-              "Error en la comunicacion con el servidor";
+            this.error_msg = "Error en la comunicacion con el servidor";
             this.submitted = false;
-            console.log("not found")
           }
         })
     },
