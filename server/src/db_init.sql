@@ -23,8 +23,8 @@ VALUES  ("david19", "david19@gmail.com", "david", "fernandez", "data scientist")
 DROP TABLE IF EXISTS EXPERIMENTS;
 
 CREATE TABLE EXPERIMENTS(
+    experiment_id BIGINT(20) AUTO_INCREMENT,
     user_id BIGINT(20) NOT NULL,
-    experiment_id CHAR(32) NOT NULL,
     creation_date DATETIME NOT NULL,
     experiment_name VARCHAR(50), 
     network_json JSON NOT NULL,
@@ -32,22 +32,12 @@ CREATE TABLE EXPERIMENTS(
     description VARCHAR(300),
     metrics JSON,
     dataset_name VARCHAR(50),
+    dataset_hash CHAR(32) NOT NULL, 
     thumbnail BLOB,
-    PRIMARY KEY (experiment_id, category),
+    PRIMARY KEY (experiment_id),
     FOREIGN KEY (user_id) REFERENCES USERS(id) 
     ON DELETE CASCADE
 );
 
-
--- DROP TABLE IF EXISTS EXPERIMENT_THUMBNAIL;
-
--- CREATE TABLE EXPERIMENT_THUMBNAIL(
---     id BIGINT(20) AUTO_INCREMENT,
---     experiment_id CHAR(32) NOT NULL,
---     thumbnail BLOB NOT NULL,
---     PRIMARY KEY (id),
---     FOREIGN KEY (experiment_id) REFERENCES USER_EXPERIMENTS(experiment_id) 
---     ON DELETE CASCADE
--- );
 
 

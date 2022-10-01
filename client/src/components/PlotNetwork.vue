@@ -206,25 +206,8 @@ export default {
   text-align: left;
 }
 
-#no-margins {
-  position: fixed;
-  top:0;
-  right:0;
-  bottom:0;
-  left:0;
-  margin: 0;
-  padding: 0;
-  min-height:100vh;
-  min-width:100vh;
-}
-
 #container {
-  position: relative;
-  height: 100%;
   min-height: 75vh;
-  min-width: 100%;
-  max-width: 100vw;
-
   border-radius: 10px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;

@@ -8,14 +8,15 @@ class Experiment(db.Model):
     __table_args__ = {'extend_existing': True}
 
     user_id = db.Column(db.Integer, db.ForeignKey("USERS.id"))
-    experiment_id = db.Column(db.String(32), primary_key=True)  
+    experiment_id = db.Column(db.Integer, primary_key=True)  
     creation_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     experiment_name = db.Column(db.String(50))
     network_json = db.Column(db.JSON, nullable=False)
-    category = db.Column(db.String(50), primary_key=True)
+    category = db.Column(db.String(50))
     description = db.Column(db.String(300))
     metrics = db.Column(db.JSON)
     dataset_name = db.Column(db.String(50))
+    dataset_hash = db.Column(db.String(32), nullable=False)
     thumbnail = db.Column(db.BLOB, nullable=False)
     
     user = db.relationship('User', passive_deletes=True)
@@ -27,7 +28,7 @@ class Experiment(db.Model):
         return {
             'user_id': self.user_id,
             'experiment_id': self.experiment_id,
-            'dataset_hash': self.experiment_id,
+            'dataset_hash': self.dataset_hash,
             'experiment_name': self.experiment_name,
             'creation_date': self.creation_date.strftime("%Y/%m/%d, %H:%M"),
             'network_json': self.network_json,

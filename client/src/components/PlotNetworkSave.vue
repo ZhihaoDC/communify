@@ -2,9 +2,9 @@
   <div>
     <b-button :disabled="!activateSubmitButton" @click="submit_experiment" type="submit" variant="primary"
       class="w-25 content-item submit-button">
-      <span v-if="!submitted"> Guardar experimento </span>
+      <span v-if=!submitted> Guardar experimento </span>
       <span v-else> Guardado! </span>
-      {{ submitted }}
+      <span>{{this.submitted}}</span>
     </b-button>
   </div>
 </template>
@@ -17,7 +17,6 @@ export default {
   props: ['experiment', 'activateSubmitButton'],
   methods: {
     async submit_experiment() {
-      this.submitted = false;
       const axios = require("axios");
       await axios.post('http://localhost:5000/save-experiment',
         JSON.stringify(this.experiment),

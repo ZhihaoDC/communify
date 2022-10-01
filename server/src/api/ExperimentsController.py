@@ -11,17 +11,25 @@ ExperimentsController = Blueprint('ExperimentsController', __name__)
 @ExperimentsController.route('/save-experiment', methods=['POST'])
 def save_experiment():
     request_json = request.get_json()
-    # if all(keys in request_json for keys in ['user_id', 'dataset_hash']):
+
+    default_values = {'experiment_name': request_json["dataset_name"],
+                    'description': ""}
+    for key, value in default_values.items():
+        if key not in request_json:
+            request_json[key] = value
+
     if 'dataset_hash' in request_json:
         ExperimentService.add_instance(Experiment,
                                         user_id=1,
-                                        experiment_id=request_json['dataset_hash'],
+                                        experiment_name = request_json['experiment_name'],
                                         network_json=request_json['network_json'],
                                         category=request_json['category'],
                                         metrics=request_json['metrics'],
                                         dataset_name = request_json['dataset_name'],
+                                        dataset_hash = request_json['dataset_hash'],
                                         thumbnail= base64.decodebytes(encode(request_json['thumbnail'])),
-                                        description=bytes("Descripcion introducida por el usuario", encoding='utf-8') #hardcodeado
+                                        # description=bytes("Descripcion introducida por el usuario", encoding='utf-8') #hardcodeado
+                                        description = request_json['description']
                                         )
                                                                 
         return json.jsonify({"successMessage": "File saved",
