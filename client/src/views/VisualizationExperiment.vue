@@ -46,17 +46,19 @@ export default {
     }
 
     #save-network-form{
-        height: 100%;
-        min-height: 75vh;
-        min-width: 35%;
-        max-width: 35vw;
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 10px;
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
         
     }
 
     #network-viz{
-        height: 100%;
         min-height: 75vh;
-        min-width: 65%;
-        max-width: 65vw;
+        border-radius: 10px;
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+            rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     }
 </style>

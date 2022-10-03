@@ -13,8 +13,9 @@ def get_all_by_user_id(model, user_id):
 
 def add_instance(model, **kwargs):
     instance = model(**kwargs)
-    db.session.merge(instance)
+    instance = db.session.merge(instance)
     commit_changes()
+    return instance.serialized
 
 
 # def delete_instance(model, id):

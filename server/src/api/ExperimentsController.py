@@ -12,15 +12,20 @@ ExperimentsController = Blueprint('ExperimentsController', __name__)
 def save_experiment():
     request_json = request.get_json()
 
-    default_values = {'experiment_name': request_json["dataset_name"],
-                    'description': ""}
+    default_values = {
+                    'experiment_id' : None,
+                    'experiment_name': request_json["dataset_name"],
+                    'description': ""
+                    }
+
     for key, value in default_values.items():
         if key not in request_json:
             request_json[key] = value
 
     if 'dataset_hash' in request_json:
-        ExperimentService.add_instance(Experiment,
+        added_experiment = ExperimentService.add_instance(Experiment,
                                         user_id=1,
+                                        experiment_id=request_json['experiment_id'],
                                         experiment_name = request_json['experiment_name'],
                                         network_json=request_json['network_json'],
                                         category=request_json['category'],
@@ -28,12 +33,11 @@ def save_experiment():
                                         dataset_name = request_json['dataset_name'],
                                         dataset_hash = request_json['dataset_hash'],
                                         thumbnail= base64.decodebytes(encode(request_json['thumbnail'])),
-                                        # description=bytes("Descripcion introducida por el usuario", encoding='utf-8') #hardcodeado
                                         description = request_json['description']
-                                        )
-                                                                
+                                        )                                                      
         return json.jsonify({"successMessage": "File saved",
-                             'Access-Control-Allow-Origin': '*'}), 200
+                             'Access-Control-Allow-Origin': '*',
+                             'experiment': added_experiment}), 200
     else:
         return json.jsonify({"errorMessage": "Invalid .csv format"}), 400
 
