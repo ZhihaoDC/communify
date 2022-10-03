@@ -37,18 +37,12 @@
           </b-card>
         </b-card-group>
       </div>
-      <div>
-        <h2 id="section-header"> Experimentos </h2>
-        <Experiments></Experiments>
-      </div>
       
   </b-container>
 </template>
 
 <script>
-import Experiments from "@/components/Experiments.vue"
 export default {
-  components : {Experiments},
   name: 'Home'
 }
 </script>

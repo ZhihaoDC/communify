@@ -8,7 +8,7 @@
     </b-form-group>
 
     <b-form-group id="input-description" label="Descripción" label-for="input-description">
-      <b-form-textarea> id="description" v-model="description" placeholder="Introduce tu descripción"</b-form-textarea>
+      <b-form-textarea id="description" v-model="description" placeholder="Introduce tu descripción"></b-form-textarea>
     </b-form-group>
  
     <b-button type="submit" :disabled="!activateSubmitButton" @click="submit_experiment" variant="primary"
@@ -19,6 +19,7 @@
     <b-alert
       :show="dismissCountDown"
       dismissible
+      fade
       variant="success"
       @dismissed="dismissCountDown=0"
       @dismiss-count-down="countDownChanged"
@@ -36,8 +37,8 @@ export default {
   props: ['experiment', 'activateSubmitButton'],
   data: function () {
     return{
-      experiment_name_placeholder: "Experimento " + this.experiment.dataset_name + " " + this.experiment.category,
-      dismissSecs: 5,
+      experiment_name_placeholder: this.experiment.dataset_name,
+      dismissSecs: 4,
       dismissCountDown: 0,
       submitted_msg: "Guardar experimento",
     }

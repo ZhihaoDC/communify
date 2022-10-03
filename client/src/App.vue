@@ -13,8 +13,8 @@
               >Método de Girvan-Newman</b-dropdown-item
             >
           </b-nav-item-dropdown>
-          <b-nav-item to="/graph-visualization"> Visualización </b-nav-item>
-          <b-nav-item to="/user-experiments"> Experiments </b-nav-item>
+          <b-nav-item to="/graph-visualization"> Representar grafo </b-nav-item>
+          <b-nav-item to="/user-experiments"> Experimentos </b-nav-item>
           <b-nav-item right to="/about"> About </b-nav-item>
         </b-navbar-nav>
       </b-collapse>
@@ -66,9 +66,6 @@ export default {};
 
 .fade-enter-active {
   transition: opacity 0.1s ease;
-}
-
-.fade-leave {
 }
 
 .fade-leave-active {

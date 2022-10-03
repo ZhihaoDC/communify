@@ -1,8 +1,12 @@
 <template>
-    <div>
-        <h1>Experimentos</h1>
-        <Experiments></Experiments>
-    </div>
+    <b-container fluid="md">
+        <div>
+            <h1>Experimentos</h1>
+        </div>
+        <div>
+            <Experiments></Experiments>
+        </div>
+    </b-container>
 </template>
 
 

@@ -32,7 +32,7 @@ services:
 
   # Backend
   backend:
-    #image: crazyhao/networkly-server
+    image: crazyhao/networkly-server
     build: 
       context : "./"
       dockerfile: "dockerfile.server"
@@ -62,7 +62,7 @@ services:
 
   # Frontend
   frontend:
-    #image: crazyhao/networkly-client
+    image: crazyhao/networkly-client
     build: 
       context : "./"
       dockerfile: "dockerfile.client"
