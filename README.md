@@ -3,31 +3,23 @@
 
 # network.ly
 
-## Project frontend setup
+## Clone this repository to your local machine
+
+## Ensure you have docker desktop installed in your machine
+
+## In the root folder of your cloned project, i.e
 ```
-npm install
+networkly/ <-----------
+    client/
+    server/
 ```
 
-### Compiles and hot-reloads for development
+### Open Terminal and build the app
 ```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
+docker compose up --force-recreate
 ```
 
-### Lints and fixes files
+### To terminate all containers and volumes
 ```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-## Project backend setup 
-```
-cd network.ly/server/src
-flask run
+docker compose down -v
 ```
