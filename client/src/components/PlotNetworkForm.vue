@@ -2,13 +2,15 @@
 
   <div id="container">
 
+    <h4> Guardar experimento </h4>
+    <br/>
     <b-form-group id="input-name" label="Nombre del experimento" label-for="input-name">
-      <b-form-input id="experiment_name" v-model="experiment_name"
-        :placeholder="experiment_name_placeholder"></b-form-input>
+      <b-form-input id="experiment_name" v-model="experiment.experiment_name"
+        :placeholder="experiment.dataset_name"></b-form-input>
     </b-form-group>
 
     <b-form-group id="input-description" label="Descripción" label-for="input-description">
-      <b-form-textarea id="description" v-model="description" placeholder="Introduce tu descripción"></b-form-textarea>
+      <b-form-textarea id="description" v-model="experiment.description" placeholder="Introduce una descripción para el experimento"></b-form-textarea>
     </b-form-group>
  
     <b-button type="submit" :disabled="!activateSubmitButton" @click="submit_experiment" variant="primary"
@@ -38,6 +40,7 @@ export default {
   data: function () {
     return{
       experiment_name_placeholder: this.experiment.dataset_name,
+      experiment_description_placeholder: "Introduce una descripción",
       dismissSecs: 4,
       dismissCountDown: 0,
       submitted_msg: "Guardar experimento",
@@ -51,8 +54,6 @@ export default {
       this.dismissCountDown = this.dismissSecs
     },
     async submit_experiment() {
-      this.experiment['experiment_name'] = this.experiment_name
-      this.experiment['description'] = this.description
 
       const axios = require("axios");
       await axios.post('http://localhost:5000/save-experiment',
@@ -79,10 +80,23 @@ export default {
         })
     },
   },
+  // mounted (){
+  //   if (!this.experiment.experiment_name){
+  //     this.experiment_name = this.experiment.experiment_name
+  //   }
+  //   if (!this.experiment.description){
+  //     this.description = this.experiment.description
+  //   }
+
+  // }
 }
 </script>
 
 <style scoped>
+  #input-name, #input-description{
+    text-align:left;
+  }
+
   #success-alert{
     padding-top:15px;
     padding-bottom:5px;

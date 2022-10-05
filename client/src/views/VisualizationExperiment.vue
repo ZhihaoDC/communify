@@ -1,8 +1,12 @@
 <template>
 <b-container fluid id="parent-container"> 
-    
-    <h2 id="header" v-if='((experiment.category === "Louvain") | (experiment.category === "Girvan-Newman"))'> Algoritmo de {{ experiment.category }} </h2> 
-    <h2 id="header" v-else> Visualización </h2>  
+    <b-row>
+        <b-col cols="8">
+            <h2 id="header" v-if='((experiment.category === "Louvain") | (experiment.category === "Girvan-Newman"))'> -- Algoritmo de {{ experiment.category }} -- </h2> 
+            <h2 id="header" v-else> Visualización </h2>
+        </b-col>
+    </b-row>
+      
     <b-row>
         <b-col cols="8">
             <PlotNetwork id="network-viz" :experiment="experiment" @ready="animation_finished = true"></PlotNetwork>

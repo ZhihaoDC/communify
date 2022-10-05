@@ -10,7 +10,7 @@
                         {{ experiment.description }}
                     </b-card-text>
 
-                    <b-button class="w-50 mt-auto mx-auto" type="submit" variant="primary" value="Visualizar"
+                    <b-button type="submit" variant="primary" value="Visualizar"
                         v-on:click="visualize(experiment)" v-if="!submitted">
                         Visualizar
                     </b-button>
