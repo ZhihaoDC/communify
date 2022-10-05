@@ -219,6 +219,7 @@ export default {
         .then((response) => {
           if (response.status === 200) {
             store.setLastComputedExperiment(response.data);
+            store.setIsNewExperiment(true)
             this.$router.push(
               "/community-detection/" + this.method + "/experiment"
             );

@@ -12,10 +12,14 @@ Vue.config.productionTip = false
 
 export var store = {
   state: {
-    lastComputedExperiment: Object
+    lastComputedExperiment: Object,
+    isNewExperiment: true
   },
   setLastComputedExperiment(lastComputedExperiment){
     this.state.lastComputedExperiment = lastComputedExperiment
+  },
+  setIsNewExperiment(isNewExperiment){
+    this.state.isNewExperiment = isNewExperiment
   }
 }
 

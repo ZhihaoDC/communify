@@ -12,7 +12,7 @@ import fcose from "cytoscape-fcose";
 
 export default {
   name: "PlotNetwork",
-  props:['experiment'],
+  props:['experiment', 'isNewExperiment'],
   emits: ['animation_finished'],
   mounted() {
     let self = this
@@ -81,9 +81,9 @@ export default {
       quality: "default",
       // Use random node positions at beginning of layout
       // if this is set to false, then quality option must be "proof"
-      randomize: true,
+      randomize: self.isNewExperiment,
       // Whether or not to animate the layout
-      animate: true,
+      animate: self.isNewExperiment,
       // Duration of animation in ms, if enabled
       animationDuration: 5000,
       // Easing of animation, if enabled

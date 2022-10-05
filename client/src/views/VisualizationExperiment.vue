@@ -9,7 +9,7 @@
       
     <b-row>
         <b-col cols="8">
-            <PlotNetwork id="network-viz" :experiment="experiment" @ready="animation_finished = true"></PlotNetwork>
+            <PlotNetwork id="network-viz" :experiment="experiment" :isNewExperiment="isNewExperiment" @ready="animation_finished = true"></PlotNetwork>
         </b-col>
         <b-col cols="4">
             <PlotNetworkForm id="save-network-form" :experiment="experiment" :activateSubmitButton="animation_finished"></PlotNetworkForm>
@@ -29,6 +29,7 @@ export default {
     data: function () {
         return {
                 experiment: store.state.lastComputedExperiment,
+                isNewExperiment: store.state.isNewExperiment,
                 animation_finished: false,
                 };
     },

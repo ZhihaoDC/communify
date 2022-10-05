@@ -96,6 +96,7 @@ export default {
         visualize(experiment) {
             this.submitted = true
             store.setLastComputedExperiment(experiment);
+            store.setIsNewExperiment(false);
             this.$router.push(
                 "/community-detection/" + experiment.category.toLowerCase() + "/experiment"
             );
