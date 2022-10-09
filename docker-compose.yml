@@ -14,7 +14,7 @@ services:
         MYSQL_HOST: mysql_db
         MYSQL_PORT: 3306
     volumes: 
-        - ./server/src/:/docker-entrypoint-initdb.d
+        # - ./server/src/:/docker-entrypoint-initdb.d
         - mysql_data:/var/lib/mysql
     ports: 
         - 3306:3306
@@ -40,7 +40,7 @@ services:
     depends_on:
       - mysql_db
       - adminer
-
+    # restart: on-failure
     #enable live reload on development
     volumes:
       - ./server:/app/server:cached
@@ -48,16 +48,16 @@ services:
     ports:  
       - 5000:5000
     environment:
-      - MYSQL_DATABASE=Networkly
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=pwd12345
-      - MYSQL_HOST=mysql_db
-      - MYSQL_PORT=3306
-      - FLASK_ENV=development
-      - WAIT_HOSTS=mysql_db:3306,adminer:8543
-      - WAIT_HOSTS_TIMEOUT=300
-      - WAIT_SLEEP_INTERVAL=30
-      - WAIT_HOST_CONNECT_TIMEOUT=30
+      MYSQL_DATABASE: "Networkly"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "pwd12345"
+      MYSQL_HOST: mysql_db
+      MYSQL_PORT: 3306
+      FLASK_ENV: development
+      WAIT_HOSTS: mysql_db:3306,adminer:8543
+      WAIT_HOSTS_TIMEOUT: 300
+      WAIT_SLEEP_INTERVAL: 30
+      WAIT_HOST_CONNECT_TIMEOUT: 30
 
 
   # Frontend
