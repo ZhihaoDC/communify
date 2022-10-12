@@ -70,8 +70,8 @@ export default {
             this.submit_experiment_to_backend()
           })
           .catch(err => {
-            console.log(err)
             // An error occurred
+            console.log(err)
           })
       }
       if (!this.confirmation && (this.experiment.experiment_id == null)) {
@@ -103,23 +103,10 @@ export default {
             this.submitted = false;
           }
         })
-
     }
 
 
-
   },
-
-
-  // mounted (){
-  //   if (!this.experiment.experiment_name){
-  //     this.experiment_name = this.experiment.experiment_name
-  //   }
-  //   if (!this.experiment.description){
-  //     this.description = this.experiment.description
-  //   }
-
-  // }
 }
 </script>
 

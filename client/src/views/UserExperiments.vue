@@ -1,7 +1,7 @@
 <template>
     <b-container fluid="md">
         <div>
-            <h1>Experimentos</h1>
+            <h2 id="header">Experimentos</h2>
         </div>
         <div>
             <Experiments></Experiments>

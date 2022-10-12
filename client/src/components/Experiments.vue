@@ -18,6 +18,11 @@
                     <template #footer>
                         <small class="text-muted">Creado el {{parseDate(experiment.creation_date)}}</small>
                     </template>
+                    <div>
+                    <b-link id="delete-text" @click="delete_experiment(experiment)">
+                        Eliminar
+                    </b-link>
+                    </div>
                 </b-card>
             </b-card-group>
         </div>
@@ -102,6 +107,42 @@ export default {
             );
         },
 
+        delete_experiment(experiment){
+            this.$bvModal.msgBoxConfirm('La siguiente acción borrará el experimento. ¿Estás seguro?', {
+          title: '¿Eliminar experimento?',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'danger',
+          okTitle: 'Eliminar',
+          cancelTitle: 'Cancelar',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
+        })
+        .then(action=>{
+            if (action){
+                const axios = require('axios')
+            const id_to_remove = experiment.experiment_id
+            const url = 'http://localhost:5000/delete-experiment/' + String(this.user_id) + '/' + String(id_to_remove)
+            console.log(url)
+            axios.delete(url)
+            .then(response =>{
+                if (response.status === 200) {
+                    console.log(response)
+                    this.experiments = this.experiments.filter(function(experiment) {
+                                                                return experiment.experiment_id != id_to_remove;
+                                                            });
+                    // this.showAlert()
+                }
+                
+            })
+            .catch(error=>{
+                console.log(error)
+            })
+            }
+        })
+
+        }
 
     },
 
@@ -120,5 +161,16 @@ export default {
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     min-height: 25rem;
     max-width: 25rem;
+}
+
+#delete-text {
+    color:gray; 
+    font-size: 0.8rem;
+    text-decoration: underline;
+
+}
+
+#delete-text:hover{
+    color:crimson
 }
 </style>

@@ -51,3 +51,10 @@ def get_experiments(user_id):
     # print(dict({k: v for k, v in data}))
     return json.jsonify({'status': 'success',
                         'experiments': data}), 200
+
+
+@ExperimentsController.route('/delete-experiment/<user_id>/<experiment_id>', methods=['DELETE'])
+def delete_experiments(user_id, experiment_id):
+    deleted_experiment = ExperimentService.delete_by_id(Experiment, experiment_id)
+    return json.jsonify({'status': 'success',
+                        'experiments': deleted_experiment}), 200
