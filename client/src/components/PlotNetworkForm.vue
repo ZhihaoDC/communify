@@ -49,56 +49,68 @@ export default {
       this.dismissCountDown = this.dismissSecs
     },
     submit_experiment() {
-      const axios = require("axios");
       //Ask confirmation
 
-      this.confirmation = ''
-      this.$bvModal.msgBoxConfirm('Guardar de nuevo experimento sobreescribirá el antiguo. ¿Quieres sobreescribir el experimento anterior?', {
-        title: '¿Sobreescribir experimento?',
-        size: 'sm',
-        buttonSize: 'sm',
-        okVariant: 'primary',
-        okTitle: 'Sobreescribir',
-        cancelTitle: 'Cancelar',
-        footerClass: 'p-2',
-        hideHeaderClose: false,
-        centered: true
-      })
-        .then(action => {
-          this.confirmation = action
-
-          if (this.confirmation){
-          axios.post('http://localhost:5000/save-experiment',
-            JSON.stringify(this.experiment),
-            {
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            })
-            .then((response) => {
-              if (response.status === 200) {
-                console.log(response)
-                this.submitted_msg = "Guardado!"
-                this.experiment = response.data.experiment
-                this.showAlert()
-              }
-            })
-            .catch((error) => {
-              console.log(error.response);
-              if (error.response.status == 500) {
-                this.error_msg = "Error en la comunicacion con el servidor";
-                this.submitted = false;
-              }
-            })
-          }
-
+      this.confirmation = false
+      if (this.experiment.experiment_id != null) {
+        this.$bvModal.msgBoxConfirm('Guardar de nuevo experimento sobreescribirá el antiguo. ¿Quieres sobreescribir el experimento anterior?', {
+          title: '¿Sobreescribir experimento?',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'primary',
+          okTitle: 'Sobreescribir',
+          cancelTitle: 'Cancelar',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+          centered: true
         })
-        .catch(err => {
-          console.log(err)
-          // An error occurred
-        })
+          .then(action => {
+            this.confirmation = action
+            console.log(this.confirmation)
+            this.submit_experiment_to_backend()
+          })
+          .catch(err => {
+            console.log(err)
+            // An error occurred
+          })
+      }
+      if (!this.confirmation && (this.experiment.experiment_id == null)) {
+        this.submit_experiment_to_backend()
+      }
     },
+
+    submit_experiment_to_backend() {
+      const axios = require("axios");
+      axios.post('http://localhost:5000/save-experiment',
+        JSON.stringify(this.experiment),
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response)
+            this.submitted_msg = "Guardado!"
+            this.experiment = response.data.experiment
+            this.showAlert()
+          }
+        })
+        .catch((error) => {
+          console.log(error.response);
+          if (error.response.status == 500) {
+            this.error_msg = "Error en la comunicacion con el servidor";
+            this.submitted = false;
+          }
+        })
+
+    }
+
+
+
   },
+
+
   // mounted (){
   //   if (!this.experiment.experiment_name){
   //     this.experiment_name = this.experiment.experiment_name
