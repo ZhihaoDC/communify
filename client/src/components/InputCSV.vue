@@ -118,7 +118,7 @@
       </b-row>
     </b-container>
     <p>
-      <small class="error" v-if="error.length > 0">{{ error }}</small>
+      <small class="error" v-if="error.length != 0">{{ error }}</small>
     </p>
     <b-button
       type="submit"
@@ -132,7 +132,7 @@
       Visualizar
     </b-button>
     <b-spinner
-      v-else
+      v-if="submitted"
       variant="primary"
       label="Spinning"
       id="spinner"
@@ -165,13 +165,13 @@ export default {
       this.error = "";
       this.columns = [];
       if (this.file) {
+        //check format
         if ((this.file["type"] != "text/csv") && (this.file["type"] != 'application/vnd.ms-excel')) {
           this.error = "El archivo debe tener extensión .csv";
         } else if ((this.file["type"] === "text/csv") | (this.file["type"] === 'application/vnd.ms-excel')) {
           const reader = new FileReader();
           reader.readAsText(this.file);
-          let self = this;
-          //reader.onload = e => console.log(e.target.result.split('\n')[0].split(','))
+          let self = this; //save reference
           reader.onload = (e) => {
             e.target.result
               .split("\n")[0]
@@ -184,6 +184,11 @@ export default {
                   disabled: false,
                 });
               });
+              //check number of columns read
+              console.log(self.columns.length)
+              if (self.columns.length <= 2){
+                this.error = "Formato erróneo. Por favor, introduce un csv con al menos 3 columnas."
+              }
           };
         }
       }
