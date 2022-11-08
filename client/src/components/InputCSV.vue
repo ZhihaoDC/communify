@@ -34,7 +34,7 @@
       accept=".csv"
       required="required"
       enctype="multipart/form-data"
-      @input="check_form()"
+      @input="check_file()"
       ref="file_input"
     ></b-form-file>
     <br />
@@ -53,18 +53,17 @@
       >
         Seleccionar columnas manualmente (nodo_origen, nodo_destino, peso)
       </b-form-checkbox>
-      <b-row align-h="center">
+      <b-row align-h="center" v-if="manually_select_columns">
         <b-form-group
           class="mx-4"
           id="content-item"
           label="Nodo origen"
-          v-if="manually_select_columns"
           v-slot="{ ariaDescribedby }"
         >
           <b-form-radio-group
             id="source-node"
             v-model="source"
-            v-on:change="disable(source)"
+            v-on:change="update_currently_selected_columns(source, 'source')"
             :options="columns"
             :aria-describedby="ariaDescribedby"
             button-variant="outline-primary"
@@ -79,13 +78,12 @@
           id="content-item"
           class="mx-4"
           label="Nodo destino"
-          v-if="manually_select_columns"
           v-slot="{ ariaDescribedby }"
         >
           <b-form-radio-group
             id="target-node"
             v-model="target"
-            v-on:change="disable(target)"
+            v-on:change="update_currently_selected_columns(target, 'target')"
             :options="columns"
             :aria-describedby="ariaDescribedby"
             button-variant="outline-success"
@@ -99,13 +97,12 @@
           id="content-item"
           class="mx-4"
           label="Peso arista"
-          v-if="manually_select_columns"
           v-slot="{ ariaDescribedby }"
         >
           <b-form-radio-group
             id="weight"
             v-model="weight"
-            v-on:change="disable(weight)"
+            v-on:change="update_currently_selected_columns(weight, 'weight')"
             :options="columns"
             :aria-describedby="ariaDescribedby"
             button-variant="outline-danger"
@@ -124,9 +121,9 @@
       type="submit"
       variant="primary"
       class="w-25 content-item submit-button"
-      v-bind:disabled="!(file && error.length === 0)"
+      v-bind:disabled="!(file && !error)"
       value="Visualizar"
-      v-on:click="submit_file(file)"
+      v-on:click="check_manually_selected_columns_and_submit(file)"
       v-if="!submitted"
     >
       Visualizar
@@ -155,12 +152,17 @@ export default {
       source: null,
       target: null,
       weight: null,
+      currently_selected_columns: {
+        'source':null,
+        'target':null,
+        'weight':null
+      },
       error: "",
       submitted: false,
     };
   },
   methods: {
-    check_form() {
+    check_file() {
       //Update error
       this.error = "";
       this.columns = [];
@@ -173,8 +175,7 @@ export default {
           reader.readAsText(this.file);
           let self = this; //save reference
           reader.onload = (e) => {
-            e.target.result
-              .split("\n")[0]
+            e.target.result.split("\n")[0]
               .split(",")
               .forEach(function (column) {
                 var column_text = column.toString().replaceAll('"','')
@@ -185,7 +186,6 @@ export default {
                 });
               });
               //check number of columns read
-              console.log(self.columns.length)
               if (self.columns.length <= 2){
                 this.error = "Formato erróneo. Por favor, introduce un csv con al menos 3 columnas."
               }
@@ -193,10 +193,35 @@ export default {
         }
       }
     },
-    disable(element){
-      var clicked_column = this.columns.find(clicked_column => clicked_column.text === element).disabled
-      this.columns.find(clicked_column => clicked_column.text === element).disabled = !clicked_column //switch between true or false
+
+    update_currently_selected_columns(element, clicked){
+      //remove value from currently selected columns if value has already been chosen
+      if (Object.values(this.currently_selected_columns).includes(element)){
+        let key = Object.keys(this.currently_selected_columns).find(key => this.currently_selected_columns[key] === element)
+        this.currently_selected_columns[key] = null
+      }
+      //update form variables
+      this.currently_selected_columns[clicked] = element
+      this.source = this.currently_selected_columns['source']
+      this.target = this.currently_selected_columns['target']
+      this.weight = this.currently_selected_columns['weight'] 
+      this.error = ''
     },
+
+    check_manually_selected_columns_and_submit(file){
+      if (this.manually_select_columns){
+        if ((this.source === null) || (this.target === null) || (this.weight === null)){
+              this.error = "Por favor, rellena todos los valores correspondientes a nodo origen, destino y peso de arista"
+            }
+        else{
+          this.error = ''
+        }
+      }
+      if (!this.error){
+        this.submit_file(file)
+      }
+    },
+
     async submit_file() {
       this.submitted = true;
       const axios = require("axios");
