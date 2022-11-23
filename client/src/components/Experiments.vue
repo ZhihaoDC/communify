@@ -1,30 +1,36 @@
 <template>
     <div id="experiments-container">
         <div v-if="!isFetching">
-            <b-card-group v-for="(experiments, idx) in makeRows" :key="idx" deck
-                class="align-items-center justify-content-center">
-                <b-card v-for="(experiment, index) in experiments" :key="index" class="mb-3" id="b-card"
-                    :title="experiment.experiment_name" :sub-title="experiment.category">
-                    <b-img fluid :src="'data:image/png;base64,' +  experiment.thumbnail"></b-img>
-                    <b-card-text>
-                        {{ experiment.description }}
-                    </b-card-text>
+            <div v-if="((experiments != null) && (!Object.keys(experiments).length === 0))">
+                <b-card-group v-for="(experiments, idx) in makeRows" :key="idx" deck
+                    class="align-items-center justify-content-center">
+                    <b-card v-for="(experiment, index) in experiments" :key="index" class="mb-3" id="b-card"
+                        :title="experiment.experiment_name" :sub-title="experiment.category">
+                        <b-img fluid :src="'data:image/png;base64,' +  experiment.thumbnail"></b-img>
+                        <b-card-text>
+                            {{ experiment.description }}
+                        </b-card-text>
 
-                    <b-button type="submit" variant="primary" value="Visualizar" v-on:click="visualize(experiment)"
-                        v-if="!submitted">
-                        Visualizar
-                    </b-button>
-                    <b-spinner v-else variant="primary" label="Spinning" id="spinner" class="m-5"></b-spinner>
-                    <template #footer>
-                        <small class="text-muted">Creado el {{parseDate(experiment.creation_date)}}</small>
-                    </template>
-                    <div>
-                        <b-link id="delete-text" @click="delete_experiment(experiment)">
-                            Eliminar
-                        </b-link>
-                    </div>
-                </b-card>
-            </b-card-group>
+                        <b-button type="submit" variant="primary" value="Visualizar" v-on:click="visualize(experiment)"
+                            v-if="!submitted">
+                            Visualizar
+                        </b-button>
+                        <b-spinner v-else variant="primary" label="Spinning" id="spinner" class="m-5"></b-spinner>
+                        <template #footer>
+                            <small class="text-muted">Creado el {{parseDate(experiment.creation_date)}}</small>
+                        </template>
+                        <div>
+                            <b-link id="delete-text" @click="delete_experiment(experiment)">
+                                Eliminar
+                            </b-link>
+                        </div>
+                    </b-card>
+                </b-card-group>
+            </div>
+            <div v-else id="empty-experiments-container">
+                <img id="empty-experiments-img" src="../assets/test-tube.png"> 
+                <div> No hay experimentos todavía </div>
+            </div>
         </div>
     </div>
 </template>
@@ -160,16 +166,23 @@ export default {
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     min-height: 25rem;
     max-width: 25rem;
-}
+};
 
 #delete-text {
     color: gray;
     font-size: 0.8rem;
     text-decoration: underline;
 
-}
+};
 
 #delete-text:hover {
     color: crimson
+};
+#empty-experiments-container{
+    padding:2em;
+}
+#empty-experiments-img{
+    vertical-align: middle;
+    padding: 1.25em;
 }
 </style>

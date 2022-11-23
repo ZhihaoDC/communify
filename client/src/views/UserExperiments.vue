@@ -1,7 +1,8 @@
 <template>
     <b-container fluid="md">
         <div>
-            <h2 id="header">Experimentos</h2>
+            <h1 id="header"> Experimentos </h1>
+            <h4> Aquí encontrarás los experimentos que realices y que hayas guardado. </h4>
         </div>
         <div>
             <Experiments></Experiments>
