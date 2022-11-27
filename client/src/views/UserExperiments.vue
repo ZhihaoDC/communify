@@ -3,6 +3,7 @@
         <div>
             <h1 id="header"> Experimentos </h1>
             <h4> Aquí encontrarás los experimentos que realices y que hayas guardado. </h4>
+            <br/>
         </div>
         <div>
             <Experiments></Experiments>

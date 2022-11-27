@@ -21,7 +21,8 @@
     <div id="success-alert">
       <b-alert :show="dismissCountDown" dismissible fade variant="success" @dismissed="dismissCountDown=0"
         @dismiss-count-down="countDownChanged">
-        ¡Experimento guardado!
+        ¡Experimento guardado! 
+        <router-link to="/user-experiments" id="experiments-link">Ir a experimentos</router-link>
       </b-alert>
     </div>
   </div>
