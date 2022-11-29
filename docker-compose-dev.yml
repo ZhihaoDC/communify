@@ -31,11 +31,10 @@ services:
 
   # Backend
   backend:
-    image: crazyhao/networkly-server
+    container_name: networkly-backend
     build: 
       context : "./"
       dockerfile: "dockerfile.server"
-    container_name: networkly-backend
     depends_on:
       - mysql_db
       - adminer
@@ -60,12 +59,11 @@ services:
 
   # Frontend
   frontend:
-    image: crazyhao/networkly-client
+    container_name: networkly-frontend
     build: 
       context : "./"
       dockerfile: "dockerfile.client"
-    container_name: networkly-frontend
-
+    
     #enable live reload on development    
     volumes:
       - ./client:/app/client:cached

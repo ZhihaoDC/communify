@@ -32,9 +32,6 @@ services:
   # Backend
   backend:
     image: crazyhao/networkly-server
-    build: 
-      context : "./"
-      dockerfile: "dockerfile.server"
     container_name: networkly-backend
     depends_on:
       - mysql_db
@@ -58,9 +55,6 @@ services:
   # Frontend
   frontend:
     image: crazyhao/networkly-client
-    build: 
-      context : "./"
-      dockerfile: "dockerfile.client"
     container_name: networkly-frontend
 
     ports:

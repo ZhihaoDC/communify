@@ -7,9 +7,7 @@
                     <b-card v-for="(experiment, index) in experiments" :key="index" class="mb-3" id="b-card"
                         :title="experiment.experiment_name" :sub-title="experiment.category">
                         <b-img fluid :src="'data:image/png;base64,' +  experiment.thumbnail"></b-img>
-                        <b-card-text>
-                            {{ experiment.description }}
-                        </b-card-text>
+                        <b-card-text> {{ experiment.description }} </b-card-text>
 
                         <b-button type="submit" variant="primary" value="Visualizar" v-on:click="visualize(experiment)"
                             v-if="!submitted">
@@ -20,7 +18,7 @@
                             <small class="text-muted">Creado el {{parseDate(experiment.creation_date)}}</small>
                         </template>
                         <div>
-                            <b-link id="delete-text" @click="delete_experiment(experiment)">
+                            <b-link id="delete-button" @click="delete_experiment(experiment)">
                                 Eliminar
                             </b-link>
                         </div>
@@ -161,23 +159,23 @@ export default {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 #b-card {
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     min-height: 25rem;
     max-width: 25rem;
 };
 
-#delete-text {
+#delete-button {
     color: gray;
     font-size: 0.8rem;
     text-decoration: underline;
-
 };
 
-#delete-text:hover {
+#delete-button:hover {
     color: crimson
 };
+
 #empty-experiments-container{
     padding:2em;
 }
