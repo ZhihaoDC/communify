@@ -108,7 +108,7 @@ def get_community_colors(graph, community):
 	Draws the graph using colors as community identifier
 	"""
 	num_comms = len(set(community.values()))
-	cmap = get_cmap('tab20', max(community.values()) + 1)
+	cmap = get_cmap('tab20', num_comms + 1)
 	# norm = matplotlib.colors.Normalize(vmin=0, vmax=num_comms)
 	colors = dict()
 
