@@ -1,7 +1,7 @@
 <template>
     <div id="experiments-container">
         <div v-if="!isFetching">
-            <div v-if="((experiments != null) && (!Object.keys(experiments).length === 0))">
+            <div v-if="((experiments != null) && (Object.keys(experiments).length != 0))">
                 <b-card-group v-for="(experiments, idx) in makeRows" :key="idx" deck
                     class="align-items-center justify-content-center">
                     <b-card v-for="(experiment, index) in experiments" :key="index" class="mb-3" id="b-card"
