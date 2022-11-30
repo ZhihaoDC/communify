@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v4
+    - uses: actions/setup-python@v4
       with:
         python-version: '3.x'
     - name: Install dependencies
@@ -19,5 +19,4 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        pip install pytest-cov
-        pytest server --junitxml=junit/test-results.xml 
+        pytest server
