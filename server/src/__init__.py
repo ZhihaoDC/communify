@@ -16,7 +16,7 @@ from src.models.UserModel import User
 ############################################## APP #################################################
 
 
-def create_app():
+def create_app(env="PROD"):
     app = Flask(__name__)
     app.config.from_object(__name__)
 
@@ -31,27 +31,28 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.app_context().push()
 
-    # Start app and database
-    db.init_app(app)
+    if env != 'TEST':
+        # Start app and database
+        db.init_app(app)
 
-    #Retry on connection failure
-    MAX_RETRIES = 10
-    TIME_RETRY_SECS = 5
-    retry_count = MAX_RETRIES
-    is_db_connected = False
-    while retry_count >= 0 and not is_db_connected:
-        try:
-            db.drop_all()
-            db.create_all()
-            is_db_connected = True
-        except OperationalError:
-            print(f"Attempting to reconnect to database... (Retry again in {TIME_RETRY_SECS} seconds...)")
-            time.sleep(TIME_RETRY_SECS)
-            if retry_count == 0:
-                print(f"Connection failed. (Tried to reconnect {MAX_RETRIES} times")
+        #Retry on connection failure
+        MAX_RETRIES = 10
+        TIME_RETRY_SECS = 5
+        retry_count = MAX_RETRIES
+        is_db_connected = False
+        while retry_count >= 0 and not is_db_connected:
+            try:
+                db.drop_all()
+                db.create_all()
+                is_db_connected = True
+            except OperationalError:
+                print(f"Attempting to reconnect to database... (Retry again in {TIME_RETRY_SECS} seconds...)")
+                time.sleep(TIME_RETRY_SECS)
+                if retry_count == 0:
+                    print(f"Connection failed. (Tried to reconnect {MAX_RETRIES} times")
 
-    # migrate = Migrate(app, db)
-    init_database()
+        # migrate = Migrate(app, db)
+        init_database()
 
     # enable CORS
     CORS(app, resources={r'/*': {'origins': '*'}})

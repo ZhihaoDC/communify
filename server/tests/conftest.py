@@ -6,7 +6,7 @@ from csv import writer, QUOTE_NONNUMERIC
 
 @pytest.fixture(scope='module')
 def client():
-    app = create_app()
+    app = create_app(env='TEST')
     app.config['TESTING'] = True
     
     with app.test_client() as client:
