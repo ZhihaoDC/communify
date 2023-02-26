@@ -30,12 +30,15 @@
 </template>
 
 <script>
+import { store } from '../main'
+
 export default {
   name: "PlotNetworkForm",
-  props: ['experiment', 'activateSubmitButton'],
+  props: ['activateSubmitButton'],
   data: function () {
     return {
-      experiment_name_placeholder: this.experiment.dataset_name,
+      experiment: store.getLastComputedExperiment(),
+      experiment_name_placeholder: store.getLastComputedExperiment().dataset_name,
       experiment_description_placeholder: "Introduce una descripción",
       dismissSecs: 4,
       dismissCountDown: 0,
@@ -52,7 +55,6 @@ export default {
     submit_experiment() {
       //Ask confirmation
 
-      this.confirmation = false
       if (this.experiment.experiment_id != null) {
         this.$bvModal.msgBoxConfirm('Guardar de nuevo experimento sobreescribirá el antiguo. ¿Quieres sobreescribir el experimento anterior?', {
           title: '¿Sobreescribir experimento?',
@@ -65,13 +67,14 @@ export default {
           hideHeaderClose: false,
           centered: true
         })
-          .then(action => {
-            this.confirmation = action
-            console.log(this.confirmation)
-            this.submit_experiment_to_backend()
+          .then(confirmation => {
+            if (confirmation){
+              this.submit_experiment_to_backend()
+            }
           })
           .catch(err => {
             // An error occurred
+            console.log("Error: ")
             console.log(err)
           })
       }
@@ -82,8 +85,10 @@ export default {
 
     submit_experiment_to_backend() {
       const axios = require("axios");
+      console.log("Guardando")
+      console.log(store.getLastComputedExperiment())
       axios.post('http://localhost:5000/save-experiment',
-        JSON.stringify(this.experiment),
+        JSON.stringify(store.getLastComputedExperiment()),
         {
           headers: {
             'Content-Type': 'application/json'

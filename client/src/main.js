@@ -15,11 +15,17 @@ export var store = {
     lastComputedExperiment: Object,
     isNewExperiment: true
   },
+  getLastComputedExperiment(){
+    return this.state.lastComputedExperiment
+  },
   setLastComputedExperiment(lastComputedExperiment){
     this.state.lastComputedExperiment = lastComputedExperiment
   },
   setIsNewExperiment(isNewExperiment){
     this.state.isNewExperiment = isNewExperiment
+  },
+  setExperimentJSON(new_json){
+    this.state.lastComputedExperiment.network_json = new_json
   }
 }
 

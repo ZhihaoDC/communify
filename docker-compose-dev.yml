@@ -31,6 +31,7 @@ services:
 
   # Backend
   backend:
+    image: crazyhao/networkly-server
     container_name: networkly-backend
     build: 
       context : "./"
@@ -59,6 +60,7 @@ services:
 
   # Frontend
   frontend:
+    image: crazyhao/networkly-client
     container_name: networkly-frontend
     build: 
       context : "./"

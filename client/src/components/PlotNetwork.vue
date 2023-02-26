@@ -6,19 +6,26 @@
 </template>
 
 <script>
-// import { store } from "../main.js";
+import { store } from "../main.js";
 import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
 
 export default {
   name: "PlotNetwork",
-  props:['experiment', 'isNewExperiment'],
+  props:['isNewExperiment'],
+  data: function() {
+    return {
+      experiment: store.getLastComputedExperiment(),
+    }
+  },
   emits: ['animation_finished'],
   mounted() {
     let self = this
     cytoscape.use(fcose);
     let cy = cytoscape({
       container: this.$refs.cy, // container to render in
+
+      //set node and edges color based on node properties
       style: [
         {
           selector: "node",
@@ -27,23 +34,18 @@ export default {
             height: "data(size)",
             width: "data(size)",
             "text-valign": "center",
-            "background-color": function(node){
-                                              if ((self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){
-                                                return node.data("background_color")
-                                              }else{
-                                                return "#5CF"
-                                              }
-            },
-            "text-outline-color": function(node){
-                                              if ((self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){
-                                                return node.data("background_color")
-                                              }else{
-                                                return "#fff"
-                                              }
-
-            },
+            "background-color": 
+              function(node){
+                if (!(self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){ return "#5CF" }
+                else { return node.data("background_color") }             
+              },
+            "text-outline-color": 
+              function(node){
+                if (!(self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){ return "#fff" }
+                else { return node.data("background_color") }
+              },
             "text-outline-width": 2,
-            "font-size": "data(font_size)",
+            "font-size": "data(font_size)"
           },
         },
         {
@@ -69,11 +71,44 @@ export default {
 
       hideEdgesOnViewport: true,
     });
-    cy.json(this.experiment.network_json); //read graph from json
+
     
+    //read graph from json
+    cy.json(this.experiment.network_json);
+    
+
+    cy.on('grab', 'node', function(){
+      cy.nodes().unlock()
+      }
+    )
+
+    //define actions on node after dragging
+    cy.on('free', 'node', function(){
+
+        cy.nodes().lock() //lock node positions
+
+        //update node positioning
+        const cy_json = cy.json();
+        delete cy_json.style
+        self.experiment.network_json = cy_json
+        store.setExperimentJSON(cy_json)
+
+        // //debug node positions
+        // console.log(cy_json.elements.nodes[parseInt(evt.target._private.data.id)].position.x)
+        // console.log(cy_json.elements.nodes[parseInt(evt.target._private.data.id)].position.y)
+        // console.log(store.getLastComputedExperiment().network_json.elements.nodes[parseInt(evt.target._private.data.id)].position.x)
+        // console.log(store.getLastComputedExperiment().network_json.elements.nodes[parseInt(evt.target._private.data.id)].position.y)     
+                
+        //update thumbnail
+        const options = {'scale': 0.15, 'output':'base64'}
+        const thumbnail = cy.png(options)
+        self.experiment.thumbnail = thumbnail
+    })
+
+
+    //define layout
     var layout_options = {
       name: "fcose",
-
       // 'draft', 'default' or 'proof'
       // - "draft" only applies spectral layout
       // - "default" improves the quality with incremental layout (fast cooling rate)
@@ -85,7 +120,7 @@ export default {
       // Whether or not to animate the layout
       animate: self.isNewExperiment,
       // Duration of animation in ms, if enabled
-      animationDuration: 5000,
+      animationDuration: 3000,
       // Easing of animation, if enabled
       animationEasing: undefined,
       // Fit the viewport to the repositioned nodes
@@ -122,19 +157,18 @@ export default {
           if (cy.$id(edge.data().source).data().community === cy.$id(edge.data().target).data().community){
             return 50
           }else{
-            return 500
+            return 800 
           }
         }else{
           return 150
         }
       },
-      
       // Divisor to compute edge forces
       edgeElasticity: 0.45,
       // Nesting factor (multiplier) to compute ideal edge length for nested edges
       nestingFactor: 0.1,
       // Maximum number of iterations to perform - this is a suggested value and might be adjusted by the algorithm as required
-      numIter: 2500,
+      // numIter: 2500,
       // For enabling tiling
       tile: true,
       // Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
@@ -166,36 +200,34 @@ export default {
 
       /* layout event callbacks */
       ready: function() {
- 
-        
       }, // on layoutready
       stop: function () { // on layoutstop
         //set edges visible only when animation has stopped (for performance enhancements) 
         cy.style().selector("edge").style("visibility", "visible").update();
-
         //store json into experiments
         const cy_json = cy.json(); // take json from cytoscape
         delete cy_json.style
-        self.experiment["network_json"] = cy_json //update experiment info
-
+        self.experiment.network_json = cy_json //update experiment info
                 
         //store thumbnail
-        const options={'scale': 0.2,
-                      'output':'base64'}
+        const options = {'scale': 0.2, 'output':'base64'}
         const thumbnail = cy.png(options)
-        self.experiment["thumbnail"] = thumbnail
+        self.experiment.thumbnail = thumbnail
 
-        // self.animation_finished = true
+        self.animation_finished = true
         self.$emit('ready')
 
       },
+      
     };
+
+
     //Run layout
     var layout = cy.layout(layout_options);
     layout.run();
     this.cy = cy;
-
     cy.animated();
+  
 
   },
 };
