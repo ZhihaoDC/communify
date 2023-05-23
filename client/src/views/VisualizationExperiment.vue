@@ -9,10 +9,10 @@
       
     <b-row>
         <b-col cols="8">
-            <PlotNetwork id="network-viz" :isNewExperiment="isNewExperiment" @ready="animation_finished = true"></PlotNetwork>
+            <PlotNetwork id="network-viz" ref="plotNetwork" @network-exported="submitExperiment" :isNewExperiment="isNewExperiment" @ready="animation_finished = true"></PlotNetwork>
         </b-col>
         <b-col cols="4">
-            <PlotNetworkForm id="save-network-form" :activateSubmitButton="animation_finished"></PlotNetworkForm>
+            <PlotNetworkForm id="save-network-form" ref="plotNetworkForm" @export-network="updateNetwork" :activateSubmitButton="animation_finished" ></PlotNetworkForm>
         </b-col>
         
     </b-row>
@@ -35,6 +35,14 @@ export default {
     },
     mounted(){
         console.log(this.experiment)
+    },
+    methods: {
+        updateNetwork(){
+            this.$refs.plotNetwork.updateNetwork();
+        },
+        submitExperiment(){
+            this.$refs.plotNetworkForm.submit_experiment_with_confirmation();
+        }
     }
 }
 </script>

@@ -15,16 +15,15 @@ export default {
   props:['isNewExperiment'],
   data: function() {
     return {
-      experiment: store.getLastComputedExperiment(),
+      experiment: store.getLastComputedExperiment()
     }
   },
   emits: ['animation_finished'],
   mounted() {
     let self = this
     cytoscape.use(fcose);
-    let cy = cytoscape({
+    this.cy = cytoscape({
       container: this.$refs.cy, // container to render in
-
       //set node and edges color based on node properties
       style: [
         {
@@ -71,11 +70,12 @@ export default {
 
       hideEdgesOnViewport: true,
     });
-
     
+    //define local variable
+    let cy = this.cy
+
     //read graph from json
     cy.json(this.experiment.network_json);
-    
 
     cy.on('grab', 'node', function(){
       cy.nodes().unlock()
@@ -84,25 +84,34 @@ export default {
 
     //define actions on node after dragging
     cy.on('free', 'node', function(){
+        
+    //     const dragged_nodes_id = event.target.id()
+    //     const dragged_nodes_position = event.target.position()
 
-        cy.nodes().lock() //lock node positions
+    //     //update node positioning
+    //     const current_experiment_json = store.getExperimentJSON();
+    //     // delete cy_json.style
+    //     // self.experiment.network_json = cy_json
+    //     for (let i=0; i < dragged_nodes_id.length; i++){
+    //       // console.log(current_experiment_json.elements.nodes[dragged_nodes_id[i]], ":", current_experiment_json.elements.nodes[dragged_nodes_id[i]].position)
+    //       current_experiment_json.elements.nodes[dragged_nodes_id[i]].position = dragged_nodes_position[i]
+    //       // console.log(current_experiment_json.elements.nodes[dragged_nodes_id[i]], ":", dragged_nodes_position[i])
+    //     }
 
-        //update node positioning
-        const cy_json = cy.json();
-        delete cy_json.style
-        self.experiment.network_json = cy_json
-        store.setExperimentJSON(cy_json)
+    //     store.setExperimentJSON(current_experiment_json)
 
-        // //debug node positions
-        // console.log(cy_json.elements.nodes[parseInt(evt.target._private.data.id)].position.x)
-        // console.log(cy_json.elements.nodes[parseInt(evt.target._private.data.id)].position.y)
-        // console.log(store.getLastComputedExperiment().network_json.elements.nodes[parseInt(evt.target._private.data.id)].position.x)
-        // console.log(store.getLastComputedExperiment().network_json.elements.nodes[parseInt(evt.target._private.data.id)].position.y)     
+    //     // //debug node positions
+    //     // console.log(cy_json.elements.nodes[parseInt(evt.target._private.data.id)].position.x)
+    //     // console.log(cy_json.elements.nodes[parseInt(evt.target._private.data.id)].position.y)
+    //     // console.log(store.getLastComputedExperiment().network_json.elements.nodes[parseInt(evt.target._private.data.id)].position.x)
+    //     // console.log(store.getLastComputedExperiment().network_json.elements.nodes[parseInt(evt.target._private.data.id)].position.y)     
                 
-        //update thumbnail
-        const options = {'scale': 0.15, 'output':'base64'}
-        const thumbnail = cy.png(options)
-        self.experiment.thumbnail = thumbnail
+    //     //update thumbnail
+    //     const options = {'scale': 0.15, 'output':'base64'}
+    //     const thumbnail = cy.png(options)
+    //     self.experiment.thumbnail = thumbnail
+
+        
     })
 
 
@@ -204,6 +213,8 @@ export default {
       stop: function () { // on layoutstop
         //set edges visible only when animation has stopped (for performance enhancements) 
         cy.style().selector("edge").style("visibility", "visible").update();
+
+        cy.nodes().lock()
         //store json into experiments
         const cy_json = cy.json(); // take json from cytoscape
         delete cy_json.style
@@ -216,7 +227,8 @@ export default {
 
         self.animation_finished = true
         self.$emit('ready')
-
+        
+        cy.nodes().unlock()
       },
       
     };
@@ -230,6 +242,29 @@ export default {
   
 
   },
+  methods:{
+    updateNetwork(){
+      // console.log("Actualizando Experimento...")
+      let cy = this.cy
+      cy.nodes().lock()
+
+      let new_json = cy.json();
+      delete new_json.style //dont overwrite current style (colors)
+      store.setExperimentJSON(new_json);
+
+      // update thumbnail
+      const options = {'scale': 0.15, 'output':'base64'}
+      const thumbnail = cy.png(options)
+      store.setExperimentThumbail(thumbnail)
+
+      // console.log("Experimento actualizado")
+      this.$emit("network-exported", new_json)
+
+    }
+  },
+  created(){
+    this.$on("export-network", this.updateNetwork)
+  }
 };
 </script>
 

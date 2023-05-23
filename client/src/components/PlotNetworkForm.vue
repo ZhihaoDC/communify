@@ -14,7 +14,7 @@
         placeholder="Introduce una descripción para el experimento"></b-form-textarea>
     </b-form-group>
 
-    <b-button type="submit" :disabled="!activateSubmitButton" @click="submit_experiment" variant="primary"
+    <b-button type="submit" :disabled="!activateSubmitButton" @click="handleSubmitNetwork" variant="primary"
       class="content-item submit-button">
       {{this.submitted_msg}}
     </b-button>
@@ -52,9 +52,13 @@ export default {
     showAlert() {
       this.dismissCountDown = this.dismissSecs
     },
-    submit_experiment() {
+    async handleSubmitNetwork(){
+      // console.log("Mandando señal para actualizar experimento...")
+      this.$emit("export-network")
+    },
+    submit_experiment_with_confirmation() {
       //Ask confirmation
-
+      // console.log("Subiendo experimento")
       if (this.experiment.experiment_id != null) {
         this.$bvModal.msgBoxConfirm('Guardar de nuevo experimento sobreescribirá el antiguo. ¿Quieres sobreescribir el experimento anterior?', {
           title: '¿Sobreescribir experimento?',
@@ -85,7 +89,6 @@ export default {
 
     submit_experiment_to_backend() {
       const axios = require("axios");
-      console.log("Guardando")
       console.log(store.getLastComputedExperiment())
       axios.post('http://localhost:5000/save-experiment',
         JSON.stringify(store.getLastComputedExperiment()),
@@ -96,7 +99,6 @@ export default {
         })
         .then((response) => {
           if (response.status === 200) {
-            console.log(response)
             this.submitted_msg = "Guardado!"
             this.experiment = response.data.experiment
             this.showAlert()

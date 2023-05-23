@@ -24,8 +24,17 @@ export var store = {
   setIsNewExperiment(isNewExperiment){
     this.state.isNewExperiment = isNewExperiment
   },
+  getExperimentJSON(){
+    return this.state.lastComputedExperiment.network_json
+  },
   setExperimentJSON(new_json){
     this.state.lastComputedExperiment.network_json = new_json
+  },
+  getExperimentThumbnail(){
+    return this.state.lastComputedExperiment.thumbnail
+  },
+  setExperimentThumbail(new_thumbnail){
+    this.state.lastComputedExperiment.thumbnail = new_thumbnail
   }
 }
 
