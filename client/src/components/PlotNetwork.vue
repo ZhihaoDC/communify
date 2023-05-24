@@ -50,6 +50,27 @@ export default {
           },
         },
         {
+          selector: "node:selected",
+          style: {
+            label: "data(name)",
+            height: "data(size)",
+            width: "data(size)",
+            "text-valign": "center",
+            "background-color": 
+              function(node){
+                if (!(self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){ return "#5CF" }
+                else { return node.data("background_color") }             
+              },
+            "text-outline-color": 
+              function(){
+                if (!(self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){ return "#fff" }
+                else { return "#999999" }
+              },
+            "text-outline-width": 7,
+            "font-size": "data(font_size)"
+          },
+        },
+        {
           selector: "edge",
           style: {
             visibility: "hidden",
