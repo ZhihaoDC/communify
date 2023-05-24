@@ -59,10 +59,10 @@ export default {
     }
 
     #save-network-form{
-        padding-top: 10px;
-        padding-left: 10px;
-        padding-right: 10px;
-        border-radius: 10px;
+        padding-top: 25px;
+        padding-left: 15px;
+        padding-right: 15px;
+        border-radius: 15px;
         box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
         

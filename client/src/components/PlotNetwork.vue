@@ -25,6 +25,8 @@ export default {
     this.cy = cytoscape({
       container: this.$refs.cy, // container to render in
       //set node and edges color based on node properties
+      wheelSensitivity: 0.2,
+      hideEdgesOnViewport: true,
       style: [
         {
           selector: "node",
@@ -67,53 +69,13 @@ export default {
           },
         },
       ],
-
-      hideEdgesOnViewport: true,
+      
     });
     
     //define local variable
     let cy = this.cy
-
     //read graph from json
     cy.json(this.experiment.network_json);
-
-    cy.on('grab', 'node', function(){
-      cy.nodes().unlock()
-      }
-    )
-
-    //define actions on node after dragging
-    cy.on('free', 'node', function(){
-        
-    //     const dragged_nodes_id = event.target.id()
-    //     const dragged_nodes_position = event.target.position()
-
-    //     //update node positioning
-    //     const current_experiment_json = store.getExperimentJSON();
-    //     // delete cy_json.style
-    //     // self.experiment.network_json = cy_json
-    //     for (let i=0; i < dragged_nodes_id.length; i++){
-    //       // console.log(current_experiment_json.elements.nodes[dragged_nodes_id[i]], ":", current_experiment_json.elements.nodes[dragged_nodes_id[i]].position)
-    //       current_experiment_json.elements.nodes[dragged_nodes_id[i]].position = dragged_nodes_position[i]
-    //       // console.log(current_experiment_json.elements.nodes[dragged_nodes_id[i]], ":", dragged_nodes_position[i])
-    //     }
-
-    //     store.setExperimentJSON(current_experiment_json)
-
-    //     // //debug node positions
-    //     // console.log(cy_json.elements.nodes[parseInt(evt.target._private.data.id)].position.x)
-    //     // console.log(cy_json.elements.nodes[parseInt(evt.target._private.data.id)].position.y)
-    //     // console.log(store.getLastComputedExperiment().network_json.elements.nodes[parseInt(evt.target._private.data.id)].position.x)
-    //     // console.log(store.getLastComputedExperiment().network_json.elements.nodes[parseInt(evt.target._private.data.id)].position.y)     
-                
-    //     //update thumbnail
-    //     const options = {'scale': 0.15, 'output':'base64'}
-    //     const thumbnail = cy.png(options)
-    //     self.experiment.thumbnail = thumbnail
-
-        
-    })
-
 
     //define layout
     var layout_options = {
@@ -152,7 +114,7 @@ export default {
       // Sample size to construct distance matrix
       sampleSize: 25,
       // Separation amount between nodes
-      nodeSeparation: 350,
+      nodeSeparation: 500,
       // Power iteration tolerance
       piTol: 0.0000001,
 
@@ -259,6 +221,8 @@ export default {
 
       // console.log("Experimento actualizado")
       this.$emit("network-exported", new_json)
+      
+      cy.nodes().unlock()
 
     }
   },

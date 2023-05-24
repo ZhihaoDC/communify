@@ -1,13 +1,22 @@
 <template>
 
-  <div id="container">
+  <b-container id="container">
 
-    <h4> Guardar experimento </h4>
-    <br />
-    <b-form-group id="input-name" label="Nombre del experimento" label-for="input-name">
-      <b-form-input id="experiment_name" v-model="experiment.experiment_name" :placeholder="experiment.dataset_name">
+    <b-form-group>
+      <h4 v-if="!editing" @click="startEditing" title="Editar título del experimento"> {{experiment_name}} 
+        <b-icon id="edit-icon" icon="pencil-fill"></b-icon>
+      </h4>
+
+      <b-form-input v-else id="experiment_name" 
+      ref="experiment_name_input" 
+      class="custom-input" 
+      v-model="experiment.experiment_name"
+      @keyup.enter="stopEditing"
+      @blur="stopEditing" 
+      @focus="moveCursorToLeft"
+      :placeholder="experiment_name">
       </b-form-input>
-    </b-form-group>
+  </b-form-group>
 
     <b-form-group id="input-description" label="Descripción" label-for="input-description">
       <b-form-textarea id="description" v-model="experiment.description"
@@ -18,6 +27,7 @@
       class="content-item submit-button">
       {{this.submitted_msg}}
     </b-button>
+
     <div id="success-alert">
       <b-alert :show="dismissCountDown" dismissible fade variant="success" @dismissed="dismissCountDown=0"
         @dismiss-count-down="countDownChanged">
@@ -25,7 +35,8 @@
         <router-link to="/user-experiments" id="experiments-link">Ir a experimentos</router-link>
       </b-alert>
     </div>
-  </div>
+    
+  </b-container>
 
 </template>
 
@@ -38,14 +49,32 @@ export default {
   data: function () {
     return {
       experiment: store.getLastComputedExperiment(),
-      experiment_name_placeholder: store.getLastComputedExperiment().dataset_name,
-      experiment_description_placeholder: "Introduce una descripción",
+      experiment_name: store.getLastComputedExperiment().dataset_name,
+      editing: false,
       dismissSecs: 4,
       dismissCountDown: 0,
       submitted_msg: "Guardar experimento",
     }
   },
   methods: {
+    startEditing(){
+      this.editing = true
+      this.experiment.experiment_name = this.experiment_name
+      this.$nextTick(() => {
+        this.$refs.experiment_name_input.$el.setSelectionRange(0, 0)
+        this.$refs.experiment_name_input.focus()
+      })
+    },
+    stopEditing(){
+      this.editing = false
+      if ((this.experiment.experiment_name !== this.experiment.dataset_name) & (this.experiment.experiment_name !== "")){
+        this.experiment_name = this.experiment.experiment_name
+      }
+    },  
+    moveCursorToLeft() {
+      const inputElement = this.$refs.experiment_name_input.$el;
+      inputElement.setSelectionRange(this.experiment.experiment_name.length, this.experiment.experiment_name.length);
+    },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
     },
@@ -119,11 +148,25 @@ export default {
 </script>
 
 <style scoped>
+.custom-input{
+  border: none;
+  box-shadow: none;
+  outline: none;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
 #input-name,
 #input-description {
   text-align: left;
 }
 
+#edit-icon{
+  padding-bottom: 0.15em;
+  padding-top: 0.1em;
+  padding-left: 0.05em;
+  padding-right: 0.1em;
+}
 #success-alert {
   padding-top: 15px;
   padding-bottom: 5px;
