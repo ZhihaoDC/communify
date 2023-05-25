@@ -3,7 +3,7 @@
   <b-container id="container">
 
     <b-form-group>
-      <h4 v-if="!editing" @click="startEditing" title="Editar título del experimento"> {{experiment_name}} 
+      <h4 v-if="!editing" @click="startEditing" title="Nombre del experimento"> {{experiment_name}} 
         <b-icon id="edit-icon" icon="pencil-fill"></b-icon>
       </h4>
 
@@ -148,6 +148,7 @@ export default {
 </script>
 
 <style scoped>
+
 .custom-input{
   border: none;
   box-shadow: none;
