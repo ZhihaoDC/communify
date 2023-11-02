@@ -149,6 +149,9 @@ export default {
 
 <style scoped>
 
+#container{
+  margin-left: 1rem;
+}
 .custom-input{
   border: none;
   box-shadow: none;

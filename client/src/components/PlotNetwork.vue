@@ -37,13 +37,13 @@ export default {
             "text-valign": "center",
             "background-color": 
               function(node){
-                if (!(self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){ return "#5CF" }
-                else { return node.data("background_color") }             
+                if ("background_color" in node.data){return node.data("background_color")}
+                else {return "#5CF"}             
               },
             "text-outline-color": 
               function(node){
-                if (!(self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){ return "#fff" }
-                else { return node.data("background_color") }
+                if ("background_color" in node.data){return node.data("background_color")}
+                else {return "#fff"}
               },
             "text-outline-width": 2,
             "font-size": "data(font_size)"
@@ -58,13 +58,13 @@ export default {
             "text-valign": "center",
             "background-color": 
               function(node){
-                if (!(self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){ return "#5CF" }
-                else { return node.data("background_color") }             
+                if ("background_color" in node.data){return node.data("background_color")}
+                else {return "#5CF"}         
               },
             "text-outline-color": 
               function(){
-                if (!(self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){ return "#fff" }
-                else { return "#999999" }
+                if (!((self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman"))){ return "#fff" }
+                else {return "#999999"}
               },
             "text-outline-width": 7,
             "font-size": "data(font_size)"
@@ -258,7 +258,7 @@ export default {
 }
 
 #container {
-  min-height: 90vh;
+  min-height: 80vh;
   /* border-radius: 10px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; */

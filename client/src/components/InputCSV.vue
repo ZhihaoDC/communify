@@ -102,6 +102,7 @@
           <b-form-radio-group
             id="weight"
             v-model="weight"
+            v-if="columns.length > 2"
             v-on:change="update_currently_selected_columns(weight, 'weight')"
             :options="columns"
             :aria-describedby="ariaDescribedby"
@@ -178,7 +179,7 @@ export default {
             e.target.result.split("\n")[0]
               .split(",")
               .forEach(function (column) {
-                var column_text = column.toString().replaceAll('"','')
+                var column_text = column.toString().replaceAll('"','').replaceAll("'", "")
                 self.columns.push({
                   text: column_text,
                   value: column_text,
@@ -186,9 +187,10 @@ export default {
                 });
               });
               //check number of columns read
-              if (self.columns.length <= 2){
+              if (this.columns.length < 2){
                 this.error = "Formato erróneo. Por favor, introduce un csv con al menos 3 columnas."
               }
+              console.log(this.columns)
           };
         }
       }

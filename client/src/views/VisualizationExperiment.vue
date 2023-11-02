@@ -2,15 +2,16 @@
 <b-container fluid id="parent-container" class="flex-grow-1"> 
       
     <b-row no-gutters>
+        <b-col cols="12">
+            <h2 id="header" v-if='((experiment.category === "Louvain") | (experiment.category === "Girvan-Newman"))'>  Comunidades ({{ experiment.category }}) </h2> 
+            <h2 id="header" v-else> Visualización </h2>
+        </b-col>
+        <b-col cols="9">
+            <PlotNetwork id="network-viz"  ref="plotNetwork" @network-exported="submitExperiment" :isNewExperiment="isNewExperiment" @ready="animation_finished = true"></PlotNetwork>
+        </b-col>
         <b-col cols="3">
             <PlotNetworkForm id="save-network-form" ref="plotNetworkForm" @export-network="updateNetwork" :activateSubmitButton="animation_finished" ></PlotNetworkForm>
         </b-col>
-        <b-col cols="9">
-            <h2 id="header" v-if='((experiment.category === "Louvain") | (experiment.category === "Girvan-Newman"))'>  Comunidades ({{ experiment.category }}) </h2> 
-            <h2 id="header" v-else> Visualización </h2>
-            <PlotNetwork id="network-viz"  ref="plotNetwork" @network-exported="submitExperiment" :isNewExperiment="isNewExperiment" @ready="animation_finished = true"></PlotNetwork>
-        </b-col>
-                
     </b-row>
     
 
@@ -59,7 +60,6 @@ export default {
     } */
 
     #save-network-form{
-        position:absolute;
         padding-top: 25px;
         border-top: 1em;
         border-radius: 15px;
@@ -68,11 +68,12 @@ export default {
         
     }
     #network-viz{
-        min-height: 80vh;
-        z-index:1
-        /* border-radius: 10px;
+        min-height: 75vh;
+        z-index:1;
+        border-radius: 10px;
         box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-            rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; */
+            rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+        margin-right: 1rem;
     }
     #page-title{
         position:absolute;
