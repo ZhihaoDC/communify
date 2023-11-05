@@ -10,6 +10,7 @@ def test_apply_louvain(client):
         AND contains graph's nodes
         AND contains communities
         AND contains modularity
+        AND me
     """
     #create mock csv for POST request
     mock_csv = BytesIO(b"""\
@@ -30,8 +31,9 @@ def test_apply_louvain(client):
 
     response = rv.json #convert response to json
 
-    assert "graph" in response
-    assert "nodes" in response["graph"]["elements"]
-    assert "edges" in response["graph"]["elements"]
+    assert "network_json" in response
+    assert "Louvain" == response["category"]
+    assert "nodes" in response["network_json"]["elements"]
+    assert "edges" in response["network_json"]["elements"]
     assert "communities" in response
-    assert "modularity" in response
+    assert "modularity" in response["metrics"]

@@ -30,8 +30,9 @@ def test_apply_girvan_newman(client):
 
     response = rv.json #convert response to json
     
-    assert "graph" in response
-    assert "nodes" in response["graph"]["elements"]
-    assert "edges" in response["graph"]["elements"]
+    assert "network_json" in response
+    assert "Girvan-Newman" == response["category"]
+    assert "nodes" in response["network_json"]["elements"]
+    assert "edges" in response["network_json"]["elements"]
     assert "communities" in response
-    assert "modularity" in response
+    assert "modularity" in response["metrics"]

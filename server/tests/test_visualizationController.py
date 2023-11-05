@@ -20,13 +20,13 @@ def test_visualize_network(client):
     data = dict()
     data['file'] = (mock_csv, 'edge_list.csv')
 
-    rv = client.post('/community-detection/network-visualization',
+    rv = client.post('/community-detection/graph-visualization',
                     data= data,
                     content_type='multipart/form-data')
 
     response = rv.json
-    assert 'graph' in response
-    assert 'nodes' in response['graph']['elements']
-    assert 'edges' in response['graph']['elements']
-    assert all(['name' in node['data'] for node in response['graph']['elements']['nodes']])
-    assert all(['degree' in node['data'] for node in response['graph']['elements']['nodes']])
+    assert 'network_json' in response
+    assert 'nodes' in response['network_json']['elements']
+    assert 'edges' in response['network_json']['elements']
+    assert all(['name' in node['data'] for node in response['network_json']['elements']['nodes']])
+    assert all(['degree' in node['data'] for node in response['network_json']['elements']['nodes']])

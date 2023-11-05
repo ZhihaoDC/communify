@@ -1,3 +1,4 @@
+from itsdangerous import NoneAlgorithm
 from pandas import DataFrame, Series, read_csv, isna
 from json import loads
 from networkx import from_pandas_edgelist, get_node_attributes
@@ -9,46 +10,46 @@ from matplotlib.colors import rgb2hex
 
 
 #Prepare file, return networkx graph
-def preprocess_network(file, input_columns=None):
+def file_to_network(file, input_columns=None):
+    """
+    Takes file contained in variable and returns a Networkx.Graph object with attributes
+    either specified in input_columns or in the first two columns as (source, target).
+
+    Parameters:
+        - file: Bytes file from request
+        - input_columns: dict with shape {  'source':'name_of_column_soruce',
+                                            'target:'name_of_column_target'.
+                                            'weight':'optional_name_of_column_weight'
+                                            }
+                        The weight value is optional.
+    Returns:
+        networkx.Graph
+    """
+
     #Prepare dataframe
     edge_list = read_csv(file)
     edge_list.columns = edge_list.columns.str.lower()
-    # edge_list.dropna(how='any', axis='index', inplace=True)
-    # edge_list['id'] = edge_list.index
-    # edge_list = edge_list.filter(['from', 'to', 'source', 'taget'],axis='columns')
-    possible_weights = ['weight', 'weights', 'value', 'values']
-    #Generate graph
-    if input_columns:
-        if all(not isna(column) for column in input_columns.values()):
-            print(all(not isna(column) for column in input_columns.values()))
-            print('Using weights inserted by user')
-            graph = from_pandas_edgelist(edge_list, 
-                                            source=str(input_columns['source']).lower(), 
-                                            target=str(input_columns['target']).lower(), 
-                                            edge_attr=str(input_columns['weight']).lower())
-            
-        elif isna(input_columns['weight']) and (not isna(input_columns['source'])) and (not isna(input_columns['target'])):
-            graph = from_pandas_edgelist(edge_list, 
-                                            source=str(input_columns['source']).lower(), 
-                                            target=str(input_columns['target']).lower())
-            print("No weights in input")        
-        else: #input error
-            raise ValueError("Inserted values do not meet requierements")
-        
-    elif any(column in possible_weights for column in edge_list.columns): #search for column names similar to 'weight' or 'value'
-            is_desired_column_name =  [column in possible_weights for column in edge_list.columns]
-            desired_column_name_index = is_desired_column_name.index(True)
-            graph = from_pandas_edgelist(edge_list, 
-                                            source=edge_list.columns[0], 
-                                            target=edge_list.columns[1],
-                                            edge_attr=edge_list.columns[desired_column_name_index])
-        
-            print('Found weight-alike column in ', desired_column_name_index)
-    else:
-        print('No weights found')
-        graph = from_pandas_edgelist(edge_list, 
-                                        source=edge_list.columns[0], 
-                                        target=edge_list.columns[1])
+
+    possible_weight_names = ['weight', 'weights', 'value', 'values'] #possible names for column 'weight'
+
+    if input_columns and (not isna(input_columns['source'])) and (not isna(input_columns['target'])):
+    #input columns provided with 'source' and 'target' columns are defined
+        source = str(input_columns['source']).lower() 
+        target = str(input_columns['target']).lower()
+        weights = str(input_columns['weight']).lower() if not isna(input_columns['weight']) else None
+
+    
+    else: 
+    #input_columns was not provided, search for column names similar to 'weight' or 'value' using possible_weights variable
+        weights = next((similar for similar in edge_list.columns if similar in possible_weight_names), None)
+        source = edge_list.columns[0]
+        target = edge_list.columns[1]
+
+
+    graph = from_pandas_edgelist(edge_list, 
+                                source=source, 
+                                target=target,
+                                edge_attr=weights)
 
     graph = convert_node_labels_to_integers(graph, first_label=0, label_attribute='name')
 
@@ -56,7 +57,18 @@ def preprocess_network(file, input_columns=None):
 
 
 #Convert graph to json 
-def preprocess_json(graph, communities=None):
+def network_to_json(graph, communities=None):
+    """
+    Take Networkx.Graph object and set all possible attributes
+
+    Parameters:
+        - graph: networkx.Graph object
+        - communities: dict like {'name_of_node':'community_it_belongs_to'}
+
+    Returns:
+        dict of shape like cytoscape data
+    """
+
     #add color to communities and label them
     if communities is not None:
         colors = get_community_colors(graph, communities)
@@ -96,16 +108,17 @@ def get_community_colors(graph, community):
 	Draws the graph using colors as community identifier
 	"""
 	num_comms = len(set(community.values()))
-	cmap = get_cmap('tab20', max(community.values()) + 1)
+	cmap = get_cmap('tab20', num_comms + 1)
 	# norm = matplotlib.colors.Normalize(vmin=0, vmax=num_comms)
 	colors = dict()
 
 	for node in graph.nodes:
-		colors.update({node: "#"+rgb2hex(cmap(community[node]))[1]
-                                    +rgb2hex(cmap(community[node]))[3] 
-                                    +rgb2hex(cmap(community[node]))[5]})
+		colors.update({node: "#" + rgb2hex(cmap(community[node]))[1]
+                                + rgb2hex(cmap(community[node]))[3] 
+                                + rgb2hex(cmap(community[node]))[5]})
     
 	return colors
+
 
 
 def remap_communities(communities):

@@ -1,12 +1,8 @@
-<template>
-  <b-container fluid-width> 
-    <h2 id="header" v-if='((experiment.algorithm === "Louvain") | (experiment.algorithm === "Girvan-Newman"))'> Algoritmo de {{ experiment.algorithm }} </h2>
-    <h2 id="header" v-else> Visualización </h2>
-    <div class="parent_container">
-      <div id="container" ref="cy">
-      </div>
+<template> 
+  <div class="parent_container">
+    <div id="container" ref="cy">
     </div>
-  </b-container>
+  </div>
 </template>
 
 <script>
@@ -15,18 +11,22 @@ import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
 
 export default {
-  name: "ExpVisualization",
-  data: function () {
+  name: "PlotNetwork",
+  props:['isNewExperiment'],
+  data: function() {
     return {
-      experiment: store.state.lastComputedExperiment,
-    };
+      experiment: store.getLastComputedExperiment()
+    }
   },
+  emits: ['animation_finished'],
   mounted() {
-    console.log(this.experiment)
     let self = this
     cytoscape.use(fcose);
-    let cy = cytoscape({
+    this.cy = cytoscape({
       container: this.$refs.cy, // container to render in
+      //set node and edges color based on node properties
+      wheelSensitivity: 0.2,
+      hideEdgesOnViewport: true,
       style: [
         {
           selector: "node",
@@ -35,23 +35,39 @@ export default {
             height: "data(size)",
             width: "data(size)",
             "text-valign": "center",
-            "background-color": function(node){
-                                              if ((self.experiment.algorithm === "Louvain") | (self.experiment.algorithm==="Girvan-Newman")){
-                                                return node.data().background_color
-                                              }else{
-                                                return "#5CF"
-                                              }
-            },
-            "text-outline-color": function(node){
-                                              if ((self.experiment.algorithm === "Louvain") | (self.experiment.algorithm==="Girvan-Newman")){
-                                                return node.data().background_color
-                                              }else{
-                                                return "#fff"
-                                              }
-
-            },
+            "background-color": 
+              function(node){
+                if ("background_color" in node.data){return node.data("background_color")}
+                else {return "#5CF"}             
+              },
+            "text-outline-color": 
+              function(node){
+                if ("background_color" in node.data){return node.data("background_color")}
+                else {return "#fff"}
+              },
             "text-outline-width": 2,
-            "font-size": "data(font_size)",
+            "font-size": "data(font_size)"
+          },
+        },
+        {
+          selector: "node:selected",
+          style: {
+            label: "data(name)",
+            height: "data(size)",
+            width: "data(size)",
+            "text-valign": "center",
+            "background-color": 
+              function(node){
+                if ("background_color" in node.data){return node.data("background_color")}
+                else {return "#5CF"}         
+              },
+            "text-outline-color": 
+              function(){
+                if (!((self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman"))){ return "#fff" }
+                else {return "#999999"}
+              },
+            "text-outline-width": 7,
+            "font-size": "data(font_size)"
           },
         },
         {
@@ -60,11 +76,12 @@ export default {
             visibility: "hidden",
             width: 0.5,
             "line-color": function(edge){
-              if ((self.experiment.algorithm === "Louvain") | (self.experiment.algorithm==="Girvan-Newman")){
-                if (cy.$id(edge.data().source).data().degree > cy.$id(edge.data().target).data().degree){
-                  return cy.$id(edge.data().source).data().background_color
+              if ((self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){
+                //take the color of highest degree node ('source' or 'target' node)
+                if (cy.$id(edge.data("source")).data("degree") > cy.$id(edge.data("target")).data("degree")){
+                  return cy.$id(edge.data("source")).data("background_color")
                 }else{
-                  return cy.$id(edge.data().target).data().background_color
+                  return cy.$id(edge.data("target")).data("background_color")
                 }
               }else{
                 return "#666"
@@ -72,18 +89,17 @@ export default {
             }
           },
         },
-      ],
+      ]
+    });
+    
+    //define local variable
+    let cy = this.cy
+    //read graph from json
+    cy.json(this.experiment.network_json);
 
-      hideEdgesOnViewport: true,
-      wheelSensitivity: 0.7,
-    });
-    cy.json(this.experiment.graph);
-    cy.zoom({
-      level: 10,
-    });
+    //define layout
     var layout_options = {
       name: "fcose",
-
       // 'draft', 'default' or 'proof'
       // - "draft" only applies spectral layout
       // - "default" improves the quality with incremental layout (fast cooling rate)
@@ -91,17 +107,17 @@ export default {
       quality: "default",
       // Use random node positions at beginning of layout
       // if this is set to false, then quality option must be "proof"
-      randomize: true,
+      randomize: self.isNewExperiment,
       // Whether or not to animate the layout
-      animate: true,
+      animate: self.isNewExperiment,
       // Duration of animation in ms, if enabled
-      animationDuration: 10000,
+      animationDuration: 3000,
       // Easing of animation, if enabled
       animationEasing: undefined,
       // Fit the viewport to the repositioned nodes
       fit: true,
       // Padding around layout
-      padding: 30,
+      padding: 10,
       // Whether to include labels in node dimensions. Valid in "proof" quality
       nodeDimensionsIncludeLabels: true,
       // Whether or not simple nodes (non-compound nodes) are of uniform dimensions
@@ -118,7 +134,7 @@ export default {
       // Sample size to construct distance matrix
       sampleSize: 25,
       // Separation amount between nodes
-      nodeSeparation: 350,
+      nodeSeparation: 500,
       // Power iteration tolerance
       piTol: 0.0000001,
 
@@ -128,23 +144,22 @@ export default {
       nodeRepulsion: 6000,
       // Ideal edge (non nested) length
       idealEdgeLength: function(edge){
-        if (self.experiment.algorithm === "Louvain" | self.experiment.algorithm==="Girvan-Newman"){
+        if (self.experiment.category === "Louvain" | self.experiment.category==="Girvan-Newman"){
           if (cy.$id(edge.data().source).data().community === cy.$id(edge.data().target).data().community){
             return 50
           }else{
-            return 400
+            return 800 
           }
         }else{
           return 150
         }
       },
-      
       // Divisor to compute edge forces
       edgeElasticity: 0.45,
       // Nesting factor (multiplier) to compute ideal edge length for nested edges
       nestingFactor: 0.1,
       // Maximum number of iterations to perform - this is a suggested value and might be adjusted by the algorithm as required
-      numIter: 2500,
+      // numIter: 2500,
       // For enabling tiling
       tile: true,
       // Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
@@ -175,18 +190,65 @@ export default {
       relativePlacementConstraint: undefined,
 
       /* layout event callbacks */
-      ready: () => {}, // on layoutready
+      ready: function() {
+      }, // on layoutready
       stop: function () { // on layoutstop
+        //set edges visible only when animation has stopped (for performance enhancements) 
         cy.style().selector("edge").style("visibility", "visible").update();
+
+        cy.nodes().lock()
+        //store json into experiments
+        const cy_json = cy.json(); // take json from cytoscape
+        delete cy_json.style
+        self.experiment.network_json = cy_json //update experiment info
+                
+        //store thumbnail
+        const options = {'scale': 0.2, 'output':'base64'}
+        const thumbnail = cy.png(options)
+        self.experiment.thumbnail = thumbnail
+
+        self.animation_finished = true
+        self.$emit('ready')
+        
+        cy.nodes().unlock()
       },
+      
     };
+
+
     //Run layout
     var layout = cy.layout(layout_options);
     layout.run();
     this.cy = cy;
-
     cy.animated();
+  
+
   },
+  methods:{
+    updateNetwork(){
+      // console.log("Actualizando Experimento...")
+      let cy = this.cy
+      cy.nodes().lock()
+
+      let new_json = cy.json();
+      delete new_json.style //dont overwrite current style (colors)
+      store.setExperimentJSON(new_json);
+
+      // update thumbnail
+      const options = {'scale': 0.15, 'output':'base64'}
+      const thumbnail = cy.png(options)
+      store.setExperimentThumbail(thumbnail)
+
+      // console.log("Experimento actualizado")
+      this.$emit("network-exported", new_json)
+      
+      cy.nodes().unlock()
+
+    }
+  },
+  created(){
+    this.$on("export-network", this.updateNetwork)
+  }
 };
 </script>
 
@@ -196,18 +258,10 @@ export default {
 }
 
 #container {
-  position: relative;
-  height: 100%;
   min-height: 80vh;
-  width: 100%;
-
-  border-radius: 10px;
+  /* border-radius: 10px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; */
 }
 
-#title{
-  margin-top:0.5em;
-
-}
 </style>

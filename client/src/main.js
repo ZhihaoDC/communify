@@ -12,10 +12,29 @@ Vue.config.productionTip = false
 
 export var store = {
   state: {
-    lastComputedExperiment: Object
+    lastComputedExperiment: Object,
+    isNewExperiment: true
+  },
+  getLastComputedExperiment(){
+    return this.state.lastComputedExperiment
   },
   setLastComputedExperiment(lastComputedExperiment){
     this.state.lastComputedExperiment = lastComputedExperiment
+  },
+  setIsNewExperiment(isNewExperiment){
+    this.state.isNewExperiment = isNewExperiment
+  },
+  getExperimentJSON(){
+    return this.state.lastComputedExperiment.network_json
+  },
+  setExperimentJSON(new_json){
+    this.state.lastComputedExperiment.network_json = new_json
+  },
+  getExperimentThumbnail(){
+    return this.state.lastComputedExperiment.thumbnail
+  },
+  setExperimentThumbail(new_thumbnail){
+    this.state.lastComputedExperiment.thumbnail = new_thumbnail
   }
 }
 
