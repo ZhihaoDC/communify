@@ -37,12 +37,12 @@ export default {
             "text-valign": "center",
             "background-color": 
               function(node){
-                if ("background_color" in node.data){return node.data("background_color")}
+                if (node.data("background_color")){return node.data("background_color")}
                 else {return "#5CF"}             
               },
             "text-outline-color": 
               function(node){
-                if ("background_color" in node.data){return node.data("background_color")}
+                if (node.data("background_color")){return node.data("background_color")}
                 else {return "#fff"}
               },
             "text-outline-width": 2,
@@ -58,7 +58,7 @@ export default {
             "text-valign": "center",
             "background-color": 
               function(node){
-                if ("background_color" in node.data){return node.data("background_color")}
+                if (node.data("background_color")){return node.data("background_color")}
                 else {return "#5CF"}         
               },
             "text-outline-color": 

@@ -44,7 +44,7 @@ def apply_girvan_newman():
                         'metrics' : {'modularity': modularity},
                         'category' : 'Girvan-Newman',
                         'dataset_name': dataset_name,
-                        'dataset_hash': md5_hash
+                        'dataset_id': md5_hash
                         }), 200
     except:
         return jsonify({"errorMessage": "Invalid .csv format"}), 400

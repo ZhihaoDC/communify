@@ -2,7 +2,7 @@ from src import db
 
 
 class User(db.Model):
-    __tablename__ = 'USERS'
+    __tablename__ = 'USER'
     __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)

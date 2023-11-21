@@ -33,9 +33,15 @@ services:
   backend:
     image: crazyhao/networkly-server
     container_name: networkly-backend
+    build: 
+      context : "./"
+      dockerfile: "dockerfile.server"
     depends_on:
       - mysql_db
       - adminer
+    #enable live reload on development
+    volumes:
+      - ./server:/app/server:cached
     
     ports:  
       - 5000:5000
@@ -56,6 +62,14 @@ services:
   frontend:
     image: crazyhao/networkly-client
     container_name: networkly-frontend
+    build: 
+      context : "./"
+      dockerfile: "dockerfile.client"
+    
+    #enable live reload on development    
+    volumes:
+      - ./client:/app/client:cached
+      - /app/client/node_modules
 
     ports:
       - 8080:8080 

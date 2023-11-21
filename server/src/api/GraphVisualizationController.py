@@ -25,6 +25,6 @@ def visualize_network():
 
         return jsonify({'network_json': graph_json, 
                         'category':'network-visualization', 
-                        'dataset_hash': md5_hash}), 200
+                        'dataset_id': md5_hash}), 200
     except:
         return jsonify({"errorMessage": "Invalid .csv format"}), 400

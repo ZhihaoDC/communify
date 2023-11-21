@@ -57,7 +57,7 @@ def apply_louvain():
                         'metrics' : {'modularity': modularity},
                         'category': 'Louvain',
                         'dataset_name': dataset_name,
-                        'dataset_hash': md5_hash
+                        'dataset_id': md5_hash
                     }), 200
     # except:
     #     return jsonify({"errorMessage": "Invalid .csv format"}), 500
