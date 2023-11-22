@@ -7,7 +7,10 @@
         densidad de las interconexiones intra-comunidad e inter-comunidad.
       </h4>
       <div id="content">
-        <InputCSV selectedMethod="louvain"/>
+        <InputCSV selectedMethod="louvain" 
+          submitUrl="http://localhost:5000/community-detection/louvain" 
+          successUrl="/community-detection/louvain/experiment"
+        />
       </div>
     </div>
   </b-container>

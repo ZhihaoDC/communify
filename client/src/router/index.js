@@ -2,8 +2,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import FormLouvain from '../views/FormLouvain.vue'
+import FormDataset from '../views/FormDataset.vue'
 import VisualizationExperiment from '../views/VisualizationExperiment.vue'
 import UserExperiments from '../views/UserExperiments.vue'
+import UserDatasets from '../views/UserDatasets.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -11,6 +13,11 @@ const routes = [
     path: '/',
     name: 'home',
     component: Home
+  },  
+  {
+    path: '/dataset-upload-form',
+    name: 'FormDataset',
+    component: FormDataset
   },
   {
     path: '/community-detection/louvain',
@@ -36,6 +43,11 @@ const routes = [
     path: '/user-experiments',
     name: 'UserExperiments',
     component: UserExperiments
+  },
+  {
+    path: '/user-datasets',
+    name: 'UserDatasets',
+    component: UserDatasets
   },
   {
     path: '/about',

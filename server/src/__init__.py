@@ -78,7 +78,7 @@ def init_database():
     # dataset_json = dataset_csv.to_json("./static/game-of-thrones-books/book1.json", orient='records', indent=2)
     with open("./static/game-of-thrones-books/book1.json") as f:
         book1 = json.load(f)
-        default_dataset = Dataset(id="12345678912345678912345678912345", json=json.dumps(book1))
+        default_dataset = Dataset(id="12345678912345678912345678912345", json=json.dumps(book1), user_id=default_user.id)
     db.session.add(default_dataset)
 
     db.session.commit()

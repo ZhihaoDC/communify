@@ -5,6 +5,7 @@
       <b-navbar-toggle target="routes"></b-navbar-toggle>
       <b-collapse is-nav id="routes">
         <b-navbar-nav>
+          <b-nav-item to="/dataset-upload-form"> Subir dataset </b-nav-item>
           <b-nav-item-dropdown text="Detección de comunidades" ref="dropdown" align="right">
             <b-dropdown-item to="/community-detection/louvain"
               >Método de Louvain</b-dropdown-item

@@ -143,11 +143,13 @@
 import { store } from "../main.js";
 export default {
   name: "InputCSV",
-  props: ["selectedMethod"],
+  props: ["selectedMethod", "submitUrl", "successUrl"],
   data() {
     return {
       file: null,
       method: this.selectedMethod,
+      submitUrl: this.submitUrl,
+      successUrl: this.successUrl,
       manually_select_columns: false,
       columns: [], //options
       source: null,
@@ -240,7 +242,7 @@ export default {
       }
       await axios
         .post(
-          "http://localhost:5000/community-detection/" + this.method,
+          this.submitUrl,
           formData,
           {
             headers: {
@@ -250,10 +252,13 @@ export default {
         )
         .then((response) => {
           if (response.status === 200) {
-            store.setLastComputedExperiment(response.data);
-            store.setIsNewExperiment(true)
+            if (["louvain", "girvan-newman"].includes(this.method)){
+              store.setLastComputedExperiment(response.data);
+              store.setIsNewExperiment(true)
+            }
             this.$router.push(
-              "/community-detection/" + this.method + "/experiment"
+              // "/community-detection/" + this.method + "/experiment"
+              this.successUrl
             );
           }
         })

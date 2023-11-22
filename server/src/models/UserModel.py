@@ -12,6 +12,8 @@ class User(db.Model):
     lastname = db.Column(db.String(100))
     profile_description = db.Column(db.String(250))
 
+    datasets = db.relationship('Dataset', passive_deletes=True)
+
     def serialize(self):
         return{
             "user_id": self.id,

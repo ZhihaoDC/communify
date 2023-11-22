@@ -14,15 +14,15 @@ DatasetController = Blueprint('DatasetController', __name__)
 def get_datasets(user_id):
     data = DatasetService.get_all_by_user_id(
         Dataset,
-        user_id=user_id
+        user_id=1
     )
     return json.jsonify({'status': 'success',
-                        'experiments': data}), 200
+                        'datasets': data}), 200
 
 
 @DatasetController.route('/save-dataset', methods=['POST'])
 def save_dataset():
-    try:
+    # try:
         file = request.files['file']
         dataset_name = secure_filename(file.filename.replace(".csv", ""))
 
@@ -41,11 +41,12 @@ def save_dataset():
         added_dataset = DatasetService.add_instance(Dataset,
             id=md5_hash,
             name=dataset_name,
-            json=graph
+            json=preprocess.network_to_json(graph),
+            user_id=1
         )
         
         return jsonify(added_dataset), 200
     
-    except:
-        return jsonify({"errorMessage": "Invalid .csv format"}), 400
+    # except:
+    #     return jsonify({"errorMessage": "Invalid .csv format"}), 400
 

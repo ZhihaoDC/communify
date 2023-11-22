@@ -24,6 +24,12 @@ class Dataset(db.Model):
         nullable=False
     )
 
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("USER.id")
+    )
+    
+
     @property
     def serialized(self):
         """Return object data in serializeable format"""
@@ -32,5 +38,6 @@ class Dataset(db.Model):
             'id': self.id,
             'creation_date': self.creation_date.strftime("%Y/%m/%d, %H:%M"),
             'name': self.name,
-            'json': self.json
+            'json': self.json,
+            'user_id': self.user_id
         }
