@@ -7,6 +7,15 @@
         Datasets guardados por el usuario
         </h4>
         
+        
+    
+        <b-table
+            id="my-table"
+            :items="datasets"
+            :per-page="perPage"
+            :current-page="currentPage"
+            small
+        ></b-table>
         <div>
         <b-pagination
             v-model="currentPage"
@@ -15,16 +24,6 @@
             aria-controls="my-table"
         ></b-pagination>
         </div>
-    
-        <p class="mt-3">Current Page: {{ currentPage }}</p>
-    
-        <b-table
-            id="my-table"
-            :items="items"
-            :per-page="perPage"
-            :current-page="currentPage"
-            small
-        ></b-table>
         </div>
     </b-container>
 </template>
@@ -33,14 +32,14 @@
     export default {
       data() {
         return {
-          perPage: 1,
+          perPage: 3,
           currentPage: 1,
-          items: []
+          datasets: []
         }
       },
       computed: {
         rows() {
-          return this.items.length
+          return this.datasets.length
         }
       },
       mounted() {
@@ -49,7 +48,9 @@
             .get("http://localhost:5000/get-datasets/1")
             .then((response) => {
             if (response.status === 200) {
-                this.items = response.data['datasets']
+                this.datasets = response.data['datasets']
+                this.datasets = this.format_datasets(this.datasets)
+                console.log(this.datasets)
             }
             })
             .catch((error) => {
@@ -60,6 +61,22 @@
                 "from, to, weight";
             }
             });
+        },
+        methods: {
+          format_dataset(dataset){
+            let dataset_nodes = dataset.json.elements.nodes.map(node => node.data.name)
+            let dataset_json = {
+              nombre : dataset['name'],
+              fecha_creacion: dataset['creation_date'],
+              nodos : dataset_nodes.join(', ').substring(0, 200) + " ..."
+            }
+            return dataset_json
+          },
+
+          format_datasets(datasets){
+             let formatted_dataset = datasets.map(dataset => this.format_dataset(dataset))
+            return formatted_dataset
+          }
         }
       
     }

@@ -148,8 +148,6 @@ export default {
     return {
       file: null,
       method: this.selectedMethod,
-      submitUrl: this.submitUrl,
-      successUrl: this.successUrl,
       manually_select_columns: false,
       columns: [], //options
       source: null,
