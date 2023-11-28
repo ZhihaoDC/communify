@@ -255,7 +255,6 @@ export default {
               store.setIsNewExperiment(true)
             }
             this.$router.push(
-              // "/community-detection/" + this.method + "/experiment"
               this.successUrl
             );
           }

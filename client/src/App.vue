@@ -15,6 +15,7 @@
             >
           </b-nav-item-dropdown>
           <b-nav-item to="/graph-visualization"> Representar grafo </b-nav-item>
+          <b-nav-item to="/user-datasets"> Datasets </b-nav-item>
           <b-nav-item to="/user-experiments"> Experimentos </b-nav-item>
           <b-nav-item right to="/about"> About </b-nav-item>
         </b-navbar-nav>

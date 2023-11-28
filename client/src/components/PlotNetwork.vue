@@ -224,6 +224,9 @@ export default {
   
 
   },
+  created(){
+    this.$on("export-network", this.updateNetwork)
+  },
   methods:{
     updateNetwork(){
       // console.log("Actualizando Experimento...")
@@ -246,9 +249,6 @@ export default {
 
     }
   },
-  created(){
-    this.$on("export-network", this.updateNetwork)
-  }
 };
 </script>
 

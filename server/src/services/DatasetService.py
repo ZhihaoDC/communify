@@ -1,6 +1,10 @@
 from src import db
 
 
+def get_by_id(model, id):
+    result = model.query.filter_by(id=id).first()
+    return result.serialized
+
 def get_all(model):
     data = model.query.all()
     return data
@@ -21,7 +25,7 @@ def add_instance(model, **kwargs):
 def delete_by_id(model, id):
     deleted_id = model.query.filter_by(id=id).delete()
     commit_changes()
-    return id
+    return deleted_id
 
 
 def commit_changes():

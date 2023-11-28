@@ -2,14 +2,15 @@ from flask import request, Blueprint
 from flask.json import jsonify
 import json
 import hashlib
+from networkx import cytoscape_graph
 from werkzeug.utils import secure_filename
-import itertools
-import sys
-import csv
+
 
 #import custom modules
 from src.community_detection import louvain_algorithm as louvain
 import src.api.preprocess as preprocess 
+from src.models.DatasetModel import Dataset
+from src.services import DatasetService
 from networkx.algorithms.community.quality import modularity as nx_modularity
 
 
@@ -20,17 +21,9 @@ LouvainController = Blueprint('LouvainController', __name__)
 @LouvainController.route('/community-detection/louvain', methods=['POST'])
 def apply_louvain():
 
-    # try: 
+    try: 
         file = request.files['file']
         dataset_name = secure_filename(file.filename.replace(".csv", ""))
-
-        # reader = csv.reader(file, delimiter=",")
-        # print(next(reader), file=sys.stdout)
-        # num_columns = len(next(reader))
-        # print(f"Number of columns: {num_columns}", file=sys.stdout)
-        # sys.stdout.flush()
-        # if num_columns == 2:
-        #     print("ERROR!")
 
         if (len(request.files) > 1) and ('columns' in request.files):
             columns = request.files['columns'].read().decode('utf8').replace("'",'"')
@@ -59,8 +52,33 @@ def apply_louvain():
                         'dataset_name': dataset_name,
                         'dataset_id': md5_hash
                     }), 200
-    # except:
-    #     return jsonify({"errorMessage": "Invalid .csv format"}), 500
+    except:
+        return jsonify({"errorMessage": "Invalid .csv format"}), 500
+
+
+@LouvainController.route("/community-detection/louvain/<dataset_id>", methods=['GET'])
+def apply_louvain_to_dataset(dataset_id):
+    try:
+        dataset = DatasetService.get_by_id(Dataset, dataset_id)
+        graph = cytoscape_graph(dataset['json'])
+
+        #Apply louvain method
+        supergraph, communities = louvain.Louvain(graph)
+        last_community = louvain.last_community(graph, communities)
+        modularity = nx_modularity(graph, louvain.dendrogram(last_community))
+        graph_json = preprocess.network_to_json(graph, last_community)
+
+
+        return  jsonify({    
+                        'network_json': graph_json,
+                        'communities': last_community,
+                        'metrics' : {'modularity': modularity},
+                        'category': 'Louvain',
+                        'dataset_name': dataset['name'],
+                        'dataset_id': dataset['id']
+                    }), 200
+    except:
+        return jsonify({"errorMessage": "Error interno del servidor"}), 500
 
     
 def md5(fname):
