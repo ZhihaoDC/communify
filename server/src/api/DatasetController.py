@@ -20,8 +20,8 @@ def get_datasets(user_id):
                         'datasets': data}), 200
 
 
-@DatasetController.route('/save-dataset', methods=['POST'])
-def save_dataset():
+@DatasetController.route('/save-dataset/<user_id>', methods=['POST'])
+def save_dataset(user_id):
     # try:
         file = request.files['file']
         dataset_name = secure_filename(file.filename.replace(".csv", ""))

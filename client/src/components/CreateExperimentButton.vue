@@ -12,7 +12,7 @@
         methods: {
             getExperimentWithDataset(){
                 const axios = require("axios");
-                let url = "http://localhost:5000/community-detection/"+ this.method +"/"+ this.dataset_id
+                let url = "http://localhost:5000/community-detection/"+ this.method +"/1/"+ this.dataset_id
                 axios.get(url)
                 .then((response) => {
                 if (response.status === 200) {

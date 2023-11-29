@@ -4,6 +4,7 @@ import json
 import hashlib
 from networkx import cytoscape_graph
 from werkzeug.utils import secure_filename
+import sys
 
 
 #import custom modules
@@ -56,10 +57,11 @@ def apply_louvain():
         return jsonify({"errorMessage": "Invalid .csv format"}), 500
 
 
-@LouvainController.route("/community-detection/louvain/<dataset_id>", methods=['GET'])
-def apply_louvain_to_dataset(dataset_id):
+@LouvainController.route("/community-detection/louvain/<user_id>/<dataset_id>", methods=['GET'])
+def apply_louvain_to_dataset(user_id, dataset_id):
     try:
-        dataset = DatasetService.get_by_id(Dataset, dataset_id)
+        dataset = DatasetService.get_by_id(Dataset, user_id, dataset_id)
+        
         graph = cytoscape_graph(dataset['json'])
 
         #Apply louvain method
@@ -68,8 +70,9 @@ def apply_louvain_to_dataset(dataset_id):
         modularity = nx_modularity(graph, louvain.dendrogram(last_community))
         graph_json = preprocess.network_to_json(graph, last_community)
 
+        # print(dataset['id'], file=sys.stderr) #depurar
 
-        return  jsonify({    
+        return jsonify({    
                         'network_json': graph_json,
                         'communities': last_community,
                         'metrics' : {'modularity': modularity},
@@ -77,8 +80,8 @@ def apply_louvain_to_dataset(dataset_id):
                         'dataset_name': dataset['name'],
                         'dataset_id': dataset['id']
                     }), 200
-    except:
-        return jsonify({"errorMessage": "Error interno del servidor"}), 500
+    except Exception as e:
+        return jsonify({"errorMessage": "Error interno del servidor" + str(e)}), 500
 
     
 def md5(fname):

@@ -9,8 +9,8 @@ from codecs import encode
 ExperimentController = Blueprint('ExperimentController', __name__)
 
 
-@ExperimentController.route('/save-experiment', methods=['POST'])
-def save_experiment():
+@ExperimentController.route('/save-experiment/<user_id>', methods=['POST'])
+def save_experiment(user_id):
     request_json = request.get_json()
 
     default_values = {
@@ -24,21 +24,16 @@ def save_experiment():
             request_json[key] = value
 
     if 'dataset_id' in request_json:
-        added_dataset = DatasetService.add_instance(Dataset,
-                                                    id = request_json['dataset_id'],
-                                                    name = request_json['dataset_name'],
-                                                    json = request_json['network_json']
-                                                    )
         
         added_experiment = ExperimentService.add_instance(Experiment,
-                                        user_id=1,
+                                        user_id=user_id,
                                         experiment_id=request_json['experiment_id'],
                                         experiment_name = request_json['experiment_name'],
                                         network_json=request_json['network_json'],
                                         category=request_json['category'],
                                         metrics=request_json['metrics'],
-                                        dataset_id = added_dataset['id'],
-                                        dataset_name = added_dataset['name'],
+                                        dataset_id = request_json['dataset_id'],
+                                        dataset_name = request_json['dataset_name'],
                                         thumbnail= base64.decodebytes(encode(request_json['thumbnail'])),
                                         description = request_json['description']
                                         )                                                      

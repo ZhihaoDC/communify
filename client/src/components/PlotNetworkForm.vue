@@ -50,6 +50,7 @@ export default {
     return {
       experiment: store.getLastComputedExperiment(),
       experiment_name: store.getLastComputedExperiment().dataset_name,
+      user_id : 1,
       editing: false,
       dismissSecs: 4,
       dismissCountDown: 0,
@@ -119,7 +120,7 @@ export default {
     submit_experiment_to_backend() {
       const axios = require("axios");
       console.log(store.getLastComputedExperiment())
-      axios.post('http://localhost:5000/save-experiment',
+      axios.post('http://localhost:5000/save-experiment/'+this.user_id,
         JSON.stringify(store.getLastComputedExperiment()),
         {
           headers: {
