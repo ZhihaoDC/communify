@@ -1,9 +1,9 @@
 from flask import Blueprint, request
 from flask import json, jsonify
-import hashlib
-from werkzeug.utils import secure_filename
 
-import src.api.preprocess as preprocess 
+import src.api.__network_formatter__ as nw_formatter
+from src.api.__input_manager__ import InputManager
+
 from src.models.DatasetModel import Dataset
 from src.services import DatasetService
 
@@ -23,25 +23,16 @@ def get_datasets(user_id):
 @DatasetController.route('/save-dataset/<user_id>', methods=['POST'])
 def save_dataset(user_id):
     # try:
-        file = request.files['file']
-        dataset_name = secure_filename(file.filename.replace(".csv", ""))
+        input = InputManager(request.files)
+        file, file_name, file_hash, columns = input.file, input.file_name, input.file_hash, input.csv_columns       
 
-        if (len(request.files) > 1) and ('columns' in request.files):
-            columns = request.files['columns'].read().decode('utf8').replace("'",'"')
-            columns_json= json.loads(columns)
-        else:
-            columns_json= None
-
-        graph = preprocess.file_to_network(file, columns_json)
-
-        #Generate dataset hash identifier
-        file.seek(0) #reset file pointer
-        md5_hash = hashlib.md5(file.read()).hexdigest()
+        graph = nw_formatter.file_to_network(file, columns)
+        network_json = nw_formatter.network_to_json(graph)
 
         added_dataset = DatasetService.add_instance(Dataset,
-            id=md5_hash,
-            name=dataset_name,
-            json=preprocess.network_to_json(graph),
+            id=file_hash,
+            name=file_name,
+            json=network_json,
             user_id=1
         )
         

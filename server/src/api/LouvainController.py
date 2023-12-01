@@ -1,15 +1,14 @@
 from flask import request, Blueprint
 from flask.json import jsonify
-import json
 import hashlib
 from networkx import cytoscape_graph
-from werkzeug.utils import secure_filename
 import sys
 
 
 #import custom modules
 from src.community_detection import louvain_algorithm as louvain
-import src.api.preprocess as preprocess 
+import src.api.__network_formatter__ as nw_formatter
+from src.api.__input_manager__ import InputManager
 from src.models.DatasetModel import Dataset
 from src.services import DatasetService
 from networkx.algorithms.community.quality import modularity as nx_modularity
@@ -23,37 +22,29 @@ LouvainController = Blueprint('LouvainController', __name__)
 def apply_louvain():
 
     try: 
-        file = request.files['file']
-        dataset_name = secure_filename(file.filename.replace(".csv", ""))
+        input = InputManager(request.files)
+        file, file_name, file_hash, columns = input.file, input.file_name, input.file_hash, input.csv_columns       
 
-        if (len(request.files) > 1) and ('columns' in request.files):
-            columns = request.files['columns'].read().decode('utf8').replace("'",'"')
-            columns_json= json.loads(columns)
-        else:
-            columns_json= None  
-
-        graph = preprocess.file_to_network(file, columns_json)
+        graph = nw_formatter.file_to_network(file, columns)
 
         #Apply louvain method
         supergraph, communities = louvain.Louvain(graph)
         last_community = louvain.last_community(graph, communities)
         modularity = nx_modularity(graph, louvain.dendrogram(last_community))
 
-        graph_json = preprocess.network_to_json(graph, last_community)
+        graph_json = nw_formatter.network_to_json(graph, last_community)
 
-        #Generate dataset hash identifier
-        file.seek(0) #reset file pointer
-        md5_hash = hashlib.md5(file.read()).hexdigest()
 
         return jsonify({    
                         'network_json': graph_json,
                         'communities': last_community,
                         'metrics' : {'modularity': modularity},
                         'category': 'Louvain',
-                        'dataset_name': dataset_name,
-                        'dataset_id': md5_hash
+                        'dataset_name': file_name,
+                        'dataset_id': file_hash
                     }), 200
-    except:
+    except Exception as e:
+        print(e, file=sys.stderr)
         return jsonify({"errorMessage": "Invalid .csv format"}), 500
 
 
@@ -68,7 +59,7 @@ def apply_louvain_to_dataset(user_id, dataset_id):
         supergraph, communities = louvain.Louvain(graph)
         last_community = louvain.last_community(graph, communities)
         modularity = nx_modularity(graph, louvain.dendrogram(last_community))
-        graph_json = preprocess.network_to_json(graph, last_community)
+        graph_json = nw_formatter.network_to_json(graph, last_community)
 
         # print(dataset['id'], file=sys.stderr) #depurar
 

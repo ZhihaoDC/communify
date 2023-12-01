@@ -250,7 +250,7 @@ export default {
         )
         .then((response) => {
           if (response.status === 200) {
-            if (["louvain", "girvan-newman"].includes(this.method)){
+            if (["louvain", "girvan-newman", "graph-visualization"].includes(this.method)){
               store.setLastComputedExperiment(response.data);
               store.setIsNewExperiment(true)
             }

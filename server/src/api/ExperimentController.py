@@ -1,8 +1,8 @@
 from flask import Blueprint, request
 from flask import json
 from src.models.ExperimentModel import Experiment
-from src.models.DatasetModel import Dataset
-from src.services import ExperimentService, DatasetService
+from src.api.DatasetController import save_dataset
+from src.services import ExperimentService
 import base64
 from codecs import encode
 
@@ -24,6 +24,7 @@ def save_experiment(user_id):
             request_json[key] = value
 
     if 'dataset_id' in request_json:
+        added_dataset = save_dataset(user_id=user_id)
         
         added_experiment = ExperimentService.add_instance(Experiment,
                                         user_id=user_id,
@@ -32,8 +33,8 @@ def save_experiment(user_id):
                                         network_json=request_json['network_json'],
                                         category=request_json['category'],
                                         metrics=request_json['metrics'],
-                                        dataset_id = request_json['dataset_id'],
-                                        dataset_name = request_json['dataset_name'],
+                                        dataset_id = added_dataset['id'],
+                                        dataset_name = added_dataset['name'],
                                         thumbnail= base64.decodebytes(encode(request_json['thumbnail'])),
                                         description = request_json['description']
                                         )                                                      

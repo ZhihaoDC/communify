@@ -102,7 +102,6 @@ def network_to_json(graph, communities=None):
     return graph_json
 
 
-#Helper method
 def get_community_colors(graph, community):
 	""" 
 	Draws the graph using colors as community identifier
