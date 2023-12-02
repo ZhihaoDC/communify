@@ -203,7 +203,7 @@ export default {
         self.experiment.network_json = cy_json //update experiment info
                 
         //store thumbnail
-        const options = {'scale': 0.2, 'output':'base64'}
+        const options = {'scale': 1, 'output':'base64'}
         const thumbnail = cy.png(options)
         self.experiment.thumbnail = thumbnail
 

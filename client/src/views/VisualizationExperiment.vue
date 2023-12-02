@@ -7,7 +7,7 @@
             <h2 id="header" v-else> Visualización </h2>
         </b-col>
         <b-col cols="9">
-            <PlotNetwork id="network-viz"  ref="plotNetwork" @network-exported="submitExperiment" :isNewExperiment="isNewExperiment" @ready="animation_finished = true"></PlotNetwork>
+            <PlotNetwork id="network-viz" ref="plotNetwork" @network-exported="submitExperiment" :isNewExperiment="isNewExperiment" @ready="animation_finished = true"></PlotNetwork>
         </b-col>
         <b-col cols="3">
             <PlotNetworkForm id="save-network-form" ref="plotNetworkForm" @export-network="updateNetwork" :activateSubmitButton="animation_finished" ></PlotNetworkForm>

@@ -9,7 +9,7 @@
       </h4>
       <div id="content">
         <InputCSV selectedMethod="girvan-newman" 
-          submitUrl="http://localhost:5000/community-detection/louvain"  
+          submitUrl="http://localhost:5000/community-detection/girvan-newman"  
           successUrl="/community-detection/girvan-newman/experiment"
         />
       </div>

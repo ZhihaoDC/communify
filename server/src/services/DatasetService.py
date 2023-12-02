@@ -2,7 +2,7 @@ from src import db
 
 
 def get_by_id(model, user_id, id):
-    result = model.query.filter_by(user_id=user_id).filter_by(id=id).first()
+    result = model.query.filter_by(user_id=user_id, id=id).first()
     return result.serialized
 
 def get_all(model):

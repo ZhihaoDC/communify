@@ -21,7 +21,7 @@ def visualize_network():
                         'network_json': graph_json,
                         'communities': None,
                         'metrics' : None,
-                        'category': 'Visualización',
+                        'category': 'graph-visualization',
                         'dataset_name': file_name,
                         'dataset_id': file_hash
                     }), 200

@@ -1,8 +1,11 @@
 from flask import Blueprint, request
 from flask import json
+import src.api.__network_formatter__ as nw_formatter
 from src.models.ExperimentModel import Experiment
-from src.api.DatasetController import save_dataset
+from src.models.DatasetModel import Dataset
+from src.services import DatasetService
 from src.services import ExperimentService
+import sys
 import base64
 from codecs import encode
 
@@ -11,21 +14,34 @@ ExperimentController = Blueprint('ExperimentController', __name__)
 
 @ExperimentController.route('/save-experiment/<user_id>', methods=['POST'])
 def save_experiment(user_id):
-    request_json = request.get_json()
-
-    default_values = {
-                    'experiment_id' : None,
-                    'experiment_name': request_json["dataset_name"],
-                    'description': ""
-                    }
-
-    for key, value in default_values.items():
-        if key not in request_json:
-            request_json[key] = value
-
-    if 'dataset_id' in request_json:
-        added_dataset = save_dataset(user_id=user_id)
+    def __apply_default_values__(request_json, default_values):
+        for key, value in default_values.items():
+            if key not in request_json:
+                request_json[key] = value
+        return request_json
         
+
+    request_json = request.get_json()
+    
+    request_json = __apply_default_values__(request_json, 
+                                            default_values={
+                                                'experiment_id': None,
+                                                'experiment_name': request_json["dataset_name"],
+                                                'description': ""
+                                            }
+    )
+    keys_to_check = ['network_json', 'dataset_id', 'dataset_name']
+
+    if all(request_json.get(key) for key in keys_to_check):
+        # dataset_network = nw_formatter.json_to_network(request_json['network_json'])
+        
+        # print(request_json['network_json'], file=sys.stderr)
+        added_dataset = DatasetService.add_instance(Dataset,
+                                                    id=request_json['dataset_id'],
+                                                    name=request_json['dataset_name'],
+                                                    json=request_json['network_json'],
+                                                    user_id=user_id)
+
         added_experiment = ExperimentService.add_instance(Experiment,
                                         user_id=user_id,
                                         experiment_id=request_json['experiment_id'],
@@ -37,12 +53,13 @@ def save_experiment(user_id):
                                         dataset_name = added_dataset['name'],
                                         thumbnail= base64.decodebytes(encode(request_json['thumbnail'])),
                                         description = request_json['description']
-                                        )                                                      
+                                        )
+                                     
         return json.jsonify({"successMessage": "File saved",
                              'Access-Control-Allow-Origin': '*',
                              'experiment': added_experiment}), 200
     else:
-        return json.jsonify({"errorMessage": "Invalid .csv format"}), 400
+        return json.jsonify({"errorMessage": "Invalid experiment format. Please try again."}), 400
 
 
 @ExperimentController.route('/get-experiments/<user_id>', methods=['GET'])
@@ -61,3 +78,5 @@ def delete_experiments(user_id, experiment_id):
     deleted_experiment = ExperimentService.delete_by_id(Experiment, experiment_id)
     return json.jsonify({'status': 'success',
                         'experiments': deleted_experiment}), 200
+
+

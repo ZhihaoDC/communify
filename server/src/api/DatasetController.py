@@ -14,7 +14,7 @@ DatasetController = Blueprint('DatasetController', __name__)
 def get_datasets(user_id):
     data = DatasetService.get_all_by_user_id(
         Dataset,
-        user_id=1
+        user_id=user_id
     )
     return json.jsonify({'status': 'success',
                         'datasets': data}), 200
@@ -33,7 +33,7 @@ def save_dataset(user_id):
             id=file_hash,
             name=file_name,
             json=network_json,
-            user_id=1
+            user_id=user_id
         )
         
         return jsonify(added_dataset), 200
