@@ -33,9 +33,7 @@ def save_experiment(user_id):
     keys_to_check = ['network_json', 'dataset_id', 'dataset_name']
 
     if all(request_json.get(key) for key in keys_to_check):
-        # dataset_network = nw_formatter.json_to_network(request_json['network_json'])
-        
-        # print(request_json['network_json'], file=sys.stderr)
+    
         added_dataset = DatasetService.add_instance(Dataset,
                                                     id=request_json['dataset_id'],
                                                     name=request_json['dataset_name'],
@@ -68,7 +66,6 @@ def get_experiments(user_id):
         Experiment,
         user_id=user_id
     )
-    # print(dict({k: v for k, v in data}))
     return json.jsonify({'status': 'success',
                         'experiments': data}), 200
 

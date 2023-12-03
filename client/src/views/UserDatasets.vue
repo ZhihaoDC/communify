@@ -10,16 +10,23 @@
       
         <b-table
             id="my-table"
+            class="mt-3" outlined
             :items="datasets"
             :fields="fields"
             :per-page="perPage"
             :current-page="currentPage"
-            small
         >
-        
-        <template #cell(actions)="row">
-          <CreateExperimentModal :row="row"></CreateExperimentModal>
-        </template>
+            <template #cell(actions)="row">
+                <col :style="{ width: '10em'}" >
+                    <div class="buttons">
+                     
+                    <CreateExperimentModal class="mr-2" :row="row"></CreateExperimentModal>
+                    <b-button @click="delete_dataset(row.item.id)" value="Eliminar" variant="outline-danger">
+                        <b-icon icon="trash" aria-hidden="true" scale="1"></b-icon>
+                    </b-button>
+                       
+                    </div>
+            </template>
 
         </b-table>
 
@@ -30,6 +37,7 @@
             :total-rows="rows"
             :per-page="perPage"
             aria-controls="my-table"
+            class="mr-auto"
         ></b-pagination>
         </div>
       </div>
@@ -42,14 +50,15 @@ import CreateExperimentModal from '../components/CreateExperimentModal.vue';
     export default {
     data() {
         return {
+            user_id: 1,
             perPage: 3,
             currentPage: 1,
             datasets: [],
             fields: [
-                { key: 'name', label: 'nombre dataset' },
-                { key: 'creation_date', label: 'fecha creacion' },
-                { key: 'nodes', label: 'nodos' },
-                { key: 'actions', label: 'acciones' }
+                { key: 'name', label: 'Nombre del dataset' },
+                { key: 'creation_date', label: 'Fecha de creacion' },
+                { key: 'nodes', label: 'Ejemplo de nodos' },
+                { key: 'actions', label: 'Acciones'}
             ]
         };
     },
@@ -85,7 +94,7 @@ import CreateExperimentModal from '../components/CreateExperimentModal.vue';
                 name: dataset['name'],
                 id: dataset['id'],
                 creation_date: this.parseDate(dataset['creation_date']),
-                nodes: dataset_nodes.join(', ').substring(0, 200) + " ..."
+                nodes: dataset_nodes.join(', ').substring(0, 50) + " ..."
             };
             return dataset_json;
         },
@@ -99,14 +108,47 @@ import CreateExperimentModal from '../components/CreateExperimentModal.vue';
             const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', seconds: 'numeric', hour12: false }
             return local_date.toLocaleString('es-ES', options)
         },
-        // Añadir funcion que:
-        // 1. Obtenga el dataset original mediante una llamada a la api
-        // 2. Con el dataset obtenido, haga una peticion post a la api para generar la network de louvain/girvan newman
-        // 3. Asigne la variable lastComputedExperiment a este experimento
-        // 4. Redirija a la pagina de visualizacion de experimentos
-        // Otra idea seria que el componente visualizador de experimentos sea el que reciba por parametro el metodo que queremos realizar
-        // y que reciba por la url el dataset que queremos visualizar. Habria que generar una pantalla de carga para el experimento...
+        delete_dataset(dataset_id){
+            this.$bvModal.msgBoxConfirm('La siguiente acción borrará el dataset. ¿Estás seguro?', {
+                title: '¿Eliminar dataset?',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'danger',
+                okTitle: 'Eliminar',
+                cancelTitle: 'Cancelar',
+                footerClass: 'p-2',
+                hideHeaderClose: false,
+                centered: true
+            })
+                .then(action => {
+                    if (action) {
+                        const axios = require('axios')
+                        var id_to_remove = dataset_id
+                        const url = 'http://localhost:5000/delete-dataset/' + String(this.user_id) + '/' + String(dataset_id)
+                        console.log(url)
+                        axios.delete(url)
+                            .then(response => {
+                                if (response.status === 200) {
+                                    console.log(response)
+                                    this.datasets = this.datasets.filter((dataset) => dataset.dataset_id != id_to_remove)
+                                    window.location.reload()
+                                }
+
+                            })
+                            .catch(error => {
+                                console.log(error)
+                            })
+                    }
+                })
+
+            
+        }
     },
     components: { CreateExperimentModal }
 }
-  </script>
+</script>
+<style>
+.buttons{
+    display:inline-block
+};
+</style>

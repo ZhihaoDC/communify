@@ -22,7 +22,7 @@ def get_datasets(user_id):
 
 @DatasetController.route('/save-dataset/<user_id>', methods=['POST'])
 def save_dataset(user_id):
-    # try:
+    try:
         input = InputManager(request.files)
         file, file_name, file_hash, columns = input.file, input.file_name, input.file_hash, input.csv_columns       
 
@@ -38,6 +38,17 @@ def save_dataset(user_id):
         
         return jsonify(added_dataset), 200
     
-    # except:
-    #     return jsonify({"errorMessage": "Invalid .csv format"}), 400
+    except:
+        return jsonify({"errorMessage": "Invalid .csv format"}), 400
+    
 
+@DatasetController.route('/delete-dataset/<user_id>/<dataset_id>', methods=['DELETE'])
+def delete_dataset(user_id, dataset_id):
+    try:
+        deleted_dataset = DatasetService.delete_by_id(Dataset, user_id=user_id, id=dataset_id)
+        return json.jsonify({'status': 'success', 'experiments': deleted_dataset}), 200
+    
+    except Exception as e:
+        import sys
+        print(e, file=sys.stderr)
+        return jsonify({"errorMessage": "Error deleting dataset"}), 400

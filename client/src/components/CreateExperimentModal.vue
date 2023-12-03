@@ -1,14 +1,13 @@
 <template>
-    <div>
-    <b-button size="sm" @click="openModal(row.item)" class="mr-1">
-            Deteccion de comunidades
+    <b-button variant="primary" @click="openModal(row.item)">
+        <b-icon icon="bounding-box" aria-hidden="true" scale="1"></b-icon>
+        
+        <b-modal v-model="modalShow" :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
+            <CreateExperimentButton method="girvan-newman" :dataset_id="this.dataset_id"></CreateExperimentButton>
+            <CreateExperimentButton method="louvain" :dataset_id="this.dataset_id"></CreateExperimentButton>
+        </b-modal>
     </b-button>
 
-    <b-modal v-model="modalShow" :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
-        <pre><CreateExperimentButton method="girvan-newman" :dataset_id="this.dataset_id"></CreateExperimentButton></pre>
-        <pre><CreateExperimentButton method="louvain" :dataset_id="this.dataset_id"></CreateExperimentButton></pre>
-    </b-modal>
-    </div>
 </template>
 
 <script>

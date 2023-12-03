@@ -49,7 +49,7 @@ export default {
   data: function () {
     return {
       experiment: store.getLastComputedExperiment(),
-      experiment_name: store.getLastComputedExperiment().dataset_name,
+      experiment_name: store.getLastComputedExperiment().experiment_name,
       user_id : 1,
       editing: false,
       dismissSecs: 4,

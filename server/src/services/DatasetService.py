@@ -22,8 +22,8 @@ def add_instance(model, **kwargs):
     return instance.serialized
 
 
-def delete_by_id(model, id):
-    deleted_id = model.query.filter_by(id=id).delete()
+def delete_by_id(model, id, user_id):
+    deleted_id = model.query.filter_by(id=id, user_id=user_id).delete()
     commit_changes()
     return deleted_id
 
