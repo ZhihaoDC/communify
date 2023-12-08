@@ -24,12 +24,14 @@
     </b-form-group>
 
 
-    <b-button type="submit" :disabled="!activateSubmitButton" @click="handleSubmitNetwork" variant="primary"
+   
+    <PlotVisualizationParameters @updateVisualizationParameters="updateVisualizationParameters"></PlotVisualizationParameters>
+
+    <b-button block size ="lg" type="submit" :disabled="!activateSubmitButton" @click="handleSubmitNetwork" variant="primary"
       class="content-item submit-button">
       {{this.submitted_msg}}
     </b-button>
 
-    <PlotVisualizationParameters @updateVisualizationParameters="updateVisualizationParameters"></PlotVisualizationParameters>
 
     <div id="success-alert">
       <b-alert :show="dismissCountDown" dismissible fade variant="success" @dismissed="dismissCountDown=0"
