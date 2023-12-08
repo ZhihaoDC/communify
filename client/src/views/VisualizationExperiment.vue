@@ -7,16 +7,20 @@
             <h2 id="header" v-else> Visualización </h2>
         </b-col>
         <b-col cols="9">
-            <PlotNetwork id="network-viz" ref="plotNetwork" @network-exported="submitExperiment" :isNewExperiment="isNewExperiment" @ready="animation_finished = true"></PlotNetwork>
+            <PlotNetwork id="network-viz" ref="plotNetwork" @network-exported="submitExperiment" :isNewExperiment="isNewExperiment" @ready="animation_finished = true"
+            :visualizationParameters="visualizationParameters"></PlotNetwork>
         </b-col>
         <b-col cols="3">
-            <PlotNetworkForm id="save-network-form" ref="plotNetworkForm" @export-network="updateNetwork" :activateSubmitButton="animation_finished" ></PlotNetworkForm>
+            <PlotNetworkForm 
+                id="save-network-form" 
+                ref="plotNetworkForm" 
+                @export-network="updateNetwork" 
+                :activateSubmitButton="animation_finished" 
+                @updatevisualizationParameters="updatevisualizationParameters">
+            </PlotNetworkForm>
         </b-col>
+
     </b-row>
-    
-
-    
-
 </b-container>
 </template>
 
@@ -30,7 +34,8 @@ export default {
     data: function () {
         return {
                 experiment: store.getLastComputedExperiment(),
-                isNewExperiment: store.state.isNewExperiment,
+                isNewExperiment: store.state.isNewExperiment,                
+                visualizationParameters: store.getExperimentVisualizationParams(),
                 animation_finished: false,
                 };
     },
@@ -43,7 +48,11 @@ export default {
         },
         submitExperiment(){
             this.$refs.plotNetworkForm.submit_experiment_with_confirmation();
+        },
+        updateVisualizationParameters(newNetworkParams){
+            this.visualizationParameters = newNetworkParams
         }
+
     }
 }
 </script>

@@ -47,6 +47,7 @@ def save_experiment(user_id):
                                         network_json=request_json['network_json'],
                                         category=request_json['category'],
                                         metrics=request_json['metrics'],
+                                        visualization_params=request_json['visualization_params'],
                                         dataset_id = added_dataset['id'],
                                         dataset_name = added_dataset['name'],
                                         thumbnail= base64.decodebytes(encode(request_json['thumbnail'])),

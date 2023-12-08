@@ -33,10 +33,13 @@ def apply_girvan_newman():
 
         graph_json = nw_formatter.network_to_json(graph, GN_communities)
 
+        default_visualization_params = {'nodeSeparation': 500, 'communitySeparation': 800, 'gravity': 0.1}
+
         return jsonify(
                         {'network_json': graph_json,
                         'communities': GN_communities,
                         'metrics' : {'modularity': modularity},
+                        'visualization_params': default_visualization_params,
                         'category' : 'Girvan-Newman',
                         'dataset_name': file_name,
                         'dataset_id': file_hash
@@ -56,11 +59,14 @@ def apply_girvan_newman_to_dataset(dataset_id):
         dendrogram, modularity = gn.Girvan_Newman_2004(graph)
         GN_communities = gn.dendrogram_to_community(dendrogram)
         graph_json = nw_formatter.network_to_json(graph, GN_communities)
+        
+        default_visualization_params = {'nodeSeparation': 500, 'communitySeparation': 800, 'gravity': 0.1}
 
         return jsonify(
                         {'network_json': graph_json,
                         'communities': GN_communities,
                         'metrics' : {'modularity': modularity},
+                        'visualization_params': default_visualization_params,
                         'category' : 'Girvan-Newman',
                         'dataset_name': dataset['name'],
                         'dataset_id': dataset['id']

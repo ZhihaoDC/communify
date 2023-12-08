@@ -32,12 +32,15 @@ def apply_louvain():
         modularity = nx_modularity(graph, louvain.dendrogram(last_community))
 
         graph_json = nw_formatter.network_to_json(graph, last_community)
+
+        default_visualization_params = {'nodeSeparation': 500, 'communitySeparation': 800, 'gravity': 0.1}
         
         return jsonify({ 
                         'experiment_name': file_name, #default value
                         'network_json': graph_json,
                         'communities': last_community,
                         'metrics' : {'modularity': modularity},
+                        'visualization_params': default_visualization_params,
                         'category': 'Louvain',
                         'dataset_name': file_name,
                         'dataset_id': file_hash
@@ -60,10 +63,14 @@ def apply_louvain_to_dataset(user_id, dataset_id):
         modularity = nx_modularity(graph, louvain.dendrogram(last_community))
         graph_json = nw_formatter.network_to_json(graph, last_community)
 
-        return jsonify({    
+        default_visualization_params = {'nodeSeparation': 500, 'communitySeparation': 800, 'gravity': 0.1}
+
+        return jsonify({
+                        'experiment_name': dataset['name'], #default value
                         'network_json': graph_json,
                         'communities': last_community,
                         'metrics' : {'modularity': modularity},
+                        'visualization_params': default_visualization_params,
                         'category': 'Louvain',
                         'dataset_name': dataset['name'],
                         'dataset_id': dataset['id']

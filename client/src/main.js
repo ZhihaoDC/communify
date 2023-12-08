@@ -13,7 +13,8 @@ Vue.config.productionTip = false
 export var store = {
   state: {
     lastComputedExperiment: Object,
-    isNewExperiment: true
+    isNewExperiment: true,
+    visualization_params : {}
   },
   getLastComputedExperiment(){
     return this.state.lastComputedExperiment
@@ -35,6 +36,12 @@ export var store = {
   },
   setExperimentThumbail(new_thumbnail){
     this.state.lastComputedExperiment.thumbnail = new_thumbnail
+  },
+  getExperimentVisualizationParams(){
+    return this.state.lastComputedExperiment.visualization_params
+  },
+  setExperimentVisualizationParams(new_value){
+    this.state.lastComputedExperiment.visualization_params = new_value
   }
 }
 

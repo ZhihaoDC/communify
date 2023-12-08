@@ -23,10 +23,13 @@
         placeholder="Introduce una descripción para el experimento"></b-form-textarea>
     </b-form-group>
 
+
     <b-button type="submit" :disabled="!activateSubmitButton" @click="handleSubmitNetwork" variant="primary"
       class="content-item submit-button">
       {{this.submitted_msg}}
     </b-button>
+
+    <PlotVisualizationParameters @updateVisualizationParameters="updateVisualizationParameters"></PlotVisualizationParameters>
 
     <div id="success-alert">
       <b-alert :show="dismissCountDown" dismissible fade variant="success" @dismissed="dismissCountDown=0"
@@ -42,9 +45,11 @@
 
 <script>
 import { store } from '../main'
+import PlotVisualizationParameters from "@/components/PlotVisualizationParameters.vue"
 
 export default {
   name: "PlotNetworkForm",
+  components: {PlotVisualizationParameters},
   props: ['activateSubmitButton'],
   data: function () {
     return {
@@ -55,6 +60,7 @@ export default {
       dismissSecs: 4,
       dismissCountDown: 0,
       submitted_msg: "Guardar experimento",
+      visualizationParameters: store.getLastComputedExperiment().visualization_params
     }
   },
   methods: {
@@ -81,6 +87,11 @@ export default {
     },
     showAlert() {
       this.dismissCountDown = this.dismissSecs
+    },
+    updateVisualizationParameters(newvisualizationParameters){
+        this.visualizationParameters = newvisualizationParameters
+        this.experiment.visualization_params = newvisualizationParameters
+        this.$emit('updateVisualizationParameters', newvisualizationParameters)
     },
     async handleSubmitNetwork(){
       // console.log("Mandando señal para actualizar experimento...")
@@ -131,6 +142,7 @@ export default {
           if (response.status === 200) {
             this.submitted_msg = "Guardado!"
             this.experiment = response.data.experiment
+            store.setLastComputedExperiment(this.experiment)
             this.showAlert()
           }
         })

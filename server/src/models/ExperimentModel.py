@@ -43,6 +43,10 @@ class Experiment(db.Model):
         db.JSON
     )
 
+    visualization_params = db.Column(
+        db.JSON
+    )
+
     dataset_id = db.Column(
         db.String(32),        
         db.ForeignKey("DATASET.id")
@@ -74,6 +78,7 @@ class Experiment(db.Model):
             'category': self.category,
             'description': self.description,
             'metrics': self.metrics,
+            'visualization_params': self.visualization_params,
             'dataset_name': self.dataset_name,
             'thumbnail': base64.encodebytes(self.thumbnail).decode('utf-8')
         }
