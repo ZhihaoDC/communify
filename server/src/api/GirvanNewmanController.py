@@ -36,7 +36,8 @@ def apply_girvan_newman():
         default_visualization_params = {'nodeSeparation': 500, 'communitySeparation': 800, 'gravity': 0.1}
 
         return jsonify(
-                        {'network_json': graph_json,
+                        {'experiment_name': file_name, #default value
+                        'network_json': graph_json,
                         'communities': GN_communities,
                         'metrics' : {'modularity': modularity},
                         'visualization_params': default_visualization_params,
@@ -63,7 +64,8 @@ def apply_girvan_newman_to_dataset(dataset_id):
         default_visualization_params = {'nodeSeparation': 500, 'communitySeparation': 800, 'gravity': 0.1}
 
         return jsonify(
-                        {'network_json': graph_json,
+                        {'experiment_name': dataset['name'], #default value
+                        'network_json': graph_json,
                         'communities': GN_communities,
                         'metrics' : {'modularity': modularity},
                         'visualization_params': default_visualization_params,

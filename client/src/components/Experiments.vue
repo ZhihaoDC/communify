@@ -9,23 +9,21 @@
                         <!-- <b-img fluid :src="'data:image/png;base64,' +  experiment.thumbnail"></b-img> -->
                         <b-card-text> {{ experiment.description }} </b-card-text>
                         
-                        <div class="buttons">
-
-                            <b-button v-if="!submitted" @click="visualize(experiment)"
-                            value="Visualizar" type="submit" variant="primary" class="mr-2">
-                                Visualizar
-                            </b-button>
-                            <b-spinner v-else variant="primary" label="Spinning" id="spinner" class="m-5"></b-spinner>
-                            <b-button @click="delete_experiment(experiment)"
-                            value="Eliminar" variant="outline-danger" class="mr-2">
-                                Eliminar
-                            </b-button>
-                        
-                        </div>
+                        <b-button v-if="!submitted" @click="visualize(experiment)"
+                        value="Visualizar" type="submit" variant="primary" class="mr-2">
+                            Visualizar
+                        </b-button>
+                        <b-spinner v-else variant="primary" label="Spinning" id="spinner" class="m-5"></b-spinner>
+                        <b-button @click="delete_experiment(experiment)"
+                        value="Eliminar" variant="outline-danger">
+                            Eliminar
+                        </b-button>
+                
 
                         <template #footer>
                             <small class="text-muted">Creado el {{parseDate(experiment.creation_date)}}</small>
                         </template>
+
                     </b-card>
                 </b-card-group>
             </div>
@@ -166,10 +164,17 @@ export default {
 <style scoped lang="scss">
 #b-card {
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    min-height: 25rem;
     max-width: 25rem;
 };
 
+@media screen and (min-width: 40em) {
+  .card-img,
+  .card-img-top,
+  .card-img-bottom {
+    max-height: 20em !important;
+    padding: 0.5em
+  }
+}
 // #delete-button {
 //     color: gray;
 //     font-size: 0.8rem;

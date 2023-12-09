@@ -16,11 +16,13 @@ def visualize_network():
         graph = nw_formatter.file_to_network(file, columns)
         graph_json = nw_formatter.network_to_json(graph)
 
+        default_visualization_params = {'nodeSeparation': 500, 'communitySeparation': 800, 'gravity': 0.1}
 
         return jsonify({    
                         'network_json': graph_json,
                         'communities': None,
                         'metrics' : None,
+                        'visualization_params': default_visualization_params,
                         'category': 'graph-visualization',
                         'dataset_name': file_name,
                         'dataset_id': file_hash
