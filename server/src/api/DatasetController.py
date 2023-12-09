@@ -29,6 +29,7 @@ def save_dataset(user_id):
         graph = nw_formatter.file_to_network(file, columns)
         network_json = nw_formatter.network_to_json(graph)
 
+
         added_dataset = DatasetService.add_instance(Dataset,
             id=file_hash,
             name=file_name,
@@ -38,8 +39,10 @@ def save_dataset(user_id):
         
         return jsonify(added_dataset), 200
     
-    except:
-        return jsonify({"errorMessage": "Invalid .csv format"}), 400
+    except Exception as e:
+        import sys 
+        print(e, file=sys.stderr)
+        # return jsonify({"errorMessage": "Invalid .csv format"}), 400
     
 
 @DatasetController.route('/delete-dataset/<user_id>/<dataset_id>', methods=['DELETE'])

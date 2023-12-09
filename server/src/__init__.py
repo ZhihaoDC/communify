@@ -5,8 +5,8 @@ from flask_migrate import Migrate
 
 from sqlalchemy.exc import OperationalError
 import time
-
 import json
+import hashlib
 
 from . import app_config
 from src.plugins.SQLAlchemy import db
@@ -17,6 +17,8 @@ from src.api.GirvanNewmanController import GirvanNewmanController
 from src.api.GraphVisualizationController import GraphVisualizationController
 from src.models.UserModel import User
 from src.models.DatasetModel import Dataset
+from src.services import UserService
+import src.api.__network_formatter__ as nw_formatter
 ############################################## APP #################################################
 
 
@@ -39,6 +41,7 @@ def create_app(env="PROD"):
     if env != 'TEST':
         # Start app and database
         db.init_app(app)
+        
 
         #Retry on connection failure
         MAX_RETRIES = 10
@@ -57,6 +60,7 @@ def create_app(env="PROD"):
                     print(f"Connection failed. (Tried to reconnect {MAX_RETRIES} times")
 
         # migrate = Migrate(app, db)
+        
         init_database()
 
     # enable CORS
@@ -66,19 +70,19 @@ def create_app(env="PROD"):
 
 
 def init_database():
-    default_user = User(username="david19",
+    
+    default_user = UserService.add_instance(User, username="david19",
         email="david19@gmail.com",
         firstname="david", 
         lastname="fernandez", 
         profile_description="data scientist")
-        
-    db.session.add(default_user)
-    
-    # dataset_csv = pd.read_csv("./static/game-of-thrones-books/book1.csv")
-    # dataset_json = dataset_csv.to_json("./static/game-of-thrones-books/book1.json", orient='records', indent=2)
-    with open("./static/game-of-thrones-books/book1.json") as f:
-        book1 = json.load(f)
-        default_dataset = Dataset(id="12345678912345678912345678912345", json=json.dumps(book1), user_id=default_user.id)
+
+    columns = {'source':'source', 'target':'target', 'weight':'weight'}
+    graph = nw_formatter.file_to_network("./static/game-of-thrones-books/book1.csv", columns)
+    network_json = nw_formatter.network_to_json(graph)
+    file_hash = hashlib.md5(json.dumps(network_json).encode()).hexdigest()
+
+    default_dataset = Dataset(id=file_hash, name="book1", json=network_json, user_id=default_user['id'])
     db.session.add(default_dataset)
 
     db.session.commit()

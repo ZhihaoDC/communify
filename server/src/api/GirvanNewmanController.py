@@ -50,11 +50,11 @@ def apply_girvan_newman():
 
 
 
-@GirvanNewmanController.route("/community-detection/girvan-newman/<dataset_id>", methods=['GET'])
-def apply_girvan_newman_to_dataset(dataset_id):
+@GirvanNewmanController.route("/community-detection/girvan-newman/<user_id>/<dataset_id>", methods=['GET'])
+def apply_girvan_newman_to_dataset(user_id, dataset_id):
     try:
-        dataset = DatasetService.get_by_id(Dataset, dataset_id)
-        graph = cytoscape_graph(dataset['json'])
+        dataset = DatasetService.get_by_id(Dataset, user_id, dataset_id)
+        graph = nw_formatter.json_to_network(dataset['json'])
 
         #Apply girvan-newman method
         dendrogram, modularity = gn.Girvan_Newman_2004(graph)
@@ -73,7 +73,9 @@ def apply_girvan_newman_to_dataset(dataset_id):
                         'dataset_name': dataset['name'],
                         'dataset_id': dataset['id']
                         }), 200
-    except:
+    except Exception as e:
+        import sys
+        print(e, file=sys.stderr)
         return jsonify({"errorMessage": "Invalid .csv format"}), 400
         
 

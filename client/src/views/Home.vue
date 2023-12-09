@@ -7,34 +7,46 @@
       <div class="tools">
         <b-card-group deck>
           <b-card
-          title="Detección de comunidades: método de Louvain"
-          class="mb-3"
+          title="Detección de comunidades"
+          class="mb-4"
           id="b-card">
             <b-card-text>
-              Método de Louvain. El más popular. Rápido y preciso
+              Detectar comunidades en una red y visualizar el resultado.
             </b-card-text>
-            <b-button block to="/community-detection/louvain" variant="primary" id="go">Ir</b-button>
+            <b-button block to="/community-detection" variant="primary" id="go">Ir</b-button>
           </b-card>
 
           <b-card
-          title="Detección de comunidades: método de Girvan-Newman"
-          class="mb-3"
+          title="Datasets"
+          class="mb-4"
           id="b-card">
             <b-card-text>
-              Método de Girvan-Newman. Más lento y menos conocido.
+              Subir y gestionar datasets. También puedes iniciar un experimento con un dataset existente.
             </b-card-text>
-            <b-button block to="/community-detection/girvan-newman" variant="primary" id="go">Ir</b-button>
+            <b-button block to="/user-datasets" variant="primary" id="go">Ir</b-button>
           </b-card>
 
           <b-card
-          title="Visualización: Representar grafo o red"
-          class="mb-3"
+          title="Experimentos"
+          class="mb-4"
+          id="b-card">
+            <b-card-text>
+              Gestiona y visualiza de nuevo los experimentos que has creado.
+            </b-card-text>
+            <b-button block to="/user-experiments" variant="primary" id="go">Ir</b-button>
+          </b-card>
+
+          <b-card
+          title="Visualizar grafo"
+          class="mb-4"
           id="b-card">
             <b-card-text>
               Representa un grafo, cambia los nodos de color y posición
             </b-card-text>
             <b-button block to="/graph-visualization" variant="primary" id="go">Ir</b-button>
           </b-card>
+
+          
         </b-card-group>
       </div>
       

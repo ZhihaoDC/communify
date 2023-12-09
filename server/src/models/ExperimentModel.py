@@ -48,21 +48,18 @@ class Experiment(db.Model):
     )
 
     dataset_id = db.Column(
-        db.String(32),        
-        db.ForeignKey("DATASET.id")
+        db.String(32),
+        db.ForeignKey('DATASET.id')
     )
 
     dataset_name = db.Column(
-        db.String(50)
+        db.String(50),
     )
-    
+
     thumbnail = db.Column(
         db.BLOB, 
         nullable=False
     )
-    
-    user = db.relationship('User', passive_deletes=True)
-    dataset = db.relationship('Dataset', passive_deletes=True)
 
     @property
     def serialized(self):

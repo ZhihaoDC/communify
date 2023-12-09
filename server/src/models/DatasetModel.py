@@ -23,12 +23,14 @@ class Dataset(db.Model):
         db.JSON, 
         nullable=False
     )
-
+    
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey("USER.id")
+        db.ForeignKey("USER.id"),
+        nullable=False
     )
-    
+
+    experiments = db.relationship('Experiment', backref='DATASET', cascade="all, delete-orphan")
 
     @property
     def serialized(self):

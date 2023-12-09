@@ -7,7 +7,6 @@
         Datasets guardados por el usuario
         </h4>
         
-      
         <b-table
             id="my-table"
             class="mt-3" outlined
@@ -15,6 +14,7 @@
             :fields="fields"
             :per-page="perPage"
             :current-page="currentPage"
+            v-if="datasets"
         >
             <template #cell(actions)="row">
                 <col :style="{ width: '10em'}" >
@@ -30,16 +30,19 @@
 
         </b-table>
 
+        
+        <div v-else>
+            <div> Aún no hay datasets subidos. </div>
+            <router-link to="/dataset-upload-form" id="add-dataset-link">Añadir un dataset</router-link>
+        </div>
 
-        <div>
         <b-pagination
             v-model="currentPage"
             :total-rows="rows"
             :per-page="perPage"
             aria-controls="my-table"
             class="mr-auto"
-        ></b-pagination>
-        </div>
+        ></b-pagination>    
       </div>
     </b-container>
 </template>
@@ -109,7 +112,14 @@ import CreateExperimentModal from '../components/CreateExperimentModal.vue';
             return local_date.toLocaleString('es-ES', options)
         },
         delete_dataset(dataset_id){
-            this.$bvModal.msgBoxConfirm('La siguiente acción borrará el dataset. ¿Estás seguro?', {
+            const h = this.$createElement
+            const msgBox = h('p', {class: ['msgBoxtext']},[
+                'La siguiente acción borrará el dataset. ', 
+                h('strong', {class: ['danger-delete']}, 'También borrará todos sus experimentos asociados. \n'),
+                h('br'),
+                h('b', {class: ['dark']}, '¿Estás seguro?')
+            ])
+            this.$bvModal.msgBoxConfirm(msgBox, {
                 title: '¿Eliminar dataset?',
                 size: 'sm',
                 buttonSize: 'sm',
@@ -151,4 +161,11 @@ import CreateExperimentModal from '../components/CreateExperimentModal.vue';
 .buttons{
     display:inline-block
 };
+#add-dataset-link{
+    color: #42b983;
+    text-decoration: none;
+  }
+.danger-delete{
+    color:red
+}
 </style>

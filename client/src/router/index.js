@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import CommunityDetection from '../views/CommunityDetection.vue'
 import FormLouvain from '../views/FormLouvain.vue'
 import FormDataset from '../views/FormDataset.vue'
 import VisualizationExperiment from '../views/VisualizationExperiment.vue'
@@ -18,6 +19,11 @@ const routes = [
     path: '/dataset-upload-form',
     name: 'FormDataset',
     component: FormDataset
+  },
+  {
+    path: '/community-detection',
+    name: 'CommunityDetection',
+    component: CommunityDetection
   },
   {
     path: '/community-detection/louvain',

@@ -18,10 +18,11 @@ def add_instance(model, **kwargs):
     return instance.serialized
 
 
-def delete_by_id(model, id):
-    deleted_id = model.query.filter_by(experiment_id=id).delete()
-    commit_changes()
-    return id
+def delete_by_id(model, user_id, id):
+    experiment_to_delete = model.query.filter_by(user_id=user_id, experiment_id=id).first()
+    db.session.delete(experiment_to_delete)
+    commit_changes()    
+    return experiment_to_delete.serialized
 
 
 # def edit_instance(model, id, **kwargs):

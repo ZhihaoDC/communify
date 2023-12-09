@@ -12,10 +12,13 @@ class User(db.Model):
     lastname = db.Column(db.String(100))
     profile_description = db.Column(db.String(250))
 
-    datasets = db.relationship('Dataset', passive_deletes=True)
+    
+    datasets = db.relationship('Dataset', backref='User', cascade="all, delete-orphan")
+    experiments = db.relationship('Experiment', backref='User', cascade="all, delete-orphan")
 
-    def serialize(self):
+    @property
+    def serialized(self):
         return{
-            "user_id": self.id,
+            "id": self.id,
             "username": self.username
         }
