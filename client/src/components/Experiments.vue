@@ -28,7 +28,7 @@
                 </b-card-group>
             </div>
             <div v-else id="empty-experiments-container">
-                <img id="empty-experiments-img" src="../assets/test-tube.png"> 
+                <b-img id="empty-experiments-img" src="../assets/test-tube2.png" alt="No hay experiments" :width="200" :height="200"/> 
                 <div> No hay experimentos todavía </div>
             </div>
         </div>
@@ -164,14 +164,14 @@ export default {
 <style scoped lang="scss">
 #b-card {
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    max-width: 25rem;
+    max-width: 20rem;
 };
 
-@media screen and (min-width: 40em) {
+@media screen and (min-width: 20em) {
   .card-img,
   .card-img-top,
   .card-img-bottom {
-    max-height: 20em !important;
+    min-height: 15em !important;
     padding: 0.5em
   }
 }

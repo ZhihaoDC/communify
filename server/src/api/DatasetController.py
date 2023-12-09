@@ -49,7 +49,7 @@ def save_dataset(user_id):
 def delete_dataset(user_id, dataset_id):
     try:
         deleted_dataset = DatasetService.delete_by_id(Dataset, user_id=user_id, id=dataset_id)
-        return json.jsonify({'status': 'success', 'experiments': deleted_dataset}), 200
+        return json.jsonify({'status': 'success', 'deleted_dataset': deleted_dataset}), 200
     
     except Exception as e:
         import sys

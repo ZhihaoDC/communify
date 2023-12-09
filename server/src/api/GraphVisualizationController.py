@@ -18,7 +18,8 @@ def visualize_network():
 
         default_visualization_params = {'nodeSeparation': 500, 'communitySeparation': 800, 'gravity': 0.1}
 
-        return jsonify({    
+        return jsonify({
+                        'experiment_name': file_name, #default value
                         'network_json': graph_json,
                         'communities': None,
                         'metrics' : None,

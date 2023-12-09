@@ -1,56 +1,58 @@
-
 <template>
     <b-container fluid="md">
-      <div>
         <h1 id="header">Datasets guardados</h1>
         <h4>
         Datasets guardados por el usuario
         </h4>
-        
-        <b-table
-            id="my-table"
-            class="mt-3" outlined
-            :items="datasets"
-            :fields="fields"
-            :per-page="perPage"
-            :current-page="currentPage"
-            v-if="datasets"
-        >
-            <template #cell(actions)="row">
-                <col :style="{ width: '10em'}" >
-                    <div class="buttons">
-                     
-                    <CreateExperimentModal class="mr-2" :row="row"></CreateExperimentModal>
-                    <b-button @click="delete_dataset(row.item.id)" value="Eliminar" variant="outline-danger">
-                        <b-icon icon="trash" aria-hidden="true" scale="1"></b-icon>
-                    </b-button>
-                       
-                    </div>
-            </template>
+        <div v-if="((datasets != null) && (Object.keys(datasets).length != 0))">
+            <b-table
+                id="my-table"
+                class="mt-3" outlined
+                :items="datasets"
+                :fields="fields"
+                :per-page="perPage"
+                :current-page="currentPage"
+            >
+                <template #cell(actions)="row">
+                    <col :style="{ width: '10em'}" >
+                        <div class="buttons">
+                        
+                        <CreateExperimentModal class="mr-2" :row="row"></CreateExperimentModal>
+                        <b-button @click="delete_dataset(row.item.id)" value="Eliminar" variant="outline-danger">
+                            <b-icon icon="trash" aria-hidden="true" scale="1"></b-icon>
+                        </b-button>
+                        
+                        </div>
+                </template>
 
-        </b-table>
+            </b-table>
 
-        
-        <div v-else>
-            <div> Aún no hay datasets subidos. </div>
-            <router-link to="/dataset-upload-form" id="add-dataset-link">Añadir un dataset</router-link>
+            <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+                aria-controls="my-table"
+                size="sm"
+                align="right"
+            ></b-pagination>    
         </div>
-
-        <b-pagination
-            v-model="currentPage"
-            :total-rows="rows"
-            :per-page="perPage"
-            aria-controls="my-table"
-            class="mr-auto"
-        ></b-pagination>    
-      </div>
+        
+        <div v-else id="empty-datasets-container">
+            <b-img id="empty-datasets-img" src="../assets/database-empty.png" alt="No hay datasets" :width="200" :height="200"/>
+            <p> Aún no hay datasets subidos</p>
+        </div>
+        <b-button variant="primary" to="/dataset-upload-form">
+            <b-icon icon="plus" aria-hidden="true"></b-icon> Añadir un dataset
+        </b-button>
     </b-container>
 </template>
   
-  <script>
-import CreateExperimentModal from '../components/CreateExperimentModal.vue';
+<script>
+import CreateExperimentModal from '@/components/CreateExperimentModal.vue';
 
     export default {
+    name: 'UserDatasets',
+    components: {CreateExperimentModal},
     data() {
         return {
             user_id: 1,
@@ -153,19 +155,25 @@ import CreateExperimentModal from '../components/CreateExperimentModal.vue';
 
             
         }
-    },
-    components: { CreateExperimentModal }
+    }
 }
 </script>
 <style>
 .buttons{
     display:inline-block
-};
+}
 #add-dataset-link{
     color: #42b983;
     text-decoration: none;
-  }
+}
 .danger-delete{
     color:red
+}
+#empty-datasets-container{
+    padding-top:2em;    
+}
+#empty-datasets-img{
+    vertical-align: middle;
+    padding: 1.25em;
 }
 </style>

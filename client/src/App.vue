@@ -5,7 +5,6 @@
       <b-navbar-toggle target="routes"></b-navbar-toggle>
       <b-collapse is-nav id="routes">
         <b-navbar-nav>
-          <b-nav-item to="/dataset-upload-form"> Subir dataset </b-nav-item>
           <b-nav-item-dropdown text="Detección de comunidades" ref="dropdown" align="right">
             <b-dropdown-item to="/community-detection/louvain"
               >Método de Louvain</b-dropdown-item
@@ -14,9 +13,9 @@
               >Método de Girvan-Newman</b-dropdown-item
             >
           </b-nav-item-dropdown>
-          <b-nav-item to="/graph-visualization"> Representar grafo </b-nav-item>
           <b-nav-item to="/user-datasets"> Datasets </b-nav-item>
           <b-nav-item to="/user-experiments"> Experimentos </b-nav-item>
+          <b-nav-item to="/graph-visualization"> Visualizar grafo </b-nav-item>
           <b-nav-item right to="/about"> About </b-nav-item>
         </b-navbar-nav>
       </b-collapse>
