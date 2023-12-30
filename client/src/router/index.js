@@ -7,6 +7,7 @@ import FormDataset from '../views/FormDataset.vue'
 import VisualizationExperiment from '../views/VisualizationExperiment.vue'
 import UserExperiments from '../views/UserExperiments.vue'
 import UserDatasets from '../views/UserDatasets.vue'
+import UserSignUp from '../views/UserSignUp.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -54,6 +55,11 @@ const routes = [
     path: '/user-datasets',
     name: 'UserDatasets',
     component: UserDatasets
+  },
+  {
+    path: '/user-login',
+    name: 'UserSignUp',
+    component: UserSignUp
   },
   {
     path: '/about',

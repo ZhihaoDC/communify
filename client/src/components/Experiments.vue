@@ -7,7 +7,8 @@
                     <b-card v-for="(experiment, index) in experiments" :key="index" class="mb-3" id="b-card"
                         :title="experiment.experiment_name" :sub-title="experiment.category" :img-src="'data:image/png;base64,' +  experiment.thumbnail">
                         <!-- <b-img fluid :src="'data:image/png;base64,' +  experiment.thumbnail"></b-img> -->
-                        <b-card-text> {{ experiment.description }} </b-card-text>
+                        <b-card-text v-if="experiment.description"> {{ experiment.description }} </b-card-text>
+                        <b-card-text v-else id="missing-description"> No hay descripción </b-card-text>
                         
                         <b-button v-if="!submitted" @click="visualize(experiment)"
                         value="Visualizar" type="submit" variant="primary" class="mr-2">
@@ -191,6 +192,11 @@ export default {
 #empty-experiments-img{
     vertical-align: middle;
     padding: 1.25em;
+}
+#missing-description{
+    color: gray;
+    font-style: italic;
+    font-size: small
 }
 
 </style>

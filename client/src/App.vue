@@ -17,6 +17,7 @@
           <b-nav-item to="/user-experiments"> Experimentos </b-nav-item>
           <b-nav-item to="/graph-visualization"> Visualizar grafo </b-nav-item>
           <b-nav-item right to="/about"> About </b-nav-item>
+          <b-nav-item right to="/user-login"> Usuarios </b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -24,7 +25,8 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+};
 </script>
 
 <style lang="scss">

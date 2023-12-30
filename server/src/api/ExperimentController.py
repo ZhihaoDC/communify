@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask import json
-import src.api.__network_formatter__ as nw_formatter
+from src.api.__token_handler__ import token_required
 from src.models.ExperimentModel import Experiment
 from src.models.DatasetModel import Dataset
 from src.services import DatasetService
@@ -12,15 +12,15 @@ from codecs import encode
 ExperimentController = Blueprint('ExperimentController', __name__)
 
 
-@ExperimentController.route('/save-experiment/<user_id>', methods=['POST'])
-def save_experiment(user_id):
+@ExperimentController.route('/save-experiment/', methods=['POST'])
+@token_required
+def save_experiment(user):
     def __apply_default_values__(request_json, default_values):
         for key, value in default_values.items():
             if key not in request_json:
                 request_json[key] = value
         return request_json
         
-
     request_json = request.get_json()
     
     request_json = __apply_default_values__(request_json, 
@@ -38,10 +38,10 @@ def save_experiment(user_id):
                                                     id=request_json['dataset_id'],
                                                     name=request_json['dataset_name'],
                                                     json=request_json['network_json'],
-                                                    user_id=user_id)
+                                                    user_id=user['id'])
 
         added_experiment = ExperimentService.add_instance(Experiment,
-                                        user_id=user_id,
+                                        user_id=user['id'],
                                         experiment_id=request_json['experiment_id'],
                                         experiment_name = request_json['experiment_name'],
                                         network_json=request_json['network_json'],
@@ -71,9 +71,10 @@ def get_experiments(user_id):
                         'experiments': data}), 200
 
 
-@ExperimentController.route('/delete-experiment/<user_id>/<experiment_id>', methods=['DELETE'])
-def delete_experiments(user_id, experiment_id):
-    deleted_experiment = ExperimentService.delete_by_id(Experiment, user_id, experiment_id)
+@ExperimentController.route('/delete-experiment/<experiment_id>', methods=['DELETE'])
+@token_required
+def delete_experiments(user, experiment_id):
+    deleted_experiment = ExperimentService.delete_by_id(Experiment, user['id'], experiment_id)
     return json.jsonify({'status': 'success',
                         'experiments': deleted_experiment}), 200
 

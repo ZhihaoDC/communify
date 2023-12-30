@@ -1,8 +1,6 @@
 from flask import request, Blueprint
 from flask.json import jsonify
-import hashlib
 import sys
-import networkx as nx
 
 #import custom modules
 from src.community_detection import louvain_algorithm as louvain
@@ -78,11 +76,3 @@ def apply_louvain_to_dataset(user_id, dataset_id):
     except Exception as e:
         print(e, file=sys.stderr)
         return jsonify({"errorMessage": "Error interno del servidor"}), 500
-
-    
-def md5(fname):
-    hash_md5 = hashlib.md5()
-    with open(fname, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
-    return hash_md5.hexdigest()

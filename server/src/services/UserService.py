@@ -1,5 +1,12 @@
 from src import db
 
+
+def get_by_email(model, email):
+    user = model.query.filter_by(email=email).first()
+    if user:
+        return user.serialized
+    return user
+
 def add_instance(model, **kwargs):
     instance = model(**kwargs)
     instance = db.session.merge(instance)

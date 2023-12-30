@@ -2,6 +2,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
+from werkzeug.security import generate_password_hash
 
 from sqlalchemy.exc import OperationalError
 import time
@@ -10,6 +11,8 @@ import hashlib
 
 from . import app_config
 from src.plugins.SQLAlchemy import db
+
+from src.api.UserController import UserController
 from src.api.ExperimentController import ExperimentController
 from src.api.DatasetController import DatasetController
 from src.api.LouvainController import LouvainController
@@ -32,6 +35,7 @@ def create_app(env="PROD"):
     app.register_blueprint(GraphVisualizationController)
     app.register_blueprint(ExperimentController)
     app.register_blueprint(DatasetController)
+    app.register_blueprint(UserController)
 
     # Database config
     app.config['SQLALCHEMY_DATABASE_URI'] = app_config.DATABASE_CONNECTION_URI
@@ -71,8 +75,10 @@ def create_app(env="PROD"):
 
 def init_database():
     
-    default_user = UserService.add_instance(User, username="david19",
+    default_user = UserService.add_instance(User, 
+        username="david19",
         email="david19@gmail.com",
+        password= generate_password_hash('testpwd12345', method='sha256'),
         firstname="david", 
         lastname="fernandez", 
         profile_description="data scientist")
