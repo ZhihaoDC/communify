@@ -72,8 +72,10 @@ export default {
 
     methods: {
         getExperiments() {
-            const url = 'http://localhost:5000/get-experiments/' + this.user_id
-            axios.get(url)
+            const url = `${this.$API_URL}/get-experiments/`
+            axios.get(url, 
+                {headers: {'Authorization': `Bearer: ${store.getJwtToken()}`}}
+                )
                 .then((response) => {
                     this.experiments = response.data.experiments
                     this.n_experiments = this.experiments.length
@@ -130,9 +132,9 @@ export default {
                     if (action) {
                         const axios = require('axios')
                         const id_to_remove = experiment.experiment_id
-                        const url = 'http://localhost:5000/delete-experiment/' + String(this.user_id) + '/' + String(id_to_remove)
+                        const url = `${this.$API_URL}/delete-experiment/${id_to_remove}`
                         console.log(url)
-                        axios.delete(url)
+                        axios.delete(url, {headers: {'Authorization': `Bearer: ${store.getJwtToken()}`}})
                             .then(response => {
                                 if (response.status === 200) {
                                     console.log(response)

@@ -121,8 +121,7 @@ export default {
           })
           .catch(err => {
             // An error occurred
-            console.log("Error: ")
-            console.log(err)
+            console.log(`Error: ${err}`)
           })
       }
       if (!this.confirmation && (this.experiment.experiment_id == null)) {
@@ -133,10 +132,11 @@ export default {
     submit_experiment_to_backend() {
       const axios = require("axios");
       console.log(store.getLastComputedExperiment())
-      axios.post('http://localhost:5000/save-experiment/'+this.user_id,
+      axios.post(`${this.$API_URL}/save-experiment/`,
         JSON.stringify(store.getLastComputedExperiment()),
         {
           headers: {
+            'Authorization': `Bearer: ${store.getJwtToken()}`,
             'Content-Type': 'application/json'
           }
         })
@@ -148,9 +148,9 @@ export default {
             this.showAlert()
           }
         })
-        .catch((error) => {
-          console.log(error.response);
-          if (error.response.status == 500) {
+        .catch((response) => {
+          console.log(response);
+          if (response.status == 500) {
             this.error_msg = "Error en la comunicacion con el servidor";
             this.submitted = false;
           }

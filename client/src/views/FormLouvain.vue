@@ -8,7 +8,7 @@
       </h4>
       <div id="content">
         <InputCSV selectedMethod="louvain" 
-          submitUrl="http://localhost:5000/community-detection/louvain" 
+          :submitUrl="this.submitUrl"
           successUrl="/community-detection/louvain/experiment"
         />
       </div>
@@ -21,6 +21,11 @@ import InputCSV from "@/components/InputCSV.vue";
 export default {
   components: { InputCSV },
   name: "FormLouvain",
+  data: function(){
+    return {
+      submitUrl: `${this.$API_URL}/community-detection/louvain`
+    }
+  }
 };
 </script>
 

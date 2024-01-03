@@ -9,6 +9,9 @@ from src.services import UserService
 
 UserController = Blueprint('UserController', __name__)
 
+SESSION_TIME = 30
+
+
 @UserController.route('/create-user', methods=['POST'])
 def sign_up():
     data = request.get_json()
@@ -17,40 +20,63 @@ def sign_up():
     password = data.get('password')
 
     #Check if user exists
-    user = UserService.get_by_email(User, email=email)
-    if user: 
+    existing_user = UserService.get_by_email(User, email=email)
+    if existing_user: 
         return jsonify({
             'errorMessage': 'User already exists'
-        }), 400
+        }), 409
     
     created_user = UserService.add_instance(User,
                                             username=username,
                                             email=email,
                                             password=generate_password_hash(password, method='sha256'))
-    
-    return jsonify({
-        'successMsg': f'User {created_user["username"]} created.'
-    }), 200
+    #Login user
+    token = jwt.encode({'sub': created_user['email'],
+                        'iat': datetime.utcnow(),
+                        'exp': datetime.utcnow() + timedelta(minutes=SESSION_TIME)},
+                        app_config.SECRET_KEY)
+
+    return jsonify({'user': created_user, 
+                    'jwt': token,
+                    'successMsg': f'User {created_user["username"]} created.'
+                    }), 200
     
 
 @UserController.route('/login', methods=['POST'])
 def login():
-    username = request.form.get('username')
-    email = request.form.get('email')
-    password = request.form.get('password')
+    data = request.get_json()
 
-    #Check user
-    user = UserService.get_by_email(email)
-    is_password_correct = check_password_hash(user.password, password)
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+
+    import sys
+
+    if username:
+        user = UserService.get_by_username(User, username)
+        # print(user, file=sys.stderr)
+    if email:
+        user = UserService.get_by_email(User, email)
+        print(user, file=sys.stderr)
+        
+    if not user:
+        return jsonify({
+            'errorMessage': 'User not found'
+        }), 404
+
+    is_password_correct = check_password_hash(user['password'], password)
+
+    #Unsuccessful login
     if not user or not is_password_correct:
         return jsonify({'errorMessage': 'Wrong password', 'authenticated': False}), 401
     
-    token = jwt.encode({
-        'sub': user['id'],
-        'iat': datetime.utcnow(),
-        'exp': datetime.utcnow() + timedelta(minutes=30)},
-        app_config['SECRET_KEY']
-
-    )
-    return jsonify({'successMsg': 'User logged in'}, token.decode('UTF-8')), 200
-
+    #Successful login
+    token = jwt.encode({'sub': user['email'],
+                        'iat': datetime.utcnow(),
+                        'exp': datetime.utcnow() + timedelta(minutes=SESSION_TIME)
+                        },
+                        app_config.SECRET_KEY)
+    return jsonify({'user_id': user, 
+                    'jwt': token,
+                    'successMsg': f'User {user["username"]} successfully logged in.'
+                    }), 200

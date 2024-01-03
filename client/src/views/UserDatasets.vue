@@ -2,7 +2,7 @@
     <b-container fluid="md">
         <h1 id="header">Datasets guardados</h1>
         <h4>
-        Datasets guardados por el usuario
+        Aquí encontrarás los datasets que has guardado. También puedes crear nuevos experimentos.
         </h4>
         <div v-if="((datasets != null) && (Object.keys(datasets).length != 0))">
             <b-table
@@ -49,6 +49,7 @@
   
 <script>
 import CreateExperimentModal from '@/components/CreateExperimentModal.vue';
+import { store } from "../main.js";
 
     export default {
     name: 'UserDatasets',
@@ -75,7 +76,7 @@ import CreateExperimentModal from '@/components/CreateExperimentModal.vue';
     mounted() {
         const axios = require("axios");
         axios
-            .get("http://localhost:5000/get-datasets/1")
+            .get(`${this.$API_URL}/get-datasets`, {headers: {'Authorization': `Bearer: ${store.getJwtToken()}`}})
             .then((response) => {
             if (response.status === 200) {
                 this.datasets = response.data['datasets'];
@@ -136,14 +137,12 @@ import CreateExperimentModal from '@/components/CreateExperimentModal.vue';
                     if (action) {
                         const axios = require('axios')
                         var id_to_remove = dataset_id
-                        const url = 'http://localhost:5000/delete-dataset/' + String(this.user_id) + '/' + String(dataset_id)
-                        console.log(url)
-                        axios.delete(url)
+                        const url = `${this.$API_URL}/delete-dataset/${dataset_id}`
+                        axios.delete(url, {headers: {'Authorization': `Bearer: ${store.getJwtToken()}`}})
                             .then(response => {
                                 if (response.status === 200) {
                                     console.log(response)
                                     this.datasets = this.datasets.filter((dataset) => dataset.dataset_id != id_to_remove)
-                                    window.location.reload()
                                 }
 
                             })

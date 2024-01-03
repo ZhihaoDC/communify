@@ -8,6 +8,8 @@ import VisualizationExperiment from '../views/VisualizationExperiment.vue'
 import UserExperiments from '../views/UserExperiments.vue'
 import UserDatasets from '../views/UserDatasets.vue'
 import UserSignUp from '../views/UserSignUp.vue'
+import UserLoginModal from '../components/UserLoginModal.vue'
+import store from "../main.js"
 Vue.use(VueRouter)
 
 const routes = [
@@ -49,17 +51,36 @@ const routes = [
   {
     path: '/user-experiments',
     name: 'UserExperiments',
-    component: UserExperiments
+    component: UserExperiments,
+    beforeEnter (to, from, next) {
+      if (!store.isAuthenticated()) {
+        next('/user-login')
+      } else {
+        next()
+      }
+    }
   },
   {
     path: '/user-datasets',
     name: 'UserDatasets',
-    component: UserDatasets
+    component: UserDatasets,
+    beforeEnter (to, from, next) {
+      if (!store.isAuthenticated()) {
+        next('/user-login')
+      } else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/user-signup',
+    name: 'UserSignUp',
+    component: UserSignUp
   },
   {
     path: '/user-login',
-    name: 'UserSignUp',
-    component: UserSignUp
+    name: 'UserLoginModal',
+    component: UserLoginModal
   },
   {
     path: '/about',

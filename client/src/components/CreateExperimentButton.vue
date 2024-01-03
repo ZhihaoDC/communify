@@ -12,8 +12,11 @@
         methods: {
             getExperimentWithDataset(){
                 const axios = require("axios");
-                let url = "http://localhost:5000/community-detection/"+ this.method +"/"+ this.dataset_id
-                axios.get(url)
+                let url = `${this.$API_URL}/community-detection/${this.method}/${this.dataset_id}`
+                axios.get(
+                    url, 
+                    {headers: {'Authorization': `Bearer: ${store.getJwtToken()}`}}
+                )
                 .then((response) => {
                 if (response.status === 200) {
                     if (["louvain", "girvan-newman"].includes(this.method)){

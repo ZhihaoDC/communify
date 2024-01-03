@@ -9,7 +9,7 @@
       </h4>
       <div id="content">
         <InputCSV selectedMethod="girvan-newman" 
-          submitUrl="http://localhost:5000/community-detection/girvan-newman"  
+          :submitUrl=this.submitUrl
           successUrl="/community-detection/girvan-newman/experiment"
         />
       </div>
@@ -22,6 +22,11 @@ import InputCSV from "@/components/InputCSV.vue";
 export default {
   components: { InputCSV },
   name: "GirvanNewman",
+  data: function(){
+    return {
+      submitUrl: `${this.$API_URL}/community-detection/girvan-newman`
+    }
+  }
 };
 </script>
 

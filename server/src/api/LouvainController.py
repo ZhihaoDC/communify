@@ -8,6 +8,7 @@ import src.api.__network_formatter__ as nw_formatter
 from src.api.__input_manager__ import InputManager
 from src.models.DatasetModel import Dataset
 from src.services import DatasetService
+from src.api.__token_handler__ import token_required
 from networkx.algorithms.community.quality import modularity as nx_modularity
 
 
@@ -49,10 +50,11 @@ def apply_louvain():
         return jsonify({"errorMessage": "Invalid .csv format"}), 500
 
 
-@LouvainController.route("/community-detection/louvain/<user_id>/<dataset_id>", methods=['GET'])
-def apply_louvain_to_dataset(user_id, dataset_id):
+@LouvainController.route("/community-detection/louvain/<dataset_id>", methods=['GET'])
+@token_required
+def apply_louvain_to_dataset(user, dataset_id):
     try:
-        dataset = DatasetService.get_by_id(Dataset, user_id, dataset_id)
+        dataset = DatasetService.get_by_id(Dataset, user['id'], dataset_id)
         graph = nw_formatter.json_to_network(dataset['json']) 
 
         #Apply louvain method

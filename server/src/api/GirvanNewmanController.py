@@ -7,11 +7,12 @@ from werkzeug.utils import secure_filename
 
 
 #Import custom modules
-import src.api.__network_formatter__ as nw_formatter
-from src.api.__input_manager__ import InputManager
 from src.community_detection import girvan_newman_algorithm as gn
 from src.models.DatasetModel import Dataset
 from src.services import DatasetService
+import src.api.__network_formatter__ as nw_formatter
+from src.api.__input_manager__ import InputManager
+from src.api.__token_handler__ import token_required
 
 
 GirvanNewmanController = Blueprint('GirvanNewmanController', __name__)
@@ -50,10 +51,11 @@ def apply_girvan_newman():
 
 
 
-@GirvanNewmanController.route("/community-detection/girvan-newman/<user_id>/<dataset_id>", methods=['GET'])
-def apply_girvan_newman_to_dataset(user_id, dataset_id):
+@GirvanNewmanController.route("/community-detection/girvan-newman/<dataset_id>", methods=['GET'])
+@token_required
+def apply_girvan_newman_to_dataset(user, dataset_id):
     try:
-        dataset = DatasetService.get_by_id(Dataset, user_id, dataset_id)
+        dataset = DatasetService.get_by_id(Dataset, user['id'], dataset_id)
         graph = nw_formatter.json_to_network(dataset['json'])
 
         #Apply girvan-newman method

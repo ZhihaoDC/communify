@@ -11,6 +11,8 @@ import './assets/css/main.css';
 Vue.config.productionTip = false
 Vue.prototype.$API_URL =  'http://localhost:5000'
 
+export const EventBus = new Vue()
+
 export var store = {
   state: {
     lastComputedExperiment: Object,
@@ -46,18 +48,24 @@ export var store = {
   setExperimentVisualizationParams(new_value){
     this.state.lastComputedExperiment.visualization_params = new_value
   },
-  setUser(payload){
-    this.user = payload.user
+  getUserData(){
+    return this.user
   },
-  setJwtToken(payload){
-    this.jwt = payload.jwt
+  setUserData(user){
+    this.user = user
+  },
+  getJwtToken(){
+    return this.jwt
+  },
+  setJwtToken(jwt){
+    this.jwt = jwt
   },
   isAuthenticated(){
       if (!this.jwt || this.jwt.split('.').length < 3) {
         return false
       }
       const data = JSON.parse(atob(this.jwt.split('.')[1]))
-      const exp = new Date(data.exp * 1000) // JS deals with dates in milliseconds since epoch
+      const exp = new Date(data.exp * 1000) // milliseconds
       const now = new Date()
       return (now < exp)
     

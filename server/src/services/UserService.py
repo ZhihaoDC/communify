@@ -7,6 +7,12 @@ def get_by_email(model, email):
         return user.serialized
     return user
 
+def get_by_username(model, username):
+    user = model.query.filter_by(username=username).first()
+    if user:
+        return user.serialized
+    return user
+
 def add_instance(model, **kwargs):
     instance = model(**kwargs)
     instance = db.session.merge(instance)
