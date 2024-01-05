@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store/index'
 import Home from '../views/Home.vue'
 import CommunityDetection from '../views/CommunityDetection.vue'
 import FormLouvain from '../views/FormLouvain.vue'
@@ -9,7 +10,6 @@ import UserExperiments from '../views/UserExperiments.vue'
 import UserDatasets from '../views/UserDatasets.vue'
 import UserSignUp from '../views/UserSignUp.vue'
 import UserLoginModal from '../components/UserLoginModal.vue'
-import store from "../main.js"
 Vue.use(VueRouter)
 
 const routes = [
@@ -53,7 +53,7 @@ const routes = [
     name: 'UserExperiments',
     component: UserExperiments,
     beforeEnter (to, from, next) {
-      if (!store.isAuthenticated()) {
+      if (!store.getters['auth/isAuthenticated']) {
         next('/user-login')
       } else {
         next()
@@ -65,7 +65,7 @@ const routes = [
     name: 'UserDatasets',
     component: UserDatasets,
     beforeEnter (to, from, next) {
-      if (!store.isAuthenticated()) {
+      if (!store.getters['auth/isAuthenticated']) {
         next('/user-login')
       } else {
         next()

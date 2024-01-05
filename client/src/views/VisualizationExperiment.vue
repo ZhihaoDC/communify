@@ -27,20 +27,17 @@
 <script>
 import PlotNetwork from "@/components/PlotNetwork.vue";
 import PlotNetworkForm from "@/components/PlotNetworkForm.vue";
-import { store } from "../main.js";
+// import { mapGetters } from 'vuex';
 export default {
     name: "VisualizationExperiment",
     components: { PlotNetwork, PlotNetworkForm },
     data: function () {
         return {
-                experiment: store.getLastComputedExperiment(),
-                isNewExperiment: store.state.isNewExperiment,                
-                visualizationParameters: store.getExperimentVisualizationParams(),
+                experiment: this.$store.getters['experiment/getExperiment'],
+                isNewExperiment: this.$store.getters['experiment/getIsNewExperiment'],
+                visualizationParameters: this.$store.getters['experiment/getVisualizationParams'],
                 animation_finished: false,
                 };
-    },
-    mounted(){
-        console.log(this.experiment)
     },
     methods: {
         updateNetwork(){
@@ -53,7 +50,14 @@ export default {
             this.visualizationParameters = newNetworkParams
         }
 
+    },
+    mounted () {
+        console.log(this.experiment)
+    },
+    computed() {
+        // mapGetters('experiment', ['getExperiment', 'getIsNewExperiment', 'getVisualizationParams'])
     }
+
 }
 </script>
 

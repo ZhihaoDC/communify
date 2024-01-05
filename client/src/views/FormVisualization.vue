@@ -6,8 +6,7 @@
         Visualiza la red, cambia los nodos de posición, color y físicas.
       </h4>
       <div id="content">
-        <InputCSV selectedMethod="graph-visualization" 
-          :submitUrl=this.submitUrl
+        <InputCSV selectedMethod="graph-visualization"
           successUrl="/community-detection/graph-visualization/experiment"
         />
       </div>

@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { store } from "../main.js";
+import {fetchExperimentsFromDB, deleteExperimentFromDB} from '@/api'
+
 export default {
     name: "Experiments",
     data: function () {
@@ -72,31 +72,17 @@ export default {
 
     methods: {
         getExperiments() {
-            const url = `${this.$API_URL}/get-experiments/`
-            axios.get(url, 
-                {headers: {'Authorization': `Bearer: ${store.getJwtToken()}`}}
-                )
+            fetchExperimentsFromDB(this.$store.getters['auth/jwtToken'])
                 .then((response) => {
                     this.experiments = response.data.experiments
                     this.n_experiments = this.experiments.length
                     let n_rows = this.n_experiments / this.number_experiment_columns
                     this.number_experiment_rows = Math.floor(n_rows) + 1
-
                     this.isFetching = false
-                    console.log(this.experiments)
                 })
                 .catch((error) => {
                     console.error(error)
                 })
-
-        },
-
-
-        getTitle(experiment_name, dataset_name) {
-            if (experiment_name)
-                return experiment_name
-            else
-                return dataset_name
 
         },
 
@@ -109,11 +95,9 @@ export default {
 
         visualize(experiment) {
             this.submitted = true
-            store.setLastComputedExperiment(experiment);
-            store.setIsNewExperiment(false);
-            this.$router.push(
-                "/community-detection/" + experiment.category.toLowerCase() + "/experiment"
-            );
+            this.$store.commit('setExperiment', experiment);
+            this.$store.commit('setIsNewExperiment', false);
+            this.$router.push(`/community-detection/${experiment.category.toLowerCase()}/experiment`);
         },
 
         delete_experiment(experiment) {
@@ -130,19 +114,14 @@ export default {
             })
                 .then(action => {
                     if (action) {
-                        const axios = require('axios')
                         const id_to_remove = experiment.experiment_id
-                        const url = `${this.$API_URL}/delete-experiment/${id_to_remove}`
-                        console.log(url)
-                        axios.delete(url, {headers: {'Authorization': `Bearer: ${store.getJwtToken()}`}})
+                        deleteExperimentFromDB(id_to_remove, this.$store.getters['auth/jwtToken'])
                             .then(response => {
                                 if (response.status === 200) {
                                     console.log(response)
-                                    this.experiments = this.experiments.filter(function (experiment) {
-                                        return experiment.experiment_id != id_to_remove;
-                                    });
+                                    this.experiments = this.experiments.filter((experiment) => {
+                                        return experiment.experiment_id != id_to_remove});
                                 }
-
                             })
                             .catch(error => {
                                 console.log(error)

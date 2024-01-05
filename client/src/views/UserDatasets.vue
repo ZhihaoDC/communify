@@ -49,7 +49,7 @@
   
 <script>
 import CreateExperimentModal from '@/components/CreateExperimentModal.vue';
-import { store } from "../main.js";
+import { getDatasetsFromDB, deleteDatasetFromDB } from '../api';
 
     export default {
     name: 'UserDatasets',
@@ -74,9 +74,7 @@ import { store } from "../main.js";
         }
     },
     mounted() {
-        const axios = require("axios");
-        axios
-            .get(`${this.$API_URL}/get-datasets`, {headers: {'Authorization': `Bearer: ${store.getJwtToken()}`}})
+        getDatasetsFromDB(this.$store.getters['auth/jwtToken'])
             .then((response) => {
             if (response.status === 200) {
                 this.datasets = response.data['datasets'];
@@ -135,10 +133,8 @@ import { store } from "../main.js";
             })
                 .then(action => {
                     if (action) {
-                        const axios = require('axios')
                         var id_to_remove = dataset_id
-                        const url = `${this.$API_URL}/delete-dataset/${dataset_id}`
-                        axios.delete(url, {headers: {'Authorization': `Bearer: ${store.getJwtToken()}`}})
+                        deleteDatasetFromDB(dataset_id, this.$store.getters['auth/jwtToken'])
                             .then(response => {
                                 if (response.status === 200) {
                                     console.log(response)

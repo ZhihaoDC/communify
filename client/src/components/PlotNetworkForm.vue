@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import { store } from '../main'
 import PlotVisualizationParameters from "@/components/PlotVisualizationParameters.vue"
 
 export default {
@@ -55,14 +54,14 @@ export default {
   props: ['activateSubmitButton'],
   data: function () {
     return {
-      experiment: store.getLastComputedExperiment(),
-      experiment_name: store.getLastComputedExperiment().experiment_name,
+      experiment: this.$store.getters['experiment/getExperiment'],
+      experiment_name: this.$store.getters['experiment/getExperiment'].experiment_name,
       user_id : 1,
       editing: false,
       dismissSecs: 4,
       dismissCountDown: 0,
       submitted_msg: "Guardar experimento",
-      visualizationParameters: store.getLastComputedExperiment().visualization_params
+      visualizationParameters: this.$store.getters['experiment/getVisualizationParams']
     }
   },
   methods: {
@@ -82,12 +81,12 @@ export default {
     },  
     moveCursorToLeft() {
       const inputElement = this.$refs.experiment_name_input.$el;
-      inputElement.setSelectionRange(this.experiment.experiment_name.length, this.experiment.experiment_name.length);
+      inputElement.setSelectionRange(0, this.experiment.experiment_name.length);
     },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
     },
-    showAlert() {
+    showSuccessAlert() {
       this.dismissCountDown = this.dismissSecs
     },
     updateVisualizationParameters(newvisualizationParameters){
@@ -130,22 +129,11 @@ export default {
     },
 
     submit_experiment_to_backend() {
-      const axios = require("axios");
-      console.log(store.getLastComputedExperiment())
-      axios.post(`${this.$API_URL}/save-experiment/`,
-        JSON.stringify(store.getLastComputedExperiment()),
-        {
-          headers: {
-            'Authorization': `Bearer: ${store.getJwtToken()}`,
-            'Content-Type': 'application/json'
-          }
-        })
+      this.$store.dispatch('experiment/saveExperiment')        
         .then((response) => {
           if (response.status === 200) {
             this.submitted_msg = "Guardado!"
-            this.experiment = response.data.experiment
-            store.setLastComputedExperiment(this.experiment)
-            this.showAlert()
+            this.showSuccessAlert()
           }
         })
         .catch((response) => {

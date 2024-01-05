@@ -18,7 +18,6 @@ LouvainController = Blueprint('LouvainController', __name__)
 #Main method
 @LouvainController.route('/community-detection/louvain', methods=['POST'])
 def apply_louvain():
-
     try: 
         input = InputManager(request.files)
         file, file_name, file_hash, columns = input.file, input.file_name, input.file_hash, input.csv_columns       
@@ -46,7 +45,7 @@ def apply_louvain():
                     }), 200
     
     except Exception as e:
-        print(e, file=sys.stderr)
+        print(f"{type(e).__name__}: {e}", file=sys.stderr)
         return jsonify({"errorMessage": "Invalid .csv format"}), 500
 
 

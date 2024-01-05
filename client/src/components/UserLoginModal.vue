@@ -9,6 +9,7 @@
             v-model="form.identification"
             placeholder="Introduce tu nombre de usuario o email"
             :state="is_identification_valid"
+            lazy-formatter
             :formatter="identification_format"
             required
             ></b-form-input>
@@ -47,7 +48,6 @@
 </template>
 
 <script>
-import { store } from "../main.js";
 export default{
     name: "UserLoginModal",
     data: function(){
@@ -65,28 +65,13 @@ export default{
         }
     },
     methods: {
-        login(){
-            const axios = require('axios')
-            console.log(this.form)
-            axios
-                .post(`${this.$API_URL}/login`,
-                    this.form)
-                .then(response => {
-                    if (response.status === 200){
-                        store.setUserData(response.data.user)
-                        store.setJwtToken(response.data.jwt)
-                        console.log(store.isAuthenticated())
-                        this.$router.push('/')
-                        // Modal success
-                    }
-                    else if (response.status === 500){
-                        // Modal error                                                                                 
-                        console.log(response.errorMessage)
-                    }
+        async login(){
+            await this.$store.dispatch('auth/loginToDB', this.form)
+                .then(() => {
+                    this.$router.push('/')
                 })
                 .catch(response => {
-                //Modal error 
-                console.log(response.errorMessage)
+                    console.log(`Error: ${response.errorMessage}`)
                 })
         },
 
@@ -96,7 +81,6 @@ export default{
                 .match(
                     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                 );
-            console.log(isValidEmail)
             if (isValidEmail) {this.form.email = identification}
             else {this.form.username = identification}
             return identification

@@ -32,15 +32,14 @@ def save_experiment(user):
                                                 }
         )
         keys_to_check = ['network_json', 'dataset_id', 'dataset_name']
-
+    
         if all(request_json.get(key) for key in keys_to_check):
-        
+            
             added_dataset = DatasetService.add_instance(Dataset,
                                                         id=request_json['dataset_id'],
                                                         name=request_json['dataset_name'],
                                                         json=request_json['network_json'],
                                                         user_id=user['id'])
-
             added_experiment = ExperimentService.add_instance(Experiment,
                                             user_id=user['id'],
                                             experiment_id=request_json['experiment_id'],
@@ -54,6 +53,7 @@ def save_experiment(user):
                                             thumbnail= base64.decodebytes(encode(request_json['thumbnail'])),
                                             description = request_json['description']
                                             )
+            
                                         
             return json.jsonify({"successMessage": "File saved",
                                 'Access-Control-Allow-Origin': '*',

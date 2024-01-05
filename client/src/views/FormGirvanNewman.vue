@@ -8,8 +8,7 @@
         Todas las ejecuciones sobre un mismo dataset dan el mismo resultado.
       </h4>
       <div id="content">
-        <InputCSV selectedMethod="girvan-newman" 
-          :submitUrl=this.submitUrl
+        <InputCSV selectedMethod="girvan-newman"
           successUrl="/community-detection/girvan-newman/experiment"
         />
       </div>

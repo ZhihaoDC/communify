@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import { store } from "../main.js";
 import cytoscape from "cytoscape";
 import fcose from "cytoscape-fcose";
 
@@ -15,7 +14,7 @@ export default {
   props:['isNewExperiment', 'visualizationParameters'],
   data: function() {
     return {
-      experiment: store.getLastComputedExperiment()
+      experiment: this.$store.getters['experiment/getExperiment']
     }
   },
   emits: ['animation_finished'],
@@ -234,12 +233,12 @@ export default {
 
       let new_json = cy.json();
       delete new_json.style //dont overwrite current style (colors)
-      store.setExperimentJSON(new_json);
+      this.$store.commit('experiment/setNetwork', new_json);
 
       // update thumbnail
       const options = {'scale': 0.15, 'output':'base64'}
       const thumbnail = cy.png(options)
-      store.setExperimentThumbail(thumbnail)
+      this.$store.commit('experiment/setThumbnail',thumbnail)
 
       // console.log("Experimento actualizado")
       this.$emit("network-exported", new_json)
@@ -247,6 +246,7 @@ export default {
       cy.nodes().unlock()
 
     },
+
     updateExperiment(){
       // console.log("Actualizando Experimento...")
       let cy = this.cy
@@ -254,16 +254,17 @@ export default {
 
       let new_json = cy.json();
       delete new_json.style //dont overwrite current style (colors)
-      store.setExperimentJSON(new_json);
+      this.$store.commit('experiment/setNetwork', new_json);
 
       // update thumbnail
       const options = {'scale': 0.15, 'output':'base64'}
       const thumbnail = cy.png(options)
-      store.setExperimentThumbail(thumbnail)
+      this.$store.commit('experiment/setThumbnail', thumbnail)
       
       cy.nodes().unlock()
 
     },
+    
     getLayoutOptions(visualizationParameters){
       let cy = this.cy
       let self = this

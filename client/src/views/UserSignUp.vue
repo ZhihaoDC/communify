@@ -71,7 +71,6 @@
 
 <script>
 // import UserLoginModal from "@/components/UserLoginModal.vue"
-import { store } from "../main.js";
 export default {
     name: "UserSignUp",
     // components: UserLoginModal,
@@ -137,9 +136,8 @@ export default {
         await axios.post(`${this.$API_URL}/create-user`, this.form)
         .then(response => {
           if (response.status === 200){
-            store.setUserData(response.data.user)
-            store.setJwtToken(response.data.jwt)
-            console.log(store.isAuthenticated())
+            this.$store.commit('setUserData', response.data.user)
+            this.$store.commit('setJwtToken', response.data.jwt)
             this.$router.push('/')
             // Modal success
           }

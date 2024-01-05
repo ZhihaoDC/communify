@@ -140,10 +140,10 @@
 </template>
 
 <script>
-import { store } from "../main.js";
+// import {postDataset} from '@/api'
 export default {
   name: "InputCSV",
-  props: ["selectedMethod", "submitUrl", "successUrl"],
+  props: ["selectedMethod", "successUrl"],
   data() {
     return {
       file: null,
@@ -163,39 +163,43 @@ export default {
     };
   },
   methods: {
-    check_file() {
-      //Update error
-      this.error = "";
-      this.columns = [];
-      if (this.file) {
-        //check format
-        if ((this.file["type"] != "text/csv") && (this.file["type"] != 'application/vnd.ms-excel')) {
-          this.error = "El archivo debe tener extensión .csv";
-        } else if ((this.file["type"] === "text/csv") | (this.file["type"] === 'application/vnd.ms-excel')) {
-          const reader = new FileReader();
-          reader.readAsText(this.file);
-          let self = this; //save reference
-          reader.onload = (e) => {
-            e.target.result.split("\n")[0]
-              .split(",")
-              .forEach(function (column) {
-                var column_text = column.toString().replaceAll('"','').replaceAll("'", "")
-                self.columns.push({
-                  text: column_text,
-                  value: column_text,
-                  disabled: false,
-                });
-              });
-              //check number of columns read
-              if (this.columns.length < 2){
-                this.error = "Formato erróneo. Por favor, introduce un csv con al menos 3 columnas."
-              }
-              console.log(this.columns)
-          };
-        }
-      }
+    
+    read_file(file){
+      return new Promise((resolve, reject) => {
+        var reader = new FileReader()
+        reader.readAsText(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = () => reject
+      })
     },
 
+    check_file() {
+      //Reset variables
+      this.error = "";
+      this.columns = [];
+      let self = this
+
+      const accepted_file_types = ["text/csv", "application/vnd.ms-excel"]
+
+      if (accepted_file_types.includes(this.file["type"])){
+        this.read_file(this.file)
+          .then(result => {
+            let first_line = result.split("\n")[0]
+            let headers = first_line.split(",")
+            headers.forEach(header =>{
+              let column = header.toString().replaceAll('"','').replaceAll("'", "")
+              self.columns.push({text: column, value: column, disabled: false})
+            })
+            if (self.columns.length < 2)
+              self.error = "Formato erróneo. Por favor, introduce un csv con al menos 3 columnas."  
+          })
+          .catch( () => {self.error = "Error desconocido"})
+      }
+      else
+        this.error = "El archivo debe tener extensión .csv";
+              
+    },
+    
     update_currently_selected_columns(element, clicked){
       //remove value from currently selected columns if value has already been chosen
       if (Object.values(this.currently_selected_columns).includes(element)){
@@ -213,9 +217,8 @@ export default {
     check_manually_selected_columns_and_submit(file){
       if (this.manually_select_columns){
         if ((this.source === null) || (this.target === null) || (this.weight === null)){
-              this.error = "Por favor, rellena todos los valores correspondientes a nodo origen, destino y peso de arista"
-            }
-        else{
+          this.error = "Por favor, rellena todos los valores correspondientes a nodo origen, destino y peso de arista"
+        } else {
           this.error = ''
         }
       }
@@ -224,51 +227,35 @@ export default {
       }
     },
 
+    format_columns(){
+      return JSON.stringify({"source": this.source,
+                              "target": this.target,
+                              "weight": this.weight})
+    },
+
     async submit_file() {
       this.submitted = true;
-      const axios = require("axios");
       let formData = new FormData();
       formData.append("file", this.file);
       if (this.manually_select_columns){
-        var columns = JSON.stringify({"source": this.source,
-                                    "target": this.target,
-                                    "weight": this.weight})
-        const columns_blob = new Blob([columns], {
-          type: 'application/json'
-        });
+        var columns = this.format_columns()
+        const columns_blob = new Blob([columns], {type: 'application/json'});
         formData.append("columns", columns_blob);
       }
       
-      await axios
-        .post(
-          this.submitUrl,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        )
-        .then((response) => {
-          if (response.status === 200) {
-            if (["louvain", "girvan-newman", "graph-visualization"].includes(this.method)){
-              store.setLastComputedExperiment(response.data);
-              store.setIsNewExperiment(true)
-            }
-            this.$router.push(
-              this.successUrl
-            );
-          }
-        })
-        .catch((error) => {
-          console.log(error.response);
-          if (error.response.status == 500) {
-            this.error =
-              "Formato erróneo. Por favor, introduce un .csv con las columnas en orden: \n " +
-              "from, to, weight";
-            this.submitted = false;
-          }
-        });
+      // const response = await postDataset(this.method, formData)
+      // .catch((error) => {
+      //   console.log(error.response)
+      //   if (error.response.status == 500) {
+      //       this.error =
+      //         "Formato erróneo. Por favor, introduce un .csv con las columnas en orden: \n " +
+      //         "from, to, weight";
+      //       this.submitted = false;
+      //   }
+      // })
+      await this.$store.dispatch('experiment/getExperimentWithDataset', {method: this.method, formData: formData})
+      this.$router.push(this.successUrl);
+        
     },
 
     bytesToSize(bytes) {
@@ -277,7 +264,7 @@ export default {
       var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
       return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
     },
-  },
+  }
 };
 </script>
 

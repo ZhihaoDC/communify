@@ -76,7 +76,7 @@ def login():
                         'exp': datetime.utcnow() + timedelta(minutes=SESSION_TIME)
                         },
                         app_config.SECRET_KEY)
-    return jsonify({'user_id': user, 
+    return jsonify({'user': user, 
                     'jwt': token,
                     'successMsg': f'User {user["username"]} successfully logged in.'
                     }), 200

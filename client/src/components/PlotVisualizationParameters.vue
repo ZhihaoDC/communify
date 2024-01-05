@@ -19,14 +19,13 @@
 
 
 <script>
-import { store } from "../main.js";
   export default {
     name: "PlotVisualizationParameters",
     data() {
       return {
           debounceTimer: null,
           changesQueue: [],
-          visualizationParameters: store.getLastComputedExperiment().visualization_params
+          visualizationParameters: this.$store.getters['experiment/getVisualizationParams']
       }
     },
     methods:{
