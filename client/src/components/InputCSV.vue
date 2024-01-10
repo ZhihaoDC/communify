@@ -124,7 +124,7 @@
       class="w-25 content-item submit-button"
       v-bind:disabled="!(file && !error)"
       value="Visualizar"
-      v-on:click="check_manually_selected_columns_and_submit(file)"
+      v-on:click="validate_and_submit()"
       v-if="!submitted"
     >
       Visualizar
@@ -143,7 +143,7 @@
 // import {postDataset} from '@/api'
 export default {
   name: "InputCSV",
-  props: ["selectedMethod", "successUrl"],
+  props: ["selectedMethod", "action", "successUrl"],
   data() {
     return {
       file: null,
@@ -154,24 +154,15 @@ export default {
       target: null,
       weight: null,
       currently_selected_columns: {
-        'source':null,
-        'target':null,
-        'weight':null
+        'source': null,
+        'target': null,
+        'weight': null
       },
       error: "",
       submitted: false,
     };
   },
   methods: {
-    
-    read_file(file){
-      return new Promise((resolve, reject) => {
-        var reader = new FileReader()
-        reader.readAsText(file)
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = () => reject
-      })
-    },
 
     check_file() {
       //Reset variables
@@ -181,25 +172,90 @@ export default {
 
       const accepted_file_types = ["text/csv", "application/vnd.ms-excel"]
 
-      if (accepted_file_types.includes(this.file["type"])){
+      if (!accepted_file_types.includes(this.file["type"]))
+        this.error = "El archivo debe tener extensión .csv";
+      else {
         this.read_file(this.file)
           .then(result => {
             let first_line = result.split("\n")[0]
             let headers = first_line.split(",")
+
             headers.forEach(header =>{
               let column = header.toString().replaceAll('"','').replaceAll("'", "")
-              self.columns.push({text: column, value: column, disabled: false})
-            })
+              self.columns.push({text: column, value: column, disabled: false})})
+
             if (self.columns.length < 2)
-              self.error = "Formato erróneo. Por favor, introduce un csv con al menos 3 columnas."  
+              self.error = "Formato erróneo. Por favor, introduce un csv con al menos 3 columnas." 
           })
           .catch( () => {self.error = "Error desconocido"})
-      }
-      else
-        this.error = "El archivo debe tener extensión .csv";
-              
+      } 
     },
+
+    read_file(file){
+      return new Promise((resolve, reject) => {
+        var reader = new FileReader()
+        reader.readAsText(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = () => reject
+      })
+    },
+
     
+    validate_and_submit(){
+      if (this.manually_select_columns && this.manual_columns_error)
+        this.error = this.manual_columns_error
+      else
+        this.submit_file()
+    },
+
+    async submit_file(){
+      var formData = new FormData()
+      formData.append("file", this.file)
+
+      if (this.manually_select_columns){
+        formData.append("columns", new Blob([this.currently_selected_columns], {type: 'application/json'}));
+      }
+
+      await this.$store.dispatch(this.action, {method: this.method, formData: formData})
+      this.submitted = true
+      this.$router.push(this.successUrl);
+    },
+
+    // check_manually_selected_columns_and_submit(file){
+    //   if (this.manually_select_columns){
+    //     if ((this.source === null) || (this.target === null) || (this.weight === null)){
+    //       this.error = "Por favor, rellena todos los valores correspondientes a nodo origen, destino y peso de arista"
+    //     } else {
+    //       this.error = ''
+    //     }
+    //   }
+    //   if (!this.error){
+    //     this.submit_file(file)
+    //   }
+    // },
+
+    // format_columns(){
+    //   return JSON.stringify({"source": this.source,
+    //                           "target": this.target,
+    //                           "weight": this.weight})
+    // },
+
+    // async submit_file() {
+    //   this.submitted = true;
+    //   let formData = new FormData();
+    //   formData.append("file", this.file);
+    //   if (this.manually_select_columns){
+    //     var columns = this.format_columns()
+    //     const columns_blob = new Blob([columns], {type: 'application/json'});
+    //     formData.append("columns", columns_blob);
+    //   }
+
+    //   await this.$store.dispatch(this.action, {method: this.method, formData: formData})
+    
+    //   this.$router.push(this.successUrl);
+        
+    // },
+
     update_currently_selected_columns(element, clicked){
       //remove value from currently selected columns if value has already been chosen
       if (Object.values(this.currently_selected_columns).includes(element)){
@@ -214,56 +270,27 @@ export default {
       this.error = ''
     },
 
-    check_manually_selected_columns_and_submit(file){
-      if (this.manually_select_columns){
-        if ((this.source === null) || (this.target === null) || (this.weight === null)){
-          this.error = "Por favor, rellena todos los valores correspondientes a nodo origen, destino y peso de arista"
-        } else {
-          this.error = ''
-        }
-      }
-      if (!this.error){
-        this.submit_file(file)
-      }
-    },
-
-    format_columns(){
-      return JSON.stringify({"source": this.source,
-                              "target": this.target,
-                              "weight": this.weight})
-    },
-
-    async submit_file() {
-      this.submitted = true;
-      let formData = new FormData();
-      formData.append("file", this.file);
-      if (this.manually_select_columns){
-        var columns = this.format_columns()
-        const columns_blob = new Blob([columns], {type: 'application/json'});
-        formData.append("columns", columns_blob);
-      }
-      
-      // const response = await postDataset(this.method, formData)
-      // .catch((error) => {
-      //   console.log(error.response)
-      //   if (error.response.status == 500) {
-      //       this.error =
-      //         "Formato erróneo. Por favor, introduce un .csv con las columnas en orden: \n " +
-      //         "from, to, weight";
-      //       this.submitted = false;
-      //   }
-      // })
-      await this.$store.dispatch('experiment/getExperimentWithDataset', {method: this.method, formData: formData})
-      this.$router.push(this.successUrl);
-        
-    },
-
     bytesToSize(bytes) {
       var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
       if (bytes == 0) return "0 Byte";
       var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
       return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
     },
+  },
+  computed:{
+    manual_columns_error: function(){
+      const selected_cols = this.currently_selected_columns
+      const source = selected_cols.source
+      const target = selected_cols.target
+      const weight = selected_cols.weight
+
+      if (this.manually_select_columns && source && target && weight)
+        return ""
+      else{
+        return "Por favor, rellena todos los valores correspondientes o desactiva la selección manual."
+      }
+    }
+
   }
 };
 </script>

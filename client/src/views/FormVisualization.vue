@@ -7,6 +7,7 @@
       </h4>
       <div id="content">
         <InputCSV selectedMethod="graph-visualization"
+          action="experiment/getVisualization"
           successUrl="/community-detection/graph-visualization/experiment"
         />
       </div>
@@ -18,12 +19,7 @@
 import InputCSV from "@/components/InputCSV.vue";
 export default {
   components: { InputCSV },
-  name: "FormVisualization",
-  data: function(){
-    return {
-      submitUrl: `${this.$API_URL}/graph-visualization`
-    }
-  }
+  name: "FormVisualization"
 };
 </script>
 
