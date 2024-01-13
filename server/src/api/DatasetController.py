@@ -23,6 +23,7 @@ def get_datasets(user):
 
 
 @DatasetController.route('/save-dataset', methods=['POST'])
+@token_required
 def save_dataset(user):
     try:
         input = InputManager(request.files)

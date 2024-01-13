@@ -7,7 +7,7 @@
           Introduce tu dataset.
         </h4>
         <div id="content">
-          <InputCSV selectedMethod="dataset" action="dataset" successUrl="/user-datasets"/>
+          <InputCSV selectedMethod="dataset" action="experiment/postDataset" successUrl="/user-datasets"/>
         </div>
       </div>
     </b-container>

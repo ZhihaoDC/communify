@@ -1,4 +1,4 @@
-import {postDatasetForExperiment, postExperimentToDB} from '@/api'
+import {postDatasetForExperiment, postExperimentToDB, postDatasetToDB} from '@/api'
 // import EventBus from '@/main'
 import cloneDeep from 'lodash/cloneDeep'
 export default {
@@ -58,6 +58,12 @@ export default {
         saveExperiment({state, commit, rootState}){
             commit('setIsNewExperiment', false)
             return postExperimentToDB(state.experiment, rootState.auth.jwt)            
-        }
+        },
+
+        postDataset({commit, rootState}, payload){
+            commit('setIsNewExperiment', true)
+            return postDatasetToDB(payload.formData, rootState.auth.jwt)
+        },
+
     }
 }

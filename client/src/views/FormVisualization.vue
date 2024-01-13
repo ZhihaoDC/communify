@@ -7,7 +7,7 @@
       </h4>
       <div id="content">
         <InputCSV selectedMethod="graph-visualization"
-          action="experiment/getVisualization"
+          action="experiment/getExperimentWithDataset"
           successUrl="/community-detection/graph-visualization/experiment"
         />
       </div>

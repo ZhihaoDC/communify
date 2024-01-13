@@ -19,6 +19,10 @@ export function deleteExperimentFromDB(experiment_id, jwt){
         {headers: {'Authorization': `Bearer: ${jwt}`}})
 }
 
+export function postDatasetToDB(dataset, jwt){
+    return axios.post(`${API_URL}/save-dataset`, dataset, {headers: {'Authorization': `Bearer: ${jwt}`}})
+}
+
 export function getDatasetsFromDB(jwt){
     return axios.get(`${API_URL}/get-datasets`, {headers: {'Authorization': `Bearer: ${jwt}`}})
 }

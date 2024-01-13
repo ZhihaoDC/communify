@@ -138,7 +138,11 @@ import { getDatasetsFromDB, deleteDatasetFromDB } from '../api';
                             .then(response => {
                                 if (response.status === 200) {
                                     console.log(response)
-                                    this.datasets = this.datasets.filter((dataset) => dataset.dataset_id != id_to_remove)
+                                    const to_remove = this.datasets.filter((dataset) => dataset.dataset_id == id_to_remove)
+                                    this.datasets.splice(this.datasets.indexOf(to_remove), 1)
+                                    // https://github.com/bootstrap-vue/bootstrap-vue/issues/4668
+                                    // Array does not update to b-table because array are interpreted as references 
+                                    // and watchers do not watch the content of the array
                                 }
 
                             })
