@@ -238,7 +238,7 @@ export default {
       // update thumbnail
       const options = {'scale': 0.15, 'output':'base64'}
       const thumbnail = cy.png(options)
-      this.$store.commit('experiment/setThumbnail',thumbnail)
+      this.$store.commit('experiment/setThumbnail', thumbnail)
 
       // console.log("Experimento actualizado")
       this.$emit("network-exported", new_json)
@@ -321,7 +321,6 @@ export default {
         stop: function () { // on layoutstop
           //set edges visible only when animation has stopped (for performance enhancements) 
           cy.style().selector("edge").style("visibility", "visible").update();
-
           self.animation_finished = true
           self.$emit('ready')
           

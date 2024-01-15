@@ -54,7 +54,6 @@ def save_experiment(user):
                                             description = request_json['description']
                                             )
             
-                                        
             return json.jsonify({"successMessage": "File saved",
                                 'Access-Control-Allow-Origin': '*',
                                 'experiment': added_experiment}), 200

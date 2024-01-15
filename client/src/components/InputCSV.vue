@@ -125,9 +125,20 @@
       v-bind:disabled="!(file && !error)"
       value="Visualizar"
       v-on:click="validate_and_submit()"
-      v-if="!submitted"
+      v-if="!submitted && isExperiment"
     >
-      Visualizar
+    Visualizar 
+    </b-button>
+    <b-button
+      type="submit"
+      variant="primary"
+      class="w-25 content-item submit-button"
+      v-bind:disabled="!(file && !error)"
+      value="Visualizar"
+      v-on:click="validate_and_submit()"
+      v-if="!submitted && (!isExperiment)"
+    >
+    Subir 
     </b-button>
     <b-spinner
       v-if="submitted"
@@ -278,7 +289,7 @@ export default {
     },
   },
   computed:{
-    manual_columns_error: function(){
+    manual_columns_error() {
       const selected_cols = this.currently_selected_columns
       const source = selected_cols.source
       const target = selected_cols.target
@@ -289,6 +300,9 @@ export default {
       else{
         return "Por favor, rellena todos los valores correspondientes o desactiva la selección manual."
       }
+    },
+    isExperiment(){
+      return ["louvain", "girvan-newman"].includes(this.selectedMethod)
     }
 
   }

@@ -13,9 +13,9 @@
               >Método de Girvan-Newman</b-dropdown-item
             >
           </b-nav-item-dropdown>
-          <b-nav-item to="/user-datasets"> Datasets </b-nav-item>
-          <b-nav-item to="/user-experiments"> Experimentos </b-nav-item>
-          <b-nav-item to="/graph-visualization"> Visualizar grafo </b-nav-item>
+          <b-nav-item v-if="isAuthenticated" to="/user-datasets"> Datasets </b-nav-item>
+          <b-nav-item v-if="isAuthenticated" to="/user-experiments"> Experimentos </b-nav-item>
+          <b-nav-item v-if="isAuthenticated" to="/graph-visualization"> Visualizar grafo </b-nav-item>
           <b-nav-item right to="/about"> About </b-nav-item>
           <b-nav-item right to="/user-signup"> Registrarse </b-nav-item>          
           <b-nav-item right to="/user-login"> Login </b-nav-item>
@@ -31,7 +31,7 @@
 export default {
   computed: {
     isAuthenticated() {
-      return this.$store.getters.isAuthenticated
+      return this.$store.getters['auth/isAuthenticated']
     }
   }
 };

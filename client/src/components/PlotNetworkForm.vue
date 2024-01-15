@@ -19,7 +19,7 @@
   </b-form-group>
 
     <b-form-group id="input-description" label="Descripción" label-for="input-description">
-      <b-form-textarea id="description" v-model="experiment.description"
+      <b-form-textarea id="description" v-model="experiment.description" @change="updateDescription"
         placeholder="Introduce una descripción para el experimento"></b-form-textarea>
     </b-form-group>
 
@@ -77,6 +77,7 @@ export default {
       this.editing = false
       if ((this.experiment.experiment_name !== this.experiment.dataset_name) & (this.experiment.experiment_name !== "")){
         this.experiment_name = this.experiment.experiment_name
+        this.$store.commit('experiment/setExperimentName', this.experiment_name)
       }
     },  
     moveCursorToLeft() {
@@ -86,12 +87,16 @@ export default {
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown
     },
+    updateDescription(){
+      this.$store.commit('experiment/setExperimentDescription', this.experiment.description)
+    },
     showSuccessAlert() {
       this.dismissCountDown = this.dismissSecs
     },
     updateVisualizationParameters(newvisualizationParameters){
         this.visualizationParameters = newvisualizationParameters
         this.experiment.visualization_params = newvisualizationParameters
+        this.$store.commit('experiment/setVisualizationParams', newvisualizationParameters)
         this.$emit('updateVisualizationParameters', newvisualizationParameters)
     },
     async handleSubmitNetwork(){
@@ -128,21 +133,26 @@ export default {
       }
     },
 
-    submit_experiment_to_backend() {
-      this.$store.dispatch('experiment/saveExperiment')        
-        .then((response) => {
-          if (response.status === 200) {
-            this.submitted_msg = "Guardado!"
-            this.showSuccessAlert()
-          }
-        })
-        .catch((response) => {
-          console.log(response);
-          if (response.status == 500) {
-            this.error_msg = "Error en la comunicacion con el servidor";
-            this.submitted = false;
-          }
-        })
+    async submit_experiment_to_backend() {
+      this.experiment = this.$store.getters['experiment/getExperiment'] 
+      console.log(this.$store.getters['experiment/getExperiment'])
+      await this.$store.dispatch('experiment/saveExperiment')      
+      this.experiment = this.$store.getters['experiment/getExperiment']
+      console.log(this.experiment)
+      this.submitted_msg = "Guardado!"
+      this.showSuccessAlert()
+        // .then((response) => {
+        //   if (response.status === 200) {            
+            
+        //   }
+        // })
+        // .catch((response) => {
+        //   console.log(response);
+        //   if (response.status == 500) {
+        //     this.error_msg = "Error en la comunicacion con el servidor";
+        //     this.submitted = false;
+        //   }
+        // })
     }
 
 

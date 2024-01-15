@@ -19,7 +19,7 @@
           <b-card
           title="Datasets"
           class="mb-4"
-          id="b-card">
+          id="b-card" v-if="isAuthenticated">
             <b-card-text>
               Subir y gestionar datasets. También puedes iniciar un experimento con un dataset existente.
             </b-card-text>
@@ -29,7 +29,7 @@
           <b-card
           title="Experimentos"
           class="mb-4"
-          id="b-card">
+          id="b-card"  v-if="isAuthenticated">
             <b-card-text>
               Gestiona y visualiza de nuevo los experimentos que has creado.
             </b-card-text>
@@ -55,7 +55,12 @@
 
 <script>
 export default {
-  name: 'Home'
+  name: 'Home',
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters['auth/isAuthenticated']
+    }
+  }
 }
 </script>
 

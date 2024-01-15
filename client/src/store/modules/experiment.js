@@ -5,15 +5,19 @@ export default {
     namespaced: true,
 
     state: () => ({
-        experiment: {'category': '',
-                     'communities': {},
-                     'dataset_id': '',
-                     'dataset_name': '',
-                     'experiment_name': '',
-                     'metrics': {},
-                     'network_json': {},
-                     'thumbnail': '',
-                     'visualization_params': {}
+        experiment: {'category': null,
+                     'creation_date': null,
+                     'description': '',
+                     'communities': null,
+                     'dataset_id': null,
+                     'dataset_name': null,
+                     'experiment_id': null,
+                     'experiment_name': null,
+                     'metrics': null,
+                     'network_json': null,
+                     'thumbnail': null,
+                     'visualization_params': null,
+                     'user_id' : null
                     },
         isNewExperiment: true
       }),
@@ -38,6 +42,12 @@ export default {
         setVisualizationParams(state, visualizationParams){
             state.visualization_params = visualizationParams
         },
+        setExperimentName(state, experiment_name){
+            state.experiment.experiment_name = experiment_name
+        },
+        setExperimentDescription(state, description){
+            state.experiment.description = description
+        },
         setThumbnail(state, thumbnail){
             state.experiment.thumbnail = thumbnail
         },
@@ -48,6 +58,7 @@ export default {
       },
 
       actions: {
+
         async getExperimentWithDataset({commit}, payload){
             const response = await postDatasetForExperiment(payload.method, payload.formData)
             commit('setExperiment', response.data)
@@ -55,9 +66,10 @@ export default {
             commit('setVisualizationParams', response.data['visualizationParams'])
         },
 
-        saveExperiment({state, commit, rootState}){
+        async saveExperiment({state, commit, rootState}){
             commit('setIsNewExperiment', false)
-            return postExperimentToDB(state.experiment, rootState.auth.jwt)            
+            const response = await postExperimentToDB(state.experiment, rootState.auth.jwt)
+            commit('setExperiment', response.data.experiment)      
         },
 
         postDataset({commit, rootState}, payload){

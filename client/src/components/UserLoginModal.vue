@@ -52,7 +52,7 @@ export default{
     name: "UserLoginModal",
     data: function(){
         return {
-            title: '',
+            title: 'Identifícate',
             modalShow: true,
             identification : '',
             is_identification_valid: null,
