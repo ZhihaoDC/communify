@@ -60,15 +60,16 @@ def login():
         print(user, file=sys.stderr)
         
     if not user:
-        return jsonify({
-            'errorMessage': 'User not found'
-        }), 404
+        return jsonify({'errorMessage': 'User not found'}), 404
 
     is_password_correct = check_password_hash(user['password'], password)
 
     #Unsuccessful login
     if not user or not is_password_correct:
-        return jsonify({'errorMessage': 'Wrong password', 'authenticated': False}), 401
+        return {'message': 'Invalid token. Registeration and / or authentication required',
+                        'status': 401,
+                        'authenticated': False
+                        }, 401
     
     #Successful login
     token = jwt.encode({'sub': user['email'],

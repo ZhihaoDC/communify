@@ -1,7 +1,8 @@
 <template>
-    <b-container fluid="md" align="left">
-    <b-card>
-      <b-form>
+    <b-container fluid="md" >
+      <h2 id="header">Formulario de registro</h2>
+    <b-card class="signup-form">
+      <b-form align="left">
         
         <b-form-group label="Nombre de usuario:" label-for="username">
           <b-form-input
@@ -12,7 +13,7 @@
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group label="Email" label-for="email">
+        <b-form-group label="Email:" label-for="email">
           <b-form-input
             id="email"
             v-model="form.email"
@@ -24,7 +25,7 @@
             required
           ></b-form-input>
           <b-form-invalid-feedback id="input-live-feedback">
-            El email debe contener una dirección de correo con'@''.'
+            {{email_invalid_msg}}
           </b-form-invalid-feedback>
         </b-form-group>
         
@@ -58,10 +59,10 @@
           </b-form-invalid-feedback>
         </b-form-group>
 
-        <b-button block size ="lg" type="submit" @click.stop.prevent="signUp" variant="primary"
+        <b-button block size ="md" type="submit" @click.stop.prevent="signUp" variant="primary"
           class="content-item submit-button"
           :disabled="!valid_fields">
-          Aceptar
+          Registrarse
         </b-button>
         <b-link to=""> ¿No tienes cuenta? Crea una cuenta </b-link>
       </b-form>
@@ -71,6 +72,7 @@
 
 <script>
 // import UserLoginModal from "@/components/UserLoginModal.vue"
+import {EventBus} from '../main'
 export default {
     name: "UserSignUp",
     // components: UserLoginModal,
@@ -85,7 +87,8 @@ export default {
             is_username_valid: null,
             is_email_valid: null,
             is_password_valid: null,
-            is_password_confirmation_valid: null
+            is_password_confirmation_valid: null,
+            email_invalid_msg: "El email debe contener una dirección de correo con '@'."
         }
     },
     computed: {
@@ -94,7 +97,12 @@ export default {
       }
     },
     methods:{
-      email_format(email){
+      reset_error_msg(){
+        this.email_invalid_msg = "El email debe contener una dirección de correo con '@'."
+        this.errorMessage = null
+      },
+      email_format(email){      
+        this.reset_error_msg()  
         const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         if (isValidEmail){
           this.is_email_valid = true
@@ -132,26 +140,34 @@ export default {
       },
 
       async signUp(){
-        const axios = require('axios')
-        await axios.post(`${this.$API_URL}/create-user`, this.form)
-        .then(response => {
-          if (response.status === 200){
-            this.$store.commit('setUserData', response.data.user)
-            this.$store.commit('setJwtToken', response.data.jwt)
+        await this.$store.dispatch('auth/registerToDB', this.form)
+        .then(() => {
+          if (!this.errorMessage){
             this.$router.push('/')
-            // Modal success
-          }
-          else if (response.status === 500){
-            // Modal error
-            console.log(response.errorMessage)
           }
         })
-        .catch(response => {
-          //Modal error 
-          console.log(response.errorMessage)
+        .catch(error => {
+          console.log(error)
         })
 
       },
+    },
+    mounted() {
+        EventBus.$on('failedSignUp', (errorMessage) =>{
+            this.errorMessage = errorMessage
+            this.is_email_valid = false
+            this.email_invalid_msg = errorMessage
+            console.log(errorMessage)
+        })
+    },
+    beforeDestroy () {
+        EventBus.$off('failedSignUp')
     }
 }
 </script>
+
+<style scoped>
+#signup-form{
+  margin: 0 auto;
+}
+</style>

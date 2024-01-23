@@ -33,7 +33,7 @@
                 La contraseña es incorrecta.
             </b-form-invalid-feedback>
         </b-form-group>
-
+        <p v-if="errorMessage">{{errorMessage}}</p>
         <b-button block type="submit" @click.stop.prevent="login" variant="primary"
         class="content-item submit-button">
             Iniciar sesión
@@ -48,12 +48,13 @@
 </template>
 
 <script>
+import {EventBus} from '../main'
 export default{
     name: "UserLoginModal",
+    props: ["modalShow"],
     data: function(){
         return {
             title: 'Identifícate',
-            modalShow: true,
             identification : '',
             is_identification_valid: null,
             is_password_valid: null,
@@ -62,16 +63,17 @@ export default{
                     email: '',
                     password: '',
                 },
+            errorMessage: null
         }
     },
     methods: {
         async login(){
+            this.errorMessage = ''
             await this.$store.dispatch('auth/loginToDB', this.form)
                 .then(() => {
-                    this.$router.push('/')
-                })
-                .catch(response => {
-                    console.log(`Error: ${response.errorMessage}`)
+                    if (!this.errorMessage){
+                        this.resetInfoModal()
+                    }
                 })
         },
 
@@ -85,15 +87,26 @@ export default{
             else {this.form.username = identification}
             return identification
         },
-        
-        closeModal() {
-            this.modalShow = false;
-        },
 
         resetInfoModal() {
-            this.title = '';
-        },
+            this.modalShow = false;
+            this.$emit('hideLoginModal', this.modalShow)
+            this.form = {
+                    username: '',
+                    email: '',
+                    password: '',
+                }
+        }
         
     },
+
+    mounted() {
+        EventBus.$on('failedLogin', (errorMessage) =>{
+            this.errorMessage = errorMessage
+        })
+    },
+    beforeDestroy () {
+        EventBus.$off('failedLogin')
+    }
 }
 </script>

@@ -27,7 +27,7 @@
    
     <PlotVisualizationParameters @updateVisualizationParameters="updateVisualizationParameters"></PlotVisualizationParameters>
 
-    <b-button block size ="lg" type="submit" :disabled="!activateSubmitButton" @click="handleSubmitNetwork" variant="primary"
+    <b-button block size ="lg" type="submit" v-if="isAuthenticated" :disabled="!activateSubmitButton" @click="handleSubmitNetwork" variant="primary"
       class="content-item submit-button">
       {{this.submitted_msg}}
     </b-button>
@@ -141,22 +141,14 @@ export default {
       console.log(this.experiment)
       this.submitted_msg = "Guardado!"
       this.showSuccessAlert()
-        // .then((response) => {
-        //   if (response.status === 200) {            
-            
-        //   }
-        // })
-        // .catch((response) => {
-        //   console.log(response);
-        //   if (response.status == 500) {
-        //     this.error_msg = "Error en la comunicacion con el servidor";
-        //     this.submitted = false;
-        //   }
-        // })
-    }
-
-
+    }, 
+  
   },
+  computed: {
+      isAuthenticated() {
+        return this.$store.getters['auth/isAuthenticated']
+      }
+    }
 }
 </script>
 

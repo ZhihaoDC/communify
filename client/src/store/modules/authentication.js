@@ -1,4 +1,5 @@
-import {login} from '@/api'
+import {login, register_user} from '@/api'
+import {EventBus} from '../../main'
 export default {
     namespaced: true,
 
@@ -39,14 +40,38 @@ export default {
                         commit('setUserData', response.data.user)
                         commit('setJwtToken', response.data.jwt)
                     }
-                    else if (response.status === 401){                                                                  
-                        console.log(response.errorMessage)
-                        //EventBus error
+                })
+                .catch(error => {
+                    if (error.response.status === 401){
+                        EventBus.$emit('failedLogin', 'La contraseña es incorrecta. Por favor, inténtalo de nuevo.')
+                    }
+                    else if (error.response.status === 404){
+                        EventBus.$emit('failedLogin', 'El usuario o email no existen. Por favor, inténtalo de nuevo.')
+                    }
+                    else{
+                        EventBus.$emit('failedLogin', error)
                     }
                 })
-                .catch(response => {
-                    console.log(response.errorMessage)
-                    //EventBus error
+
+        },
+
+        logout({commit}){
+            commit('setJwtToken', '')
+            commit('setUserData', {})
+        },
+
+        registerToDB({commit}, form){
+            return register_user(form)
+                .then(response => {
+                    if (response.status === 200){
+                        commit('setUserData', response.data.user)
+                        commit('setJwtToken', response.data.jwt)
+                    } 
+                })
+                .catch(error => {
+                    if (error.response.status === 409){
+                        EventBus.$emit('failedSignUp', 'El usuario ya existe. Por favor, inténtalo de nuevo con otro nombre de usuario / email.')
+                    }
                 })
 
         }

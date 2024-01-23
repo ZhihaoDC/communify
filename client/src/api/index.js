@@ -6,6 +6,10 @@ export function login(form){
     return axios.post(`${API_URL}/login`, form)
 }
 
+export function register_user(form){
+    return axios.post(`${API_URL}/create-user`, form)
+}
+
 export function fetchExperimentsFromDB(jwt){
     return axios.get(`${API_URL}/get-experiments/`, {headers: {'Authorization': `Bearer: ${jwt}`}})
 }

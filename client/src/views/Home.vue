@@ -16,26 +16,7 @@
             <b-button block to="/community-detection" variant="primary" id="go">Ir</b-button>
           </b-card>
 
-          <b-card
-          title="Datasets"
-          class="mb-4"
-          id="b-card" v-if="isAuthenticated">
-            <b-card-text>
-              Subir y gestionar datasets. También puedes iniciar un experimento con un dataset existente.
-            </b-card-text>
-            <b-button block to="/user-datasets" variant="primary" id="go">Ir</b-button>
-          </b-card>
-
-          <b-card
-          title="Experimentos"
-          class="mb-4"
-          id="b-card"  v-if="isAuthenticated">
-            <b-card-text>
-              Gestiona y visualiza de nuevo los experimentos que has creado.
-            </b-card-text>
-            <b-button block to="/user-experiments" variant="primary" id="go">Ir</b-button>
-          </b-card>
-
+          
           <b-card
           title="Visualizar grafo"
           class="mb-4"
@@ -47,6 +28,29 @@
           </b-card>
 
           
+        </b-card-group>
+        <b-card-group deck v-if="isAuthenticated">
+          <b-card
+          title="Mis Datasets"
+          class="mb-4"
+          id="b-card" >
+            <b-card-text>
+              Subir y gestionar datasets. También puedes iniciar un experimento con un dataset existente.
+            </b-card-text>
+            <b-button block to="/user-datasets" variant="primary" id="go">Ir</b-button>
+          </b-card>
+
+          <b-card
+          title="Mis Experimentos" 
+          class="mb-4"
+          id="b-card" >
+            <b-card-text>
+              Gestiona y visualiza de nuevo los experimentos que has creado.
+            </b-card-text>
+            <b-button block to="/user-experiments" variant="primary" id="go">Ir</b-button>
+          </b-card>
+
+
         </b-card-group>
       </div>
       
