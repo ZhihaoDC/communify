@@ -22,10 +22,9 @@
       <b-form-textarea id="description" v-model="experiment.description" @change="updateDescription"
         placeholder="Introduce una descripción para el experimento"></b-form-textarea>
     </b-form-group>
-
-
    
     <PlotVisualizationParameters @updateVisualizationParameters="updateVisualizationParameters"></PlotVisualizationParameters>
+
 
     <b-button block size ="lg" type="submit" v-if="isAuthenticated" :disabled="!activateSubmitButton" @click="handleSubmitNetwork" variant="primary"
       class="content-item submit-button">
@@ -61,7 +60,8 @@ export default {
       dismissSecs: 4,
       dismissCountDown: 0,
       submitted_msg: "Guardar experimento",
-      visualizationParameters: this.$store.getters['experiment/getVisualizationParams']
+      visualizationParameters: this.$store.getters['experiment/getVisualizationParams'],
+      communityColor: null
     }
   },
   methods: {

@@ -1,5 +1,10 @@
 <template> 
   <div class="parent_container">
+    
+    <b-form-group id="input-communityColor" label="Color de la comunidad" label-for="input-communityColor">
+      <b-form-input type="color" v-model="communityColor" @input="updateCommunityColor()"></b-form-input>
+    </b-form-group>
+
     <div id="container" ref="cy">
     </div>
   </div>
@@ -14,7 +19,8 @@ export default {
   props:['isNewExperiment', 'visualizationParameters'],
   data: function() {
     return {
-      experiment: this.$store.getters['experiment/getExperiment']
+      experiment: this.$store.getters['experiment/getExperiment'],
+      communityColor: '#000'
     }
   },
   emits: ['animation_finished'],
@@ -101,12 +107,15 @@ export default {
         },
       ]
     });
-    
+
     //define local variable
     let cy = this.cy
+
+    
     //read graph from json
     cy.json(this.experiment.network_json);
 
+    
     //define layout
     var layout_options = {
         name: "fcose",
@@ -119,7 +128,7 @@ export default {
         
         // if this is set to false, then quality option must be "proof"
         randomize: self.isNewExperiment, // Use random node positions at beginning of layout. If this is set to false, then quality option must be "proof"
-        
+
         animate: self.isNewExperiment, // Whether or not to animate the layout
         
         animationDuration: 3000, // Duration of animation in ms, if enabled
@@ -148,8 +157,6 @@ export default {
         nodeSeparation: self.visualizationParameters.nodeSeparation, // Separation amount between nodes
 
         piTol: 0.0000001, // Power iteration tolerance
-
-
 
         /* incremental layout options */
 
@@ -214,12 +221,41 @@ export default {
         },
         
       };
+
     //Run layout
     var layout = cy.layout(layout_options);
     layout.run();
     this.cy = cy;
     cy.animated();
-  
+    cy.selectionType('additive')
+
+    //define events
+    cy.on('click', 'node', (event) =>{
+      cy.nodes().unselect()
+      cy.nodes().removeClass('community')
+
+      var clickedNode = event.target
+      var community = clickedNode.data('community')
+
+      var communityNodes = cy.nodes().filter(element=> {
+        return (element.data('community') === community && element.id() != clickedNode.id())
+      })
+      communityNodes.select()
+      communityNodes.addClass('community')
+
+      
+      this.communityColor = this.hex_to_rgb(clickedNode.data('background_color'))
+
+      
+      
+    })
+
+    cy.on('dblclick', 'node', event=>{
+      var clickedNode = event.target
+      cy.nodes().unselect()
+      clickedNode.select()
+    })
+
 
   },
   created(){
@@ -329,8 +365,78 @@ export default {
         
       };
       return layoutOptions
+    },
+
+    updateCommunityColor(){
+      var color = this.rgb_to_hex(this.communityColor)
+      var fontColor = this.contrast(color)
+      var selectedNodes = this.cy.nodes(':selected');
+      // var community = selectedNodes.data('community')
+      selectedNodes.style('background-color', color)
+      selectedNodes.style('text-outline-color', color)
+      selectedNodes.style('color', fontColor)
+      
+      // console.log(this.communityColor_rgb)
+    //   this.cy.style()
+    //     .selector(`.community`)
+    //     .style('background-color', color)
+    //     .style('text-outline-color', color)
+    //     .update()
+    },
+
+    hex_to_rgb(hex) {
+      // Validate the input hex value
+      if (!/^#([0-9a-fA-F]{3})$/.test(hex)) {
+        console.error("Invalid hex color code. Please enter a 3-digit hex value.");
+        return null;
+      }
+
+      // Expand the 3-digit hex code to 6 digits
+      hex = hex.replace(/^#/, '');
+      hex = hex.split('').map(function (char) {
+        return char + char;
+      }).join('');
+
+      // Convert hex to RGB
+      var bigint = parseInt(hex, 16);
+      var r = (bigint >> 16) & 255;
+      var g = (bigint >> 8) & 255;
+      var b = bigint & 255;
+
+      // Format the RGB values to rrggbb
+      var rgb = '#'+ 
+                  ('0' + r.toString(16)).slice(-2) +
+                  ('0' + g.toString(16)).slice(-2) +
+                  ('0' + b.toString(16)).slice(-2);
+
+      return rgb.toUpperCase();
+    },
+
+    rgb_to_hex(rgb){
+      rgb = rgb.replace(/^#/, '');
+      var result = '#' + rgb[0] + rgb[2] + rgb[4];
+    return result.toUpperCase();
+    },
+
+    contrast(hex) {
+      var threshold = 149;
+      let r = 0, g = 0, b = 0;
+
+      // 3 digits
+      if (hex.length == 4) {
+        r = "0x" + hex[1] + hex[1];
+        g = "0x" + hex[2] + hex[2];
+        b = "0x" + hex[3] + hex[3];
+      // 6 digits
+      } else if (hex.length == 7) {
+        r = "0x" + hex[1] + hex[2];
+        g = "0x" + hex[3] + hex[4];
+        b = "0x" + hex[5] + hex[6];
+      }
+      return ((r*0.299 + g*0.587 + b*0.114) > threshold) ? '#000000' : '#ffffff';
     }
   },
+
 };
 </script>
 
