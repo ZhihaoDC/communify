@@ -1,6 +1,6 @@
 <template>
 
-  <b-container id="container" class="d-flex flex-column justify-content-center align-items-center">
+  <b-container id="container" class="d-flex flex-column justify-content-center align-items-center py-1 px-3">
 
     <h4 id="header" v-if='isCommunityDetection'> <b> Experimento detección de comunidades ({{ experiment.category }}) </b></h4> 
       <h4 id="header" v-else> <b> Visualización </b></h4>
