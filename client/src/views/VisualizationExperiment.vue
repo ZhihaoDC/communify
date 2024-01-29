@@ -2,23 +2,27 @@
 <b-container fluid id="parent-container" class="flex-grow-1"> 
       
     <b-row no-gutters>
-        <b-col cols="12">
+        <!-- <b-col cols="12">
             <h2 id="header" v-if='((experiment.category === "Louvain") | (experiment.category === "Girvan-Newman"))'>  Comunidades ({{ experiment.category }}) </h2> 
             <h2 id="header" v-else> Visualización </h2>
-        </b-col>
-        <b-col cols="9">
-            <PlotNetwork id="network-viz" ref="plotNetwork" @network-exported="submitExperiment" :isNewExperiment="isNewExperiment" @ready="animation_finished = true"
-            :visualizationParameters="visualizationParameters"></PlotNetwork>
-        </b-col>
+        </b-col> -->
         <b-col cols="3">
             <PlotNetworkForm 
                 id="save-network-form" 
                 ref="plotNetworkForm" 
-                @export-network="updateNetwork" 
-                :activateSubmitButton="animation_finished" 
-                @updatevisualizationParameters="updatevisualizationParameters">
+                :activateSubmitButton="animation_finished"
+                :communityColor="communityColor"
+                @export-network="exportNetwork"  
+                @updatevisualizationParameters="updatevisualizationParameters"
+                @changeCommunityColor="changeCommunityColor"
+                @updateEdgesColor="updateEdgesColor">
             </PlotNetworkForm>
         </b-col>
+        <b-col cols="9">
+            <PlotNetwork id="network-viz" ref="plotNetwork" @network-exported="submitExperiment"  @ready="animation_finished = true" :isNewExperiment="isNewExperiment"
+            :visualizationParameters="visualizationParameters" @setSelectedColor="setSelectedColor"></PlotNetwork>
+        </b-col>
+        
 
     </b-row>
 </b-container>
@@ -37,17 +41,28 @@ export default {
                 isNewExperiment: this.$store.getters['experiment/getIsNewExperiment'],
                 visualizationParameters: this.$store.getters['experiment/getVisualizationParams'],
                 animation_finished: false,
+                communityColor: null
                 };
     },
     methods: {
-        updateNetwork(){
-            this.$refs.plotNetwork.updateNetwork();
+        exportNetwork(){
+            this.$refs.plotNetwork.exportNetwork();
         },
         submitExperiment(){
             this.$refs.plotNetworkForm.submit_experiment_with_confirmation();
         },
         updateVisualizationParameters(newNetworkParams){
             this.visualizationParameters = newNetworkParams
+        },
+        setSelectedColor(selectedColor){
+            this.communityColor = selectedColor
+        },
+        changeCommunityColor(new_color){
+            this.communityColor = new_color
+            this.$refs.plotNetwork.changeCommunityColor(new_color)
+        },
+        updateEdgesColor(){
+            this.$refs.plotNetwork.updateEdgesColor()
         }
 
     },
@@ -67,12 +82,14 @@ export default {
         text-align: left;
     }
 
-    /* #parent-container{
-        padding-left: 20px;
-        padding-right: 20px
-    } */
+    #parent-container{
+        /* padding-left: 20px;
+        padding-right: 20px */
+        margin-top: 1rem
+    }
 
     #save-network-form{
+        min-height: 75vh;
         padding-top: 25px;
         border-top: 1em;
         border-radius: 15px;
@@ -81,12 +98,12 @@ export default {
         
     }
     #network-viz{
-        min-height: 75vh;
+        min-height: 90vh;
         z-index:1;
         border-radius: 10px;
         box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
             rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-        margin-right: 1rem;
+        margin-left: 1rem;
     }
     #page-title{
         position:absolute;

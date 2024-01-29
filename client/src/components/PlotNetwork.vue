@@ -1,9 +1,9 @@
 <template> 
   <div class="parent_container">
     
-    <b-form-group id="input-communityColor" label="Color de la comunidad" label-for="input-communityColor">
-      <b-form-input type="color" v-model="communityColor" @input="updateCommunityColor()"></b-form-input>
-    </b-form-group>
+    <!-- <b-form-group id="input-communityColor" label="Color de la comunidad" label-for="input-communityColor">
+      <b-form-input type="color" v-model="communityColor" @input="updateCommunityColor()" @blur="updateEdgesColor()"></b-form-input>
+    </b-form-group> -->
 
     <div id="container" ref="cy">
     </div>
@@ -19,8 +19,8 @@ export default {
   props:['isNewExperiment', 'visualizationParameters'],
   data: function() {
     return {
-      experiment: this.$store.getters['experiment/getExperiment'],
-      communityColor: '#000'
+      experiment: this.$store.getters['experiment/getExperiment'], 
+      community_detection_methods: ["Girvan-Newman", "Louvain"]
     }
   },
   emits: ['animation_finished'],
@@ -30,7 +30,6 @@ export default {
         this.animation_finished = false
         var layoutOptions = this.getLayoutOptions(newData)
         this.cy.layout(layoutOptions).run();
-        // this.updateExperiment()
       }, deep: true
     }
   },
@@ -51,18 +50,11 @@ export default {
             height: "data(size)",
             width: "data(size)",
             "text-valign": "center",
-            "background-color": 
-              function(node){
-                if (node.data("background_color")){return node.data("background_color")}
-                else {return "#5CF"}             
-              },
-            "text-outline-color": 
-              function(node){
-                if (node.data("background_color")){return node.data("background_color")}
-                else {return "#fff"}
-              },
+            "background-color": (node) => node.data("background_color") ? node.data("background_color") : "#5CF",
+            "text-outline-color": (node) => node.data("background_color") ? node.data("background_color") : "#fff",
             "text-outline-width": 2,
-            "font-size": "data(font_size)"
+            "font-size": "data(font_size)",
+            "color": (node) => node.data("background_color") ? this.contrast(node.data("background_color")) : "#000"
           },
         },
         {
@@ -79,7 +71,7 @@ export default {
               },
             "text-outline-color": 
               function(){
-                if (!((self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman"))){ return "#fff" }
+                if (!(self.isCommunityDetection)){ return "#999999"}
                 else {return "#999999"}
               },
             "text-outline-width": 7,
@@ -92,7 +84,7 @@ export default {
             visibility: "hidden",
             width: 0.5,
             "line-color": function(edge){
-              if ((self.experiment.category === "Louvain") | (self.experiment.category==="Girvan-Newman")){
+              if (self.isCommunityDetection){
                 //take the color of highest degree node ('source' or 'target' node)
                 if (cy.$id(edge.data("source")).data("degree") > cy.$id(edge.data("target")).data("degree")){
                   return cy.$id(edge.data("source")).data("background_color")
@@ -164,14 +156,14 @@ export default {
 
         // Ideal edge (non nested) length
         idealEdgeLength: function(edge){
-          if (self.experiment.category === "Louvain" | self.experiment.category==="Girvan-Newman"){
+          if (self.isCommunityDetection){
             if (cy.$id(edge.data().source).data().community === cy.$id(edge.data().target).data().community){
-              return 50
+              return 50 * (1 - self.visualizationParameters.gravity) + (self.visualizationParameters.nodeSeparation / 1000)
             }else{
               return self.visualizationParameters.communitySeparation
             }
           }else{
-            return 150
+            return null
           }
         },
         
@@ -215,8 +207,9 @@ export default {
         stop: function () { // on layoutstop
           //set edges visible only when animation has stopped (for performance enhancements)
           cy.style().selector("edge").style("visibility", "visible").update();
+          cy.nodes().unselect();
           self.animation_finished = true
-          self.updateExperiment()
+          self.updateNetworkStatus()
           self.$emit('ready')
         },
         
@@ -231,23 +224,22 @@ export default {
 
     //define events
     cy.on('click', 'node', (event) =>{
-      cy.nodes().unselect()
-      cy.nodes().removeClass('community')
-
+      
       var clickedNode = event.target
-      var community = clickedNode.data('community')
-
-      var communityNodes = cy.nodes().filter(element=> {
-        return (element.data('community') === community && element.id() != clickedNode.id())
-      })
-      communityNodes.select()
-      communityNodes.addClass('community')
-
       
-      this.communityColor = this.hex_to_rgb(clickedNode.data('background_color'))
+      if (this.isCommunityDetection){
+        var community = clickedNode.data('community')
+        var communityNodes = cy.nodes().filter(element=> {
+          return (element.data('community') === community && element.id() != clickedNode.id())
+        })
+        cy.nodes().unselect()
+        communityNodes.select()
+      }
+      else {clickedNode.select()
+            clickedNode.grabify()}
 
-      
-      
+      var communityColor = this.rgb_to_hex(clickedNode.style('background-color'))
+      this.$emit('setSelectedColor', communityColor)
     })
 
     cy.on('dblclick', 'node', event=>{
@@ -258,47 +250,38 @@ export default {
 
 
   },
-  created(){
-    this.$on("export-network", this.updateNetwork)
-  },
+
   methods:{
-    updateNetwork(){
-      // console.log("Actualizando Experimento...")
+    updateJson(){
       let cy = this.cy
-      cy.nodes().lock()
+      
+      let unselectedNodes = cy.nodes(':selected')
+      cy.nodes().lock() //preserve json position
+      cy.nodes().unselect()
 
       let new_json = cy.json();
       delete new_json.style //dont overwrite current style (colors)
       this.$store.commit('experiment/setNetwork', new_json);
 
-      // update thumbnail
-      const options = {'scale': 0.15, 'output':'base64'}
-      const thumbnail = cy.png(options)
-      this.$store.commit('experiment/setThumbnail', thumbnail)
+      cy.nodes().unlock() //for visualization
+      unselectedNodes.select()
+    },
 
-      // console.log("Experimento actualizado")
-      this.$emit("network-exported", new_json)
-      
-      cy.nodes().unlock()
+    updateThumbnail(){
+      const options = {'scale': 0.15, 'output':'base64'}
+      const thumbnail = this.cy.png(options)
+      this.$store.commit('experiment/setThumbnail', thumbnail)
 
     },
 
-    updateExperiment(){
-      // console.log("Actualizando Experimento...")
-      let cy = this.cy
-      cy.nodes().lock()
+    updateNetworkStatus(){
+      this.updateJson()
+      this.updateThumbnail()
+    },
 
-      let new_json = cy.json();
-      delete new_json.style //dont overwrite current style (colors)
-      this.$store.commit('experiment/setNetwork', new_json);
-
-      // update thumbnail
-      const options = {'scale': 0.15, 'output':'base64'}
-      const thumbnail = cy.png(options)
-      this.$store.commit('experiment/setThumbnail', thumbnail)
-      
-      cy.nodes().unlock()
-
+    exportNetwork(){
+      this.updateNetworkStatus()
+      this.$emit("network-exported")
     },
     
     getLayoutOptions(visualizationParameters){
@@ -328,7 +311,7 @@ export default {
 
         // Ideal edge (non nested) length
         idealEdgeLength: function(edge){
-          if (self.experiment.category === "Louvain" | self.experiment.category==="Girvan-Newman"){
+          if (self.isCommunityDetection){
             if (cy.$id(edge.data().source).data().community === cy.$id(edge.data().target).data().community){
               return 50
             }else{
@@ -359,7 +342,6 @@ export default {
           cy.style().selector("edge").style("visibility", "visible").update();
           self.animation_finished = true
           self.$emit('ready')
-          
         },
 
         
@@ -367,59 +349,64 @@ export default {
       return layoutOptions
     },
 
-    updateCommunityColor(){
-      var color = this.rgb_to_hex(this.communityColor)
+    changeCommunityColor(new_color){
+      var color = new_color
       var fontColor = this.contrast(color)
+
       var selectedNodes = this.cy.nodes(':selected');
-      // var community = selectedNodes.data('community')
+
       selectedNodes.style('background-color', color)
       selectedNodes.style('text-outline-color', color)
       selectedNodes.style('color', fontColor)
-      
-      // console.log(this.communityColor_rgb)
-    //   this.cy.style()
-    //     .selector(`.community`)
-    //     .style('background-color', color)
-    //     .style('text-outline-color', color)
-    //     .update()
+      selectedNodes.data('background_color', color)
     },
 
-    hex_to_rgb(hex) {
-      // Validate the input hex value
-      if (!/^#([0-9a-fA-F]{3})$/.test(hex)) {
-        console.error("Invalid hex color code. Please enter a 3-digit hex value.");
-        return null;
+    updateEdgesColor(){
+      let self = this
+      var selectedNodes = this.cy.nodes(':selected');
+      var color = selectedNodes.style('background-color')
+
+      var affectedEdges = selectedNodes.forEach(function(node) {
+        // Select edges with the same background color
+        var matchingEdges = self.cy.edges('[source="' + node.id() + '"][target]') // Outgoing edges
+                            .filter('[line-color="' + color + '"]');
+        return matchingEdges
+      });
+      affectedEdges.style('line-color', color)
+      this.cy.style().selector("edge").style("visibility", "visible").update()
+    },
+
+    rgb_to_hex(rgbString) {
+      // Use regular expression to extract RGB components
+      var match = rgbString.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+
+      if (!match) {
+        throw new Error('Invalid RGB string format');
       }
 
-      // Expand the 3-digit hex code to 6 digits
-      hex = hex.replace(/^#/, '');
-      hex = hex.split('').map(function (char) {
-        return char + char;
-      }).join('');
+      // Extract individual RGB components
+      var r = parseInt(match[1], 10);
+      var g = parseInt(match[2], 10);
+      var b = parseInt(match[3], 10);
 
-      // Convert hex to RGB
-      var bigint = parseInt(hex, 16);
-      var r = (bigint >> 16) & 255;
-      var g = (bigint >> 8) & 255;
-      var b = bigint & 255;
+      // Convert each component to a hex value
+      var rHex = this.componentToHex(r);
+      var gHex = this.componentToHex(g);
+      var bHex = this.componentToHex(b);
 
-      // Format the RGB values to rrggbb
-      var rgb = '#'+ 
-                  ('0' + r.toString(16)).slice(-2) +
-                  ('0' + g.toString(16)).slice(-2) +
-                  ('0' + b.toString(16)).slice(-2);
+      // Concatenate the hex values
+      var hexColor = "#" + rHex + gHex + bHex;
 
-      return rgb.toUpperCase();
+      return hexColor;
     },
 
-    rgb_to_hex(rgb){
-      rgb = rgb.replace(/^#/, '');
-      var result = '#' + rgb[0] + rgb[2] + rgb[4];
-    return result.toUpperCase();
+    componentToHex(c) {
+      var hex = c.toString(16);
+      return hex.length === 1 ? "0" + hex : hex;
     },
 
     contrast(hex) {
-      var threshold = 149;
+      var threshold = 130;
       let r = 0, g = 0, b = 0;
 
       // 3 digits
@@ -436,6 +423,11 @@ export default {
       return ((r*0.299 + g*0.587 + b*0.114) > threshold) ? '#000000' : '#ffffff';
     }
   },
+  computed: {
+    isCommunityDetection(){
+      return this.community_detection_methods.includes(this.experiment.category)
+    }
+  }
 
 };
 </script>
@@ -446,7 +438,7 @@ export default {
 }
 
 #container {
-  min-height: 80vh;
+  min-height: 90vh;
   /* border-radius: 10px;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; */

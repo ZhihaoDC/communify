@@ -4,10 +4,9 @@
       <b-navbar-brand id="brand" to="/">network.ly</b-navbar-brand>
       <b-navbar-toggle target="routes"></b-navbar-toggle>
       <b-collapse is-nav id="routes">
-        <b-navbar-nav>
-          
-          <b-nav-item  to="/graph-visualization"> Visualizar grafo </b-nav-item>
-          <b-nav-item-dropdown text="Detección de comunidades" ref="dropdown">
+        <b-navbar-nav class="mr-auto">
+          <b-nav-item left to="/graph-visualization"> Visualizar grafo </b-nav-item>
+          <b-nav-item-dropdown left text="Detección de comunidades" ref="dropdown">
             <b-dropdown-item to="/community-detection/louvain"
               >Método de Louvain</b-dropdown-item
             >
@@ -16,17 +15,30 @@
             >
           </b-nav-item-dropdown>
 
-          <b-nav-item v-if="isAuthenticated" to="/user-datasets"> Datasets </b-nav-item>
-          <b-nav-item v-if="isAuthenticated" to="/user-experiments"> Experimentos </b-nav-item>
-
-          <b-nav-item class="ml-auto" right to="/about"> About </b-nav-item> 
-
-          <b-nav-item v-if="!isAuthenticated" @click=showLoginModal() class="ml-auto" right  > Iniciar sesión </b-nav-item>
-          <b-nav-item v-else @click=logout() class="ml-auto" right > Cerrar sesión </b-nav-item>
-
-
-          <b-nav-item class="ml-auto" right to="/user-signup"> Registrarse </b-nav-item>
+          <b-nav-item left v-if="isAuthenticated" to="/user-datasets"> Datasets </b-nav-item>
+          <b-nav-item left v-if="isAuthenticated" to="/user-experiments"> Experimentos </b-nav-item>
         </b-navbar-nav>
+
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item right to="/about"> About </b-nav-item>
+          <b-nav-item right to="/user-signup"> Registrarse </b-nav-item>
+        </b-navbar-nav>
+
+        <b-navbar-nav>
+          <!-- <b-nav-item v-if="!isAuthenticated" @click=showLoginModal() class="ml-auto" right  > Iniciar sesión </b-nav-item>
+          <b-nav-item v-else @click=logout() class="ml-auto" right > Cerrar sesión </b-nav-item> -->
+          <b-nav-item-dropdown right text="Perfil">
+            <!-- Profile icon -->
+            <template v-slot:button-content>
+              <b-avatar icon="person" scale="0.5"></b-avatar>
+            </template>
+            <b-dropdown-item v-if="!isAuthenticated" @click=showLoginModal() right> Iniciar sesión </b-dropdown-item>
+            <b-dropdown-item v-else @click=logout() right> Cerrar sesión </b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+        
+
+        
       </b-collapse>
     </b-navbar>
 

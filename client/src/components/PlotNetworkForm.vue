@@ -1,36 +1,46 @@
 <template>
 
-  <b-container id="container">
+  <b-container id="container" class="d-flex flex-column justify-content-center align-items-center">
 
-    <b-form-group>
-      <h4 v-if="!editing" @click="startEditing" title="Nombre del experimento"> {{experiment_name}} 
-        <b-icon id="edit-icon" icon="pencil-fill"></b-icon>
-      </h4>
+    <h4 id="header" v-if='isCommunityDetection'> <b> Experimento detección de comunidades ({{ experiment.category }}) </b></h4> 
+      <h4 id="header" v-else> <b> Visualización </b></h4>
 
-      <b-form-input v-else id="experiment_name" 
-      ref="experiment_name_input" 
-      class="custom-input" 
-      v-model="experiment.experiment_name"
-      @keyup.enter="stopEditing"
-      @blur="stopEditing" 
-      @focus="moveCursorToLeft"
-      :placeholder="experiment_name">
-      </b-form-input>
-  </b-form-group>
+    <b-form>
+      <b-form-group class="mt-3">
+        <h4 v-if="!editing" @click="startEditing" title="Nombre del experimento"> {{experiment_name}} 
+          <b-icon id="edit-icon" icon="pencil-fill"></b-icon>
+        </h4>
 
-    <b-form-group id="input-description" label="Descripción" label-for="input-description">
-      <b-form-textarea id="description" v-model="experiment.description" @change="updateDescription"
-        placeholder="Introduce una descripción para el experimento"></b-form-textarea>
-    </b-form-group>
-   
-    <PlotVisualizationParameters @updateVisualizationParameters="updateVisualizationParameters"></PlotVisualizationParameters>
+        <b-form-input v-else id="experiment_name" 
+        ref="experiment_name_input" 
+        class="custom-input" 
+        v-model="experiment.experiment_name"
+        @keyup.enter="stopEditing"
+        @blur="stopEditing" 
+        @focus="moveCursorToLeft"
+        :placeholder="experiment_name">
+        </b-form-input>
+      </b-form-group>
+
+      <b-form-group id="input-description" label="Descripción" label-for="input-description">
+        <b-form-textarea id="description" v-model="experiment.description" @change="updateDescription"
+          placeholder="Introduce una descripción para el experimento"></b-form-textarea>
+      </b-form-group>
 
 
-    <b-button block size ="lg" type="submit" v-if="isAuthenticated" :disabled="!activateSubmitButton" @click="handleSubmitNetwork" variant="primary"
-      class="content-item submit-button">
-      {{this.submitted_msg}}
-    </b-button>
+      <PlotVisualizationParameters @updateVisualizationParameters="updateVisualizationParameters" :isCommunityDetection="isCommunityDetection"></PlotVisualizationParameters>
 
+
+      <b-form-group id="input-communityColor" class="mb-3">
+        <label id="colorPickerLabel" for="colorPicker">Color de la comunidad</label>
+        <b-form-input id="colorPicker" type="color" v-model="communityColor" @input="changeCommunityColor()" @blur="updateEdgesColor()"></b-form-input>
+      </b-form-group>  
+    </b-form>
+
+    <b-button block size="lg" type="submit" v-if="isAuthenticated" :disabled="!activateSubmitButton" @click="handleSubmitNetwork" variant="primary"
+        class="content-item submit-button mt-auto">
+        {{this.submitted_msg}}
+      </b-button>
 
     <div id="success-alert">
       <b-alert :show="dismissCountDown" dismissible fade variant="success" @dismissed="dismissCountDown=0"
@@ -50,7 +60,7 @@ import PlotVisualizationParameters from "@/components/PlotVisualizationParameter
 export default {
   name: "PlotNetworkForm",
   components: {PlotVisualizationParameters},
-  props: ['activateSubmitButton'],
+  props: ['activateSubmitButton', 'communityColor'],
   data: function () {
     return {
       experiment: this.$store.getters['experiment/getExperiment'],
@@ -60,8 +70,7 @@ export default {
       dismissSecs: 4,
       dismissCountDown: 0,
       submitted_msg: "Guardar experimento",
-      visualizationParameters: this.$store.getters['experiment/getVisualizationParams'],
-      communityColor: null
+      visualizationParameters: this.$store.getters['experiment/getVisualizationParams']
     }
   },
   methods: {
@@ -142,12 +151,23 @@ export default {
       this.submitted_msg = "Guardado!"
       this.showSuccessAlert()
     }, 
+
+    changeCommunityColor(){
+      this.$emit('changeCommunityColor', this.communityColor)
+    },
+    updateEdgesColor(){
+      this.$emit('updateEdgesColor')
+    }
   
   },
   computed: {
       isAuthenticated() {
         return this.$store.getters['auth/isAuthenticated']
+      },
+      isCommunityDetection(){
+        return ["Louvain", "Girvan-Newman"].includes(this.experiment.category)
       }
+
     }
 }
 </script>
