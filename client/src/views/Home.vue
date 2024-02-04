@@ -1,9 +1,10 @@
 <template>
-  <b-container fluid class="custom-container p-auto">
-      
+  <div>
+  
+    <b-container fluid class="custom-container p-auto">
       
       <b-row>
-        <b-col md-6>
+        <b-col md-12>
           <h1 id="header"> Bienvenido a network.ly </h1>
           <h4> Herramienta de detección de comunidades y visualización de grafos. </h4>
           <br/>
@@ -15,38 +16,42 @@
 
           <h5>
             Agrupa las redes por los atributos que lo relacionan. Representa redes y edítalas a tu gusto.
-            La herramienta de un auténtico investigador.
+            También puedes almacenar todos los resultados.
           </h5>
           <router-link to="/about" id="about-link">Aprende más sobre la detección de comunidades</router-link>
           <br>
 
           <b-row class="mt-4">
-            <b-button size="lg" class="try-me md-3 ml-auto mr-4">
-              Try me!
+            <b-button size="lg" class="md-3 ml-auto mr-4" variant="primary">
+              Experimento de prueba
             </b-button>
 
-            <b-button size="lg" class="login md-3 mr-auto ml-4">
+            <b-button @click=toggleLoginModal() size="lg" class="md-3 mr-auto ml-4" variant="outline-primary">
               Iniciar sesión
             </b-button>
 
+            
+          <UserLoginModal :modalShow="this.modalShow" @hideLoginModal="hideLoginModal"/>
+            
           </b-row>
           
 
           <br/>
       </b-col>
+      </b-row>
 
-      
-      <b-col md-6>
+      <b-row>
+      <b-col md-12>
       <div class="tools">
-        <b-card-group columns>
+        <b-card-group deck>
           <a href="/community-detection">
           <b-card
           title="Detección de comunidades"
           img-src="../assets/network-graphs.webp"
           size="sm"
-          class="mb-4 mt-4"
+          class="mb-4"
           id="b-card">
-            <b-card-text class=" d-flex justify-content-center align-items-center">
+            <b-card-text>
               Detectar comunidades en una red y visualizar el resultado.
             </b-card-text>
             <!-- <b-button block to="/community-detection" variant="primary" id="go">Ir</b-button> -->
@@ -86,7 +91,7 @@
           v-if="isAuthenticated"
           title="Mis Experimentos" 
           img-src="../assets/experiments.webp"
-          class="mb-4 mt-4"
+          class="mb-4"
           id="b-card" >
             <b-card-text>
               Gestiona y visualiza de nuevo los experimentos que has creado.
@@ -98,18 +103,35 @@
         </b-card-group>
       </div>
     </b-col>
-  </b-row>
-      
+  </b-row>  
   </b-container>
+</div>
 </template>
 
 <script>
+import UserLoginModal from '@/components/UserLoginModal.vue';
 export default {
   name: 'Home',
+  components: [UserLoginModal],
+  data(){
+    return {
+      modalShow: false
+    }
+    
+  },
   computed: {
     isAuthenticated() {
       return this.$store.getters['auth/isAuthenticated']
     }
+  },
+  methods:{
+    toggleLoginModal() {
+      this.modalShow = true;
+    },
+    hideLoginModal(modalShow) {
+      this.title = '';
+      this.modalShow = modalShow;
+    },
   }
 }
 </script>
@@ -188,12 +210,6 @@ export default {
     text-decoration: none;
   }
 
-  .custom-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100vw;
-    }
+
 
 </style>

@@ -66,7 +66,7 @@
   
   <script>
   export default {
-    name: 'Home',
+    name: 'HomeUser',
     computed: {
       isAuthenticated() {
         return this.$store.getters['auth/isAuthenticated']

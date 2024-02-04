@@ -48,7 +48,7 @@
     <div id="login-success">
       <b-alert :show="dismissCountDown" dismissible fade variant="success" @dismissed="dismissCountDown=0"
         @dismiss-count-down="countDownChanged">
-        ¡Experimento guardado! 
+        Has iniciado sesión correctamente. 
         <router-link to="/user-experiments" id="experiments-link">Ir a experimentos</router-link>
       </b-alert>
     </div>
@@ -58,7 +58,7 @@
 
 
 <script>
-import UserLoginModal from './components/UserLoginModal.vue';
+import UserLoginModal from '@/components/UserLoginModal.vue';
 import {EventBus} from './main'
 
 export default {  
@@ -107,7 +107,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   height: 100%;
-  min-width: 100vw
 }
 
 #nav {

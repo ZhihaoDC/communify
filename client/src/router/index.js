@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store/index'
 import Home from '../views/Home.vue'
+import HomeUser from '../views/HomeUser.vue'
 import CommunityDetection from '../views/CommunityDetection.vue'
 import FormLouvain from '../views/FormLouvain.vue'
 import FormDataset from '../views/FormDataset.vue'
@@ -16,7 +17,19 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Home,
+    beforeEnter (to, from, next) {
+      if (store.getters['auth/isAuthenticated']) {
+        next('/home-user')
+      } else {
+        next()
+      }
+    }
+  },
+  {
+    path: '/home-user',
+    name: 'HomeUser',
+    component: HomeUser
   },  
   {
     path: '/dataset-upload-form',
