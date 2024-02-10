@@ -25,8 +25,6 @@
         </b-navbar-nav>
 
         <b-navbar-nav>
-          <!-- <b-nav-item v-if="!isAuthenticated" @click=showLoginModal() class="ml-auto" right  > Iniciar sesión </b-nav-item>
-          <b-nav-item v-else @click=logout() class="ml-auto" right > Cerrar sesión </b-nav-item> -->
           <b-nav-item-dropdown right text="Perfil">
             <!-- Profile icon -->
             <template v-slot:button-content>
@@ -36,8 +34,6 @@
             <b-dropdown-item v-else @click=logout() right> Cerrar sesión </b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
-        
-
         
       </b-collapse>
     </b-navbar>
@@ -49,7 +45,6 @@
       <b-alert :show="dismissCountDown" dismissible fade variant="success" @dismissed="dismissCountDown=0"
         @dismiss-count-down="countDownChanged">
         Has iniciado sesión correctamente. 
-        <router-link to="/user-experiments" id="experiments-link">Ir a experimentos</router-link>
       </b-alert>
     </div>
 
