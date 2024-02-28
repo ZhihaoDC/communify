@@ -39,7 +39,7 @@
     </b-navbar>
 
     <router-view/>
-    <UserLoginModal :modalShow="this.modalShow" @hideLoginModal="hideLoginModal"/>
+    <UserLoginModal :showModal="this.showModal" @hideLoginModal="hideLoginModal"/>
 
     <div id="login-success">
       <b-alert :show="dismissCountDown" dismissible fade variant="success" @dismissed="dismissCountDown=0"
@@ -60,7 +60,7 @@ export default {
   components: { UserLoginModal },
   data() {
     return {
-      modalShow: false
+      showModal: false
     }
   },
   computed: {
@@ -71,11 +71,11 @@ export default {
   methods: {
       /// Modal
       showLoginModal() {
-          this.modalShow = true;
+          this.showModal = true;
       },
-      hideLoginModal(modalShow) {
+      hideLoginModal(showModal) {
           this.title = '';
-          this.modalShow = modalShow;
+          this.showModal = showModal;
       },
       async logout(){
         await this.$store.dispatch('auth/logout')

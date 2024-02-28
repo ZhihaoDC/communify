@@ -1,7 +1,7 @@
 <template>
     
     <!-- <b-container fluid="md"> -->
-    <b-modal v-model="showModal" :title=title ok-only @hide="resetInfoModal" @show="printShow" @change="changed" no-stacking>
+    <b-modal v-model="showModal" ok-only @hide="resetInfoModal" @show="printShow" @change="changed" no-stacking>
     <b-form>
         <b-form-group label="Email" label-for="email">
             <b-form-input
@@ -50,7 +50,7 @@
 <script>
 import {EventBus} from '../main'
 export default{
-    name: "UserLoginModal",
+    name: "LoginModal",
     props: ["showModal"],
     data: function(){
         return {
@@ -101,7 +101,7 @@ export default{
             console.log(this.showModal)
         },
         changed(){
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            console.log("AAAAAAAAAAAAAAAAAAAA")
         }
     },
 

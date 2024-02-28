@@ -1,4 +1,6 @@
 <template>
+    
+  
   <b-container fluid class="custom-container p-auto">
     <b-row>
       <b-col md-12>
@@ -25,9 +27,11 @@
             Experimento de prueba
           </b-button>
 
-          <b-button @click="toggleLoginModal()" size="lg" class="mr-auto ml-4" variant="outline-primary">
+          <b-button @click=showLoginModal() size="lg" class="mr-auto ml-4" variant="outline-primary">
             Iniciar sesión
           </b-button>
+          <UserLoginModal :showModal="this.showModal" @hideLoginModal="hideLoginModal"/>
+          
         </b-row>
       </b-col>
     </b-row>
@@ -80,32 +84,37 @@
         </div>
       </b-col>
     </b-row>
-    <UserLoginModal :modalShow="this.showLoginModal" @hideLoginModal="hideLoginModal()" />
   </b-container>
 </template>
 
 <script>
-import UserLoginModal from "@/components/UserLoginModal.vue";
+import UserLoginModal from '@/components/UserLoginModal.vue';
 export default {
   name: "Home",
-  components: [UserLoginModal],
+  components: { UserLoginModal },
   data() {
     return {
-      showLoginModal: false,
-    };
+      showModal: false
+    }
   },
   computed: {
-    isAuthenticated() {
-      return this.$store.getters["auth/isAuthenticated"];
-    },
+      isAuthenticated() {
+          return this.$store.getters['auth/isAuthenticated'];
+      }
   },
   methods: {
-    toggleLoginModal() {
-      this.showLoginModal = true;
-    },
-    hideLoginModal(modalShow) {
-      this.showLoginModal = modalShow;
-    },
+      /// Modal
+      showLoginModal() {
+          this.showModal = true;
+      },
+      hideLoginModal(showModal) {
+          this.title = '';
+          this.showModal = showModal;
+      },
+      async logout(){
+        await this.$store.dispatch('auth/logout')
+        this.$router.push('/')
+      }
   },
 };
 </script>
