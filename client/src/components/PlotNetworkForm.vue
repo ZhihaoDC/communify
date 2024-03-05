@@ -1,6 +1,6 @@
 <template>
 
-  <b-container id="container" class="d-flex flex-column justify-content-center align-items-center py-1 px-3">
+  <b-container id="container" class="d-flex flex-column py-1 px-3">
 
     <h4 id="header" v-if='isCommunityDetection'> <b> Experimento detección de comunidades ({{ experiment.category }}) </b></h4> 
       <h4 id="header" v-else> <b> Visualización </b></h4>
@@ -37,7 +37,7 @@
       </b-form-group>  
     </b-form>
 
-    <b-button block size="lg" type="submit" v-if="isAuthenticated" :disabled="!activateSubmitButton" @click="handleSubmitNetwork" variant="primary"
+    <b-button block size="lg" type="submit" :disabled="!activateSubmitButton & !isAuthenticated" @click="handleSubmitNetwork" variant="primary"
         class="content-item submit-button mt-auto">
         {{this.submitted_msg}}
       </b-button>

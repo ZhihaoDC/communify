@@ -23,7 +23,7 @@
         <br />
 
         <b-row class="mt-4">
-          <b-button size="lg" class="ml-auto" variant="primary">
+          <b-button @click=scrollToExperiments() size="lg" class="ml-auto" variant="primary">
             Experimento de prueba
           </b-button>
 
@@ -41,43 +41,55 @@
         <div class="tools">
           <b-card-group deck>
             <a href="/community-detection">
-              <b-card title="Detección de comunidades" img-src="../assets/network-graphs.webp" size="sm" class="mb-4"
+              <b-card title="Detectar comunidades" img-src="../assets/static/compressed/network-community.png" alt="Community Detection" size="sm" class="mb-4" img-height="300" img-width="100"
                 id="b-card">
                 <b-card-text>
-                  Detectar comunidades en una red y visualizar el resultado.
+                  Clusterizar un grafo y representarlo.
                 </b-card-text>
-                <!-- <b-button block to="/community-detection" variant="primary" id="go">Ir</b-button> -->
+                <!-- <b-button block to="/graph-visualization" variant="primary" id="go">Ir</b-button> -->
+                <template #footer>
+                  <small class="text-muted"></small>
+                </template>
               </b-card>
             </a>
 
             <a href="/graph-visualization">
-              <b-card title="Visualizar grafo" img-src="../assets/network-visualization.webp" size="sm" class="mb-4"
+              <b-card title="Visualizar grafo" img-src="../assets/static/compressed/network-visualization.png" alt="Visualize network" size="sm" class="mb-6" img-height="300" img-width="300"
                 id="b-card">
                 <b-card-text>
-                  Representa un grafo, cambia los nodos de color y posición
+                  Representar un grafo, cambiar los nodos de color y posición.
                 </b-card-text>
                 <!-- <b-button block to="/graph-visualization" variant="primary" id="go">Ir</b-button> -->
+                <template #footer>
+                  <small class="text-muted"></small>
+                </template>
               </b-card>
             </a>
 
+
             <a href="/user-datasets">
-              <b-card v-if="isAuthenticated" title="Mis Datasets" img-src="../assets/datasets.webp" class="mb-4"
+              <b-card v-if="isAuthenticated" title="Mis Datasets" img-src="../assets/static/compressed/datasets.png" alt="Datasets" class="mb-6" img-height="300" img-width="300"
                 id="b-card">
                 <b-card-text>
-                  Subir y gestionar datasets. También puedes iniciar un
-                  experimento con un dataset existente.
+                  Subir y gestionar datasets. Iniciar un experimento con un dataset existente.
                 </b-card-text>
                 <!-- <b-button block to="/user-datasets" variant="primary" id="go">Ir</b-button> -->
+                <template #footer>
+                  <small class="text-muted"></small>
+                </template>
               </b-card>
             </a>
 
             <a href="/user-experiments">
-              <b-card v-if="isAuthenticated" title="Mis Experimentos" img-src="../assets/experiments.webp" class="mb-4"
+              <b-card v-if="isAuthenticated" title="Mis Experimentos" img-src="../assets/static/compressed/laboratory.png" alt="Experiments" size="sm" class="mb-4" img-height="300" img-width="100"
                 id="b-card">
                 <b-card-text>
                   Gestiona y visualiza de nuevo los experimentos que has creado.
                 </b-card-text>
                 <!-- <b-button block to="/user-experiments" variant="primary" id="go">Ir</b-button> -->
+              <template #footer>
+                <small class="text-muted"></small>
+              </template>
               </b-card>
             </a>
           </b-card-group>
@@ -110,6 +122,12 @@ export default {
       hideLoginModal(showModal) {
           this.title = '';
           this.showModal = showModal;
+      },
+      scrollToExperiments(){
+        const targetElement = document.getElementById('community-detection');
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
       },
       async logout(){
         await this.$store.dispatch('auth/logout')
@@ -153,7 +171,10 @@ a:active {
 #b-card {
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-  max-width: 25rem;
+  max-width: 20rem;
+  min-width: 20rem;
+  min-height: 30rem;
+  min-height: 30rem;
 }
 
 #go {
@@ -197,4 +218,5 @@ a:active {
   color: aliceblue;
   text-decoration: none;
 }
+
 </style>

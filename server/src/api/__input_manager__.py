@@ -29,7 +29,6 @@ class InputManager():
     def csv_columns(self):
         return self._csv_columns
     
-
     def verify_csv_name(self, file):
         file_name = file.filename
         file_name_no_ext = file_name.replace(".csv", "") 
@@ -37,12 +36,26 @@ class InputManager():
         return secured_filename
 
     def columns_as_json(self, files):
+        import csv, sys
         if (len(files) > 1) and ('columns' in files):
-            columns = files['columns'].read().decode('utf8').replace("'",'"')
-            columns_json= json.loads(columns)
-        else:
-            columns_json= None
-        return columns_json
+            try:
+                # Convert the CSV data into a JSON object
+                json_data = csv.DictReader(files['columns'])
+                # Now json_data contains the parsed JSON object
+
+                return json.dumps([row for row in json_data])
+            except Exception as e:
+                # Handle error in CSV parsing or JSON conversion
+                print( f'Error processing file: {e}', file=sys.stderr)
+        #     files['columns'].seek(0)
+        #     columns = files['columns'].stream.read().decode('utf8').replace("'",'"')
+        #     # columns = files['columns'].decode('utf8').replace("'",'"')
+        #     import sys
+        #     # print(columns, file=sys.stderr)
+        #     columns_json= json.loads(columns)
+        # else:
+        #     columns_json= None
+        # return columns_json
 
     def generate_hash(self, file):
         file.seek(0) #reset file pointer

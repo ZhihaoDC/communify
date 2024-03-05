@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="custom-scrollbar">
     <b-navbar toggleable="md" type="dark" variant="dark" id="nav-bar">
       <b-navbar-brand id="brand" to="/">network.ly</b-navbar-brand>
       <b-navbar-toggle target="routes"></b-navbar-toggle>
@@ -30,8 +30,12 @@
             <template v-slot:button-content>
               <b-avatar icon="person" scale="0.5"></b-avatar>
             </template>
-            <b-dropdown-item v-if="!isAuthenticated" @click=showLoginModal() right> Iniciar sesión </b-dropdown-item>
-            <b-dropdown-item v-else @click=logout() right> Cerrar sesión </b-dropdown-item>
+            <b-dropdown-item v-if="!isAuthenticated" @click=showLoginModal() right> Iniciar sesión 
+              <b-icon icon="box-arrow-in-right" aria-hidden="true" scale="0.9" class="pt-1"></b-icon>
+            </b-dropdown-item>
+            <b-dropdown-item v-else @click=logout() right> Cerrar sesión 
+               <b-icon icon="box-arrow-right" aria-hidden="true" scale="0.9" class="pt-1"></b-icon>
+            </b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
         
@@ -137,5 +141,29 @@ export default {
 .fade-leave-active {
   transition: opacity 0.1s ease;
   opacity: 0;
+}
+
+// body {
+//   overflow-y: hidden;
+// }
+
+.custom-scrollbar {
+  /* Set the desired width for the scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1; /* thumb color, track color */
+
+  /* For WebKit-based browsers */
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }
 </style>

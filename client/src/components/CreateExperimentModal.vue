@@ -3,8 +3,8 @@
         <b-icon icon="bounding-box" aria-hidden="true" scale="0.9"></b-icon>
         Experimento
         <b-modal v-model="modalShow" :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
-            <CreateExperimentButton method="girvan-newman" :dataset_id="this.dataset_id" class="mr-2" ></CreateExperimentButton>
-            <CreateExperimentButton method="louvain" :dataset_id="this.dataset_id"></CreateExperimentButton>
+            <CreateExperimentButton method="louvain" :dataset_id="this.dataset_id" class="mr-4"></CreateExperimentButton>
+            <CreateExperimentButton method="girvan-newman" :dataset_id="this.dataset_id"  ></CreateExperimentButton>
         </b-modal>
     </b-button>
 

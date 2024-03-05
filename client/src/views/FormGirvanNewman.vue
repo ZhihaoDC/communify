@@ -9,6 +9,7 @@
       </h4>
       <div id="content">
         <InputCSV selectedMethod="girvan-newman"
+          action="experiment/getExperimentWithDataset" 
           successUrl="/community-detection/girvan-newman/experiment"
         />
       </div>

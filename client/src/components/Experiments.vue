@@ -29,7 +29,7 @@
                 </b-card-group>
             </div>
             <div v-else id="empty-experiments-container">
-                <b-img id="empty-experiments-img" src="../assets/test-tube2.png" alt="No hay experiments" :width="200" :height="200"/> 
+                <b-img id="empty-experiments-img" src="../assets/static/test-tube2.png" alt="No hay experiments" :width="200" :height="200"/> 
                 <div> No hay experimentos todavía </div>
             </div>
         </div>

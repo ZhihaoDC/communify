@@ -38,7 +38,7 @@
         class="content-item submit-button">
             Iniciar sesión
         </b-button>
-        <b-link to="/"> ¿No tienes cuenta? Crea una cuenta </b-link>
+        <b-link to="/user-signup"> ¿No tienes cuenta? Crea una cuenta </b-link>
 
     </b-form>
     

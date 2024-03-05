@@ -38,7 +38,7 @@
         </div>
         
         <div v-else id="empty-datasets-container">
-            <b-img id="empty-datasets-img" src="../assets/database-empty.png" alt="No hay datasets" :width="200" :height="200"/>
+            <b-img id="empty-datasets-img" src="../assets/static/database-empty.png" alt="No hay datasets" :width="200" :height="200"/>
             <p> Aún no hay datasets subidos</p>
         </div>
         <b-button variant="primary" to="/dataset-upload-form">

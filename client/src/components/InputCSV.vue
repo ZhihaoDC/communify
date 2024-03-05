@@ -226,9 +226,8 @@ export default {
       if (this.manually_select_columns){
         formData.append("columns", new Blob([this.currently_selected_columns], {type: 'application/json'}));
       }
-
-      await this.$store.dispatch(this.action, {method: this.method, formData: formData})
       this.submitted = true
+      await this.$store.dispatch(this.action, {method: this.method, formData: formData})
       this.$router.push(this.successUrl);
     },
 
