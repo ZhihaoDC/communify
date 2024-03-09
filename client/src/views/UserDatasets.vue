@@ -62,7 +62,7 @@ import { getDatasetsFromDB, deleteDatasetFromDB } from '../api';
             datasets: [],
             fields: [
                 { key: 'name', label: 'Nombre del dataset' },
-                { key: 'creation_date', label: 'Fecha de creacion' },
+                { key: 'creation_date', label: 'Fecha de creación' },
                 { key: 'nodes', label: 'Ejemplo de nodos' },
                 { key: 'actions', label: 'Acciones'}
             ]

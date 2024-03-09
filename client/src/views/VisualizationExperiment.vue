@@ -2,10 +2,6 @@
 <b-container fluid id="parent-container" class="flex-grow-1"> 
       
     <b-row no-gutters>
-        <!-- <b-col cols="12">
-            <h2 id="header" v-if='((experiment.category === "Louvain") | (experiment.category === "Girvan-Newman"))'>  Comunidades ({{ experiment.category }}) </h2> 
-            <h2 id="header" v-else> Visualización </h2>
-        </b-col> -->
         <b-col cols="3">
             <PlotNetworkForm 
                 id="save-network-form" 
@@ -63,14 +59,37 @@ export default {
         },
         updateEdgesColor(){
             this.$refs.plotNetwork.updateEdgesColor()
+        },
+        toast_info(title, body, link_to=null, delay=10000){
+            this.$bvToast.toast(body, {
+            title: title,
+            toaster: 'b-toaster-bottom-right',
+            variant: 'info',
+            //   noAutoHide: true,        
+            autoHideDelay: delay,
+            solid: true,
+            appendToast: true,
+            to: link_to
+            })
+
         }
 
     },
-    mounted () {
+    mounted() {
         console.log(this.experiment)
+
+        if (this.isNewExperiment & (!this.user)){
+            this.toast_info(`Tip 1:`, 'Puedes hacer zoom con la rueda de scroll del ratón');
+            this.toast_info(`Tip 2:`, 'Selecciona comunidades con un solo click. \n Selecciona nodos individuales con doble click', null, 10500);
+            this.toast_info(`Tip 3:`, 'Regístrate para guardar tus experimentos.', '/user-signup', 11000);
+        }
+
     },
-    computed() {
+    computed: {
         // mapGetters('experiment', ['getExperiment', 'getIsNewExperiment', 'getVisualizationParams'])
+        user() {
+            return this.$store.getters['auth/user']
+        }
     }
 
 }
@@ -89,7 +108,8 @@ export default {
     }
 
     #save-network-form{
-        min-height: 75vh;
+        min-height: 50vh;
+        max-height: 90vh;
         padding-top: 25px;
         border-top: 1em;
         border-radius: 15px;

@@ -59,4 +59,9 @@ export function getExperimentWithDatasetFromDB(method, dataset_id, jwt){
         {headers: {'Authorization': `Bearer: ${jwt}`}}
     )
 }
+
+export function getExperimentExample(){
+    console.log("Peticion")
+    return axios.get(`${API_URL}/community-detection/louvain/example`)
+}
   

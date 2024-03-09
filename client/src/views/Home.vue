@@ -23,8 +23,8 @@
         <br />
 
         <b-row class="mt-4">
-          <b-button @click=scrollToExperiments() size="lg" class="ml-auto" variant="primary">
-            Experimento de prueba
+          <b-button @click=showExample() size="lg" class="ml-auto" variant="primary">
+            Ver un ejemplo
           </b-button>
 
           <b-button @click=showLoginModal() size="lg" class="mr-auto ml-4" variant="outline-primary">
@@ -123,17 +123,33 @@ export default {
           this.title = '';
           this.showModal = showModal;
       },
-      scrollToExperiments(){
-        const targetElement = document.getElementById('community-detection');
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth' });
-        }
+      read_file(file){
+        return new Promise((resolve, reject) => {
+          var reader = new FileReader()
+          reader.readAsText(file)
+          reader.onload = () => resolve(reader.result)
+          reader.onerror = () => reject
+        })
+      },
+      async showExample(){
+          await this.$store.dispatch("experiment/getExperimentExample")
+          this.$router.push('/community-detection/louvain/experiment'); 
       },
       async logout(){
         await this.$store.dispatch('auth/logout')
         this.$router.push('/')
+      },
+      fetch_csv(file){            
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function (){
+            if(rawFile.readyState === 4){
+                if(rawFile.status === 200 || rawFile.status == 0){ console.log("SUCCESSSSS!!!") }
+            }
+        rawFile.send(null);
+        }
       }
-  },
+    }
 };
 </script>
 

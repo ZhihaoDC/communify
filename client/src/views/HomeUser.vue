@@ -85,8 +85,8 @@ export default {
     isAuthenticated() {
       return this.$store.getters['auth/isAuthenticated']
     },
-    username() {
-      return this.$store.getters['auth/user'].firstname
+    user() {
+      return this.$store.getters['auth/user']
     }
   }
 }

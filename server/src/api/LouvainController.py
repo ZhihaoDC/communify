@@ -10,6 +10,8 @@ from src.models.DatasetModel import Dataset
 from src.services import DatasetService
 from src.api.__token_handler__ import token_required
 from networkx.algorithms.community.quality import modularity as nx_modularity
+from networkx import from_pandas_edgelist
+from pandas import read_csv
 
 
 LouvainController = Blueprint('LouvainController', __name__)
@@ -77,3 +79,38 @@ def apply_louvain_to_dataset(user, dataset_id):
     except Exception as e:
         print(e, file=sys.stderr)
         return jsonify({"errorMessage": "Error interno del servidor"}), 500
+    
+
+
+@LouvainController.route('/community-detection/louvain/example', methods=['GET'])
+def get_example():
+        from os.path import relpath
+    # try: 
+        example_dataset = 'book1'
+        # example_path = relpath(f"../../static/game-of-thrones-books/{example_dataset}.csv")
+        # example_path = relpath(f"./{example_dataset}.csv")
+        edge_list = read_csv("C:/Users/Zhihao/Documents/GitKraken/network.ly/server/src/api/book1.csv")  
+
+        graph = from_pandas_edgelist(edge_list, 
+                                    source='Source', 
+                                    target='Target',
+                                    edge_attr='weight')
+        #Apply louvain method
+        supergraph, communities = louvain.Louvain(graph)
+        last_community = louvain.last_community(graph, communities)
+        modularity = nx_modularity(graph, louvain.dendrogram(last_community))
+
+        graph_json = nw_formatter.network_to_json(graph, last_community)
+
+        default_visualization_params = {'nodeSeparation': 500, 'communitySeparation': 800, 'gravity': 0.1}
+        
+        return jsonify({ 
+                        'experiment_name': 'Ejemplo de experimento', #default value
+                        'network_json': graph_json,
+                        'communities': last_community,
+                        'metrics' : {'modularity': modularity},
+                        'visualization_params': default_visualization_params,
+                        'category': 'Louvain',
+                        'dataset_name': 'book1',
+                        'dataset_id': None
+                    }), 200

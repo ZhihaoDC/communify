@@ -1,4 +1,4 @@
-import {postDatasetForExperiment, postExperimentToDB, postDatasetToDB} from '@/api'
+import {postDatasetForExperiment, postExperimentToDB, postDatasetToDB, getExperimentExample} from '@/api'
 // import EventBus from '@/main'
 import cloneDeep from 'lodash/cloneDeep'
 export default {
@@ -76,6 +76,13 @@ export default {
             commit('setIsNewExperiment', true)
             return postDatasetToDB(payload.formData, rootState.auth.jwt)
         },
+
+        async getExperimentExample({commit}){
+            const response = await getExperimentExample()
+            commit('setExperiment', response.data)
+            commit('setIsNewExperiment', true)
+            commit('setVisualizationParams', response.data['visualizationParams'])
+        }
 
     }
 }

@@ -1,19 +1,21 @@
 <template>
-    <b-container fluid="md" >
-      <h2 id="header">Formulario de registro</h2>
-    <b-card class="signup-form">
+    <b-container fluid="md" style="max-width: 40rem;" >
+      <!-- <h2 id="header">Crear una cuenta nueva</h2> -->
+    <b-card class="signup-form my-auto">
       <b-form align="left">
-        
-        <b-form-group label="Nombre de usuario:" label-for="username">
+        <div class="mx-auto" align="center"> <h3> Crear una cuenta nueva </h3></div>
+        <b-form-group label-for="username" >
+          <b-icon icon="person" aria-hidden="true" scale="1.5" class="pt-1 ml-1 mb-1"></b-icon>
           <b-form-input
             id="username"
             v-model="form.username"
-            placeholder="Introduce tu nombre de usuario"
+            placeholder="Nombre de usuario (con este nombre te verán los demás)"
             required
           ></b-form-input>
         </b-form-group>
 
-        <b-form-group label="Email:" label-for="email">
+        <b-form-group label-for="email">
+          <b-icon icon="envelope" aria-hidden="true" scale="1.5" class="pt-1 ml-1 mb-1"></b-icon>
           <b-form-input
             id="email"
             v-model="form.email"
@@ -29,7 +31,8 @@
           </b-form-invalid-feedback>
         </b-form-group>
         
-        <b-form-group label="Contraseña:" label-for="password">
+        <b-form-group label-for="password">
+          <b-icon icon="lock" aria-hidden="true" scale="1.5" class="pt-1 ml-1 mb-1"></b-icon>
           <b-form-input
             v-model="form.password"
             type="password"
@@ -44,11 +47,12 @@
           </b-form-invalid-feedback>
         </b-form-group>
 
-        <b-form-group label="Confirmación:" label-for="password-repeat">
+        <b-form-group label-for="password-repeat">
+          <b-icon icon="lock-fill" aria-hidden="true" scale="1.5" class="pt-1 ml-1 mb-1"></b-icon>
           <b-form-input
             v-model="form.password_confirmation"
             type="password"
-            placeholder="Repite la contraseña"
+            placeholder="Confirma la contraseña"
             :state="is_password_confirmation_valid"
             lazy-formatter
             :formatter="password_confirmation_format"
@@ -59,12 +63,10 @@
           </b-form-invalid-feedback>
         </b-form-group>
 
-        <b-button block size ="md" type="submit" @click.stop.prevent="signUp" variant="primary"
-          class="content-item submit-button"
+        <b-button block size="lg" type="submit" @click.stop.prevent="signUp" variant="primary" class="mt-4 mb-2 content-item submit-button"
           :disabled="!valid_fields">
           Registrarse
         </b-button>
-        <b-link to=""> ¿No tienes cuenta? Crea una cuenta </b-link>
       </b-form>
     </b-card>
   </b-container>

@@ -1,7 +1,7 @@
 <template>
     
     <!-- <b-container fluid="md"> -->
-    <b-modal v-model="showModal" ok-only @hide="resetInfoModal" @show="printShow" @change="changed" no-stacking>
+    <b-modal v-model="showModal" ok-only @hide="resetInfoModal" @show="printShow" @change="changed" no-stacking id="loginModal">
     <b-form>
         <b-form-group label="Email" label-for="email">
             <b-form-input
@@ -38,7 +38,7 @@
         class="content-item submit-button">
             Iniciar sesión
         </b-button>
-        <b-link to="/"> ¿No tienes cuenta? Crea una cuenta </b-link>
+        
 
     </b-form>
     

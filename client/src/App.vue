@@ -30,11 +30,19 @@
             <template v-slot:button-content>
               <b-avatar icon="person" scale="0.5"></b-avatar>
             </template>
-            <b-dropdown-item v-if="!isAuthenticated" @click=showLoginModal() right> Iniciar sesión 
-              <b-icon icon="box-arrow-in-right" aria-hidden="true" scale="0.9" class="pt-1"></b-icon>
+
+            <b-dropdown-item v-if="!isAuthenticated" @click=toUserSignUp()> 
+              <b-icon icon="person-plus" aria-hidden="true" scale="0.9" class="pt-1 ml-1"></b-icon>
+              <span class="mr-1"> Registrarse </span>
             </b-dropdown-item>
-            <b-dropdown-item v-else @click=logout() right> Cerrar sesión 
-               <b-icon icon="box-arrow-right" aria-hidden="true" scale="0.9" class="pt-1"></b-icon>
+
+            <b-dropdown-item v-if="!isAuthenticated" @click=showLoginModal()> 
+              <b-icon icon="box-arrow-in-right" aria-hidden="true" scale="0.9" class="pt-1 mr-1"></b-icon>
+              <span class="mr-1"> Iniciar sesión </span>
+            </b-dropdown-item>
+            <b-dropdown-item v-else @click=logout() right> 
+              <b-icon icon="box-arrow-right" aria-hidden="true" scale="0.9" class="pt-1"></b-icon>
+              <span class="mr-1"> Cerrar sesión </span>
             </b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -83,7 +91,18 @@ export default {
       },
       async logout(){
         await this.$store.dispatch('auth/logout')
-        this.$router.push('/')
+        this.$router.push('/')        
+        this.toast_on_logout()
+      },
+      toast_on_logout(){
+        this.$bvToast.toast('Esperamos verte pronto!', {
+        title: `Has cerrado sesión.`,
+        variant: 'info',
+        solid: true
+        })
+      },
+      toUserSignUp(){
+        this.$router.push('/user-signup')
       }
   },
   mounted() {

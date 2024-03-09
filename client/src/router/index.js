@@ -79,7 +79,7 @@ const routes = [
     component: UserDatasets,
     beforeEnter (to, from, next) {
       if (!store.getters['auth/isAuthenticated']) {
-        next('/user-login')
+        next('/')
       } else {
         next()
       }

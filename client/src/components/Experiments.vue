@@ -52,11 +52,6 @@ export default {
         };
     },
     computed: {
-        axiosParams() {
-            const params = new URLSearchParams();
-            params.append('user_id', '1');
-            return params;
-        },
 
         makeRows() {
             let row = [];

@@ -1,7 +1,7 @@
 <template>
     
     <!-- <b-container fluid="md"> -->
-    <b-modal v-model="showModal" :title=title ok-only @hide="resetInfoModal" @show="printShow" @change="changed" no-stacking>
+    <b-modal v-model="showModal" :title=title ok-only @hide="resetInfoModal" @change="changed" no-stacking>
     <b-form>
         <b-form-group label="Email" label-for="email">
             <b-form-input
@@ -38,7 +38,7 @@
         class="content-item submit-button">
             Iniciar sesión
         </b-button>
-        <b-link to="/user-signup"> ¿No tienes cuenta? Crea una cuenta </b-link>
+        <b-link to="/user-signup" @click=resetInfoModal()> ¿No tienes cuenta? Crea una cuenta </b-link>
 
     </b-form>
     
@@ -73,6 +73,7 @@ export default{
                 .then(() => {
                     if (!this.errorMessage){
                         this.resetInfoModal()
+                        this.toast_on_login()
                     }
                 })
         },
@@ -96,12 +97,14 @@ export default{
                     email: '',
                     password: '',
                 }
-        },
-        printShow(){
-            console.log(this.showModal)
-        },
-        changed(){
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        },        
+        toast_on_login(){
+            let username = this.$store.getters['auth/user'].firstname
+            this.$bvToast.toast('Te has identificado con éxito.', {
+            title: `Bienvenid@, ${username}.`,
+            variant: 'success',
+            solid: true
+            })
         }
     },
 
