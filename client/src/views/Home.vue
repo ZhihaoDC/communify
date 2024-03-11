@@ -22,7 +22,7 @@
         <router-link to="/about" id="about-link">Aprende más sobre la detección de comunidades</router-link>
         <br />
 
-        <b-row class="mt-4">
+        <b-row v-if="!example_submitted" class="mt-4">
           <b-button @click=showExample() size="lg" class="ml-auto" variant="primary">
             Ver un ejemplo
           </b-button>
@@ -31,7 +31,14 @@
             Iniciar sesión
           </b-button>
           <UserLoginModal :showModal="this.showModal" @hideLoginModal="hideLoginModal"/>
-          
+        </b-row>
+        <b-row v-else class="mt-4 justify-content-center">
+          <b-spinner
+            variant="primary"
+            label="Spinning"
+            size="lg"
+            id="spinner"
+          ></b-spinner>
         </b-row>
       </b-col>
     </b-row>
@@ -41,7 +48,7 @@
         <div class="tools">
           <b-card-group deck>
             <a href="/community-detection">
-              <b-card title="Detectar comunidades" img-src="../assets/static/compressed/network-community.png" alt="Community Detection" size="sm" class="mb-4" img-height="300" img-width="100"
+              <b-card title="Detectar comunidades" img-src="../assets/static/webp/network-community.webp" alt="Community Detection" size="sm" class="mb-4" img-height="300" img-width="100"
                 id="b-card">
                 <b-card-text>
                   Clusterizar un grafo y representarlo.
@@ -54,7 +61,7 @@
             </a>
 
             <a href="/graph-visualization">
-              <b-card title="Visualizar grafo" img-src="../assets/static/compressed/network-visualization.png" alt="Visualize network" size="sm" class="mb-6" img-height="300" img-width="300"
+              <b-card title="Visualizar grafo" img-src="../assets/static/webp/network-visualization.webp" alt="Visualize network" size="sm" class="mb-6" img-height="300" img-width="300"
                 id="b-card">
                 <b-card-text>
                   Representar un grafo, cambiar los nodos de color y posición.
@@ -68,7 +75,7 @@
 
 
             <a href="/user-datasets">
-              <b-card v-if="isAuthenticated" title="Mis Datasets" img-src="../assets/static/compressed/datasets.png" alt="Datasets" class="mb-6" img-height="300" img-width="300"
+              <b-card v-if="isAuthenticated" title="Mis Datasets" img-src="../assets/static/webp/datasets.webp" alt="Datasets" class="mb-6" img-height="300" img-width="300"
                 id="b-card">
                 <b-card-text>
                   Subir y gestionar datasets. Iniciar un experimento con un dataset existente.
@@ -81,7 +88,7 @@
             </a>
 
             <a href="/user-experiments">
-              <b-card v-if="isAuthenticated" title="Mis Experimentos" img-src="../assets/static/compressed/laboratory.png" alt="Experiments" size="sm" class="mb-4" img-height="300" img-width="100"
+              <b-card v-if="isAuthenticated" title="Mis Experimentos" img-src="../assets/static/webp/laboratory.webp" alt="Experiments" size="sm" class="mb-4" img-height="300" img-width="100"
                 id="b-card">
                 <b-card-text>
                   Gestiona y visualiza de nuevo los experimentos que has creado.
@@ -106,7 +113,8 @@ export default {
   components: { UserLoginModal },
   data() {
     return {
-      showModal: false
+      showModal: false,
+      example_submitted: false
     }
   },
   computed: {
@@ -132,6 +140,7 @@ export default {
         })
       },
       async showExample(){
+          this.example_submitted = true
           await this.$store.dispatch("experiment/getExperimentExample")
           this.$router.push('/community-detection/louvain/experiment'); 
       },

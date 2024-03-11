@@ -17,7 +17,8 @@
                         <b-spinner v-else variant="primary" label="Spinning" id="spinner" class="m-5"></b-spinner>
                         <b-button @click="delete_experiment(experiment)"
                         value="Eliminar" variant="outline-danger">
-                            Eliminar
+                            <!-- Eliminar -->
+                            <b-icon icon="trash" aria-hidden="true" scale="1.1" class="pt-1"></b-icon>
                         </b-button>
                 
 

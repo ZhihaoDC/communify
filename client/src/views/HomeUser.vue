@@ -2,7 +2,7 @@
   <b-container fluid>
     <b-row>
       <b-col md-12>
-        <h1 id="header">Bienvenido a network.ly, {{ username }}</h1>
+        <h1 id="header">Bienvenido a network.ly, {{ user.username }}</h1>
         <h4>
           Herramienta de detección de comunidades y visualización de grafos.
         </h4>
@@ -15,7 +15,7 @@
           <div class="tools">
             <b-card-group deck>
               <a href="/community-detection">
-                <b-card title="Detectar comunidades" img-src="../assets/static/compressed/network-community.png"
+                <b-card title="Detectar comunidades" img-src="../assets/static/webp/network-community.webp"
                   alt="Community Detection" size="sm" class="mb-4" img-height="300" img-width="100" id="b-card">
                   <b-card-text>
                     Clusterizar un grafo y representarlo.
@@ -28,7 +28,7 @@
               </a>
 
               <a href="/graph-visualization">
-                <b-card title="Visualizar grafo" img-src="../assets/static/compressed/network-visualization.png"
+                <b-card title="Visualizar grafo" img-src="../assets/static/webp/network-visualization.webp"
                   alt="Visualize network" size="sm" class="mb-6" img-height="300" img-width="300" id="b-card">
                   <b-card-text>
                     Representar un grafo, cambiar los nodos de color y posición.
@@ -43,7 +43,7 @@
 
 
               <a href="/user-datasets">
-                <b-card v-if="isAuthenticated" title="Mis Datasets" img-src="../assets/static/compressed/datasets.png"
+                <b-card v-if="isAuthenticated" title="Mis Datasets" img-src="../assets/static/webp/datasets.webp"
                   alt="Datasets" class="mb-6" img-height="300" img-width="300" id="b-card">
                   <b-card-text>
                     Subir y gestionar datasets. Iniciar un experimento con un dataset existente.
@@ -58,7 +58,7 @@
 
               <a href="/user-experiments">
                 <b-card v-if="isAuthenticated" title="Mis Experimentos"
-                  img-src="../assets/static/compressed/laboratory.png" alt="Experiments" size="sm" class="mb-4"
+                  img-src="../assets/static/webp/laboratory.webp" alt="Experiments" size="sm" class="mb-4"
                   img-height="300" img-width="100" id="b-card">
                   <b-card-text>
                     Gestiona y visualiza de nuevo los experimentos que has creado.

@@ -1,6 +1,11 @@
 <template>
     <b-container fluid="md" style="max-width: 40rem;" >
       <!-- <h2 id="header">Crear una cuenta nueva</h2> -->
+      <h1 id="header">Regístrate {{ username }}</h1>
+        <h4>
+          Podrás guardar tus experimentos y datasets
+        </h4>
+        <br />
     <b-card class="signup-form my-auto">
       <b-form align="left">
         <div class="mx-auto" align="center"> <h3> Crear una cuenta nueva </h3></div>

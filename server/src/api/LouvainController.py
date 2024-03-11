@@ -89,7 +89,7 @@ def get_example():
         example_dataset = 'book1'
         # example_path = relpath(f"../../static/game-of-thrones-books/{example_dataset}.csv")
         # example_path = relpath(f"./{example_dataset}.csv")
-        edge_list = read_csv("C:/Users/Zhihao/Documents/GitKraken/network.ly/server/src/api/book1.csv")  
+        edge_list = read_csv("./static/game-of-thrones-books/book1.csv")  
 
         graph = from_pandas_edgelist(edge_list, 
                                     source='Source', 

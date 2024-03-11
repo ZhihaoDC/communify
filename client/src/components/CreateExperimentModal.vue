@@ -1,6 +1,6 @@
 <template>
     <b-button variant="primary" @click="openModal(row.item)">
-        <b-icon icon="bounding-box" aria-hidden="true" scale="0.9"></b-icon>
+        <b-icon icon="bounding-box" aria-hidden="true" scale="1" class="pt-1"></b-icon>
         Experimento
         <b-modal v-model="modalShow" :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
             <CreateExperimentButton method="louvain" :dataset_id="this.dataset_id" class="mr-4"></CreateExperimentButton>

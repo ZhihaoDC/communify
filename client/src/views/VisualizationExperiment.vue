@@ -78,10 +78,12 @@ export default {
     mounted() {
         console.log(this.experiment)
 
-        if (this.isNewExperiment & (!this.user)){
+        if (this.isNewExperiment || (!this.user)){
+            
             this.toast_info(`Tip 1:`, 'Puedes hacer zoom con la rueda de scroll del ratón');
-            this.toast_info(`Tip 2:`, 'Selecciona comunidades con un solo click. \n Selecciona nodos individuales con doble click', null, 10500);
-            this.toast_info(`Tip 3:`, 'Regístrate para guardar tus experimentos.', '/user-signup', 11000);
+            this.toast_info(`Tip 2:`, 'Selecciona nodos individuales con doble click', null, 10500)
+            this.toast_info(`Tip 3:`, 'Pulsa la tecla Ctrl + click para seleccionar múltiples nodos.', null, 11000)
+            
         }
 
     },

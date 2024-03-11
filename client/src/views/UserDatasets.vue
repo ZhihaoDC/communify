@@ -17,9 +17,9 @@
                     <col :style="{ width: '10em'}" >
                         <div class="buttons">
                         
-                        <CreateExperimentModal class="mr-2" :row="row"></CreateExperimentModal>
+                        <CreateExperimentModal class="mr-2 pt-1" :row="row"></CreateExperimentModal>
                         <b-button @click="delete_dataset(row.item.id)" value="Eliminar" variant="outline-danger">
-                            <b-icon icon="trash" aria-hidden="true" scale="1"></b-icon>
+                            <b-icon icon="trash" aria-hidden="true" scale="1.1" class="pt-1"></b-icon>
                         </b-button>
                         
                         </div>

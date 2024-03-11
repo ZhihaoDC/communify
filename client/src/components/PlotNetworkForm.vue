@@ -37,15 +37,17 @@
       </b-form-group>  
     </b-form>
 
+    <div id="submit-experiment">
     <b-button block size="lg" type="submit" :disabled="!(activateSubmitButton & isAuthenticated)" @click="handleSubmitNetwork" variant="primary"
-        class="content-item submit-button mt-auto" id="submit-experiment">
+        class="content-item submit-button mt-auto" >
         {{this.submitted_msg}}
       </b-button>
+    </div>
 
-    <b-popover v-if=!isAuthenticated target="submit-experiment" triggers="hover" placement="top">
+    <b-popover v-if=!isAuthenticated target="submit-experiment" triggers="hover" placement="right">
       <template #title>¿Sabías que...?</template>
-      Si te <b> registras,</b> podrás guardar el resultado de tus experimentos. Además de otras funciones.
-      <b-link to="/user-signup"> Crear una cuenta </b-link>
+      Si te <b> registras,</b> podrás guardar el resultado de tus experimentos. Además de poder guardar y gestionar tus datasets.
+      <b-link to="/user-signup"> Crea una cuenta aquí.</b-link>
     </b-popover>
 
     <div id="success-alert">
