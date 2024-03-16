@@ -60,7 +60,9 @@ export default {
       actions: {
 
         async getExperimentWithDataset({commit}, payload){
-            const response = await postDatasetForExperiment(payload.method, payload.formData)
+            const response = await postDatasetForExperiment(payload.method, payload.formData).catch( () => {
+                EventBus.$emit('csvFormatError', 'El formato del archivo .csv es incorrecto. Por favor inténtalo con un formato distinto.')
+            })
             commit('setExperiment', response.data)
             commit('setIsNewExperiment', true)
             commit('setVisualizationParams', response.data['visualizationParams'])

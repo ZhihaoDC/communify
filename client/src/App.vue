@@ -21,7 +21,7 @@
 
         <b-navbar-nav class="ml-auto">
           <b-nav-item right to="/about"> About </b-nav-item>
-          <b-nav-item right to="/user-signup"> Registrarse </b-nav-item>
+          <b-nav-item v-if="!isAuthenticated" right to="/user-signup"> Registrarse </b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav>

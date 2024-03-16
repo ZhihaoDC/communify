@@ -7,15 +7,9 @@
             <b-form-input
             id="email"
             v-model="form.identification"
-            placeholder="Introduce tu nombre de usuario o email"
-            :state="is_identification_valid"
-            lazy-formatter
-            :formatter="identification_format"
+            placeholder="Introduce tu email"
             required
             ></b-form-input>
-            <b-form-invalid-feedback id="input-live-feedback">
-                El nombre de usuario o email es incorrecto o no existen.
-            </b-form-invalid-feedback>
         </b-form-group>
 
 
@@ -33,7 +27,7 @@
                 La contraseña es incorrecta.
             </b-form-invalid-feedback>
         </b-form-group>
-        <p v-if="errorMessage">{{errorMessage}}</p>
+        <p id="error-message" v-if="errorMessage">{{errorMessage}}</p>
         <b-button block type="submit" @click.stop.prevent="login" variant="primary"
         class="content-item submit-button">
             Iniciar sesión
@@ -56,11 +50,10 @@ export default{
         return {
             title: 'Identifícate',
             identification : '',
-            is_identification_valid: null,
+            is_identification_valid: true,
             is_password_valid: null,
             form: {
-                    username: '',
-                    email: '',
+                    identification: '',
                     password: '',
                 },
             errorMessage: null
@@ -70,12 +63,18 @@ export default{
         async login(){
             this.errorMessage = ''
             await this.$store.dispatch('auth/loginToDB', this.form)
-                .then(() => {
+                .then((response) => {
+                    console.log(response)
+
                     if (!this.errorMessage){
                         this.resetInfoModal()
                         this.toast_on_login()
+                        this.$router.push('/home-user')
                     }
                 })
+                .catch(
+                    console.log("AAAAA")
+                )
         },
 
         identification_format(identification){
@@ -97,6 +96,7 @@ export default{
                     email: '',
                     password: '',
                 }
+            this.errorMessage = ""
         },        
         toast_on_login(){
             let username = this.$store.getters['auth/user'].firstname
@@ -118,3 +118,9 @@ export default{
     }
 }
 </script>
+<style>
+#error-message{
+    color:red;
+    font-size: small;
+}   
+</style>

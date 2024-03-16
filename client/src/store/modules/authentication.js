@@ -49,7 +49,7 @@ export default {
                         EventBus.$emit('failedLogin', 'El usuario o email no existen. Por favor, inténtalo de nuevo.')
                     }
                     else{
-                        EventBus.$emit('failedLogin', error)
+                        EventBus.$emit('failedLogin', 'Ha ocurrido un error desconocido. Por favor inténtalo más tarde.')
                     }
                 })
 

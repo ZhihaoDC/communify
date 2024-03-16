@@ -151,7 +151,8 @@
 </template>
 
 <script>
-// import {postDataset} from '@/api'
+
+import {EventBus} from '../main'
 export default {
   name: "InputCSV",
   props: ["selectedMethod", "action", "successUrl"],
@@ -303,7 +304,15 @@ export default {
     isExperiment(){
       return ["louvain", "girvan-newman"].includes(this.selectedMethod)
     }
-
+  },
+  mounted(){
+    EventBus.$on('csvFormatError', () =>{      
+      this.submitted = false
+      this.errorMessage = "Ha ocurrido un error procesando el archivo csv. Por favor, cambia el formato."
+    })
+  },
+  beforeDestroy () {
+      EventBus.$off('failedSignUp')
   }
 };
 </script>

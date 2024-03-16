@@ -112,6 +112,13 @@ import { getDatasetsFromDB, deleteDatasetFromDB } from '../api';
             const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', seconds: 'numeric', hour12: false }
             return local_date.toLocaleString('es-ES', options)
         },
+        toast_on_delete(){
+            this.$bvToast.toast('Dataset eliminado con éxito.', {
+            title: `Exito.`,
+            variant: 'info',
+            solid: true
+            })
+        },
         delete_dataset(dataset_id){
             const h = this.$createElement
             const msgBox = h('p', {class: ['msgBoxtext']},[
@@ -143,8 +150,8 @@ import { getDatasetsFromDB, deleteDatasetFromDB } from '../api';
                                     // https://github.com/bootstrap-vue/bootstrap-vue/issues/4668
                                     // Array does not update to b-table because array are interpreted as references 
                                     // and watchers do not watch the content of the array
+                                    this.toast_on_delete()
                                 }
-
                             })
                             .catch(error => {
                                 console.log(error)

@@ -8,15 +8,19 @@
         <br />
     <b-card class="signup-form my-auto">
       <b-form align="left">
-        <div class="mx-auto" align="center"> <h3> Crear una cuenta nueva </h3></div>
+        <div class="mx-auto" align="center"> <h5> Crear una cuenta nueva </h5></div>
         <b-form-group label-for="username" >
           <b-icon icon="person" aria-hidden="true" scale="1.5" class="pt-1 ml-1 mb-1"></b-icon>
           <b-form-input
             id="username"
             v-model="form.username"
             placeholder="Nombre de usuario (con este nombre te verán los demás)"
+            :state="is_username_valid"
             required
           ></b-form-input>
+          <b-form-invalid-feedback id="input-live-feedback">
+            {{username_invalid_msg}}
+          </b-form-invalid-feedback>
         </b-form-group>
 
         <b-form-group label-for="email">
@@ -95,7 +99,8 @@ export default {
             is_email_valid: null,
             is_password_valid: null,
             is_password_confirmation_valid: null,
-            email_invalid_msg: "El email debe contener una dirección de correo con '@'."
+            email_invalid_msg: "El email debe contener una dirección de correo con '@'.",
+            username_invalid_msg: "El email debe contener una dirección de correo con '@'."
         }
     },
     computed: {
@@ -163,6 +168,8 @@ export default {
         EventBus.$on('failedSignUp', (errorMessage) =>{
             this.errorMessage = errorMessage
             this.is_email_valid = false
+            this.is_username_valid = false
+            this.username_invalid_msg = errorMessage
             this.email_invalid_msg = errorMessage
             console.log(errorMessage)
         })

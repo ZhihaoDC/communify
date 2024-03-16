@@ -84,17 +84,14 @@ def apply_louvain_to_dataset(user, dataset_id):
 
 @LouvainController.route('/community-detection/louvain/example', methods=['GET'])
 def get_example():
-        from os.path import relpath
-    # try: 
         example_dataset = 'book1'
-        # example_path = relpath(f"../../static/game-of-thrones-books/{example_dataset}.csv")
-        # example_path = relpath(f"./{example_dataset}.csv")
-        edge_list = read_csv("./static/game-of-thrones-books/book1.csv")  
+        edge_list = read_csv(f"./static/game-of-thrones-books/{example_dataset}.csv")  
 
         graph = from_pandas_edgelist(edge_list, 
                                     source='Source', 
                                     target='Target',
                                     edge_attr='weight')
+        
         #Apply louvain method
         supergraph, communities = louvain.Louvain(graph)
         last_community = louvain.last_community(graph, communities)

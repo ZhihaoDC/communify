@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from src import app_config
 from src.models.UserModel import User
 from src.services import UserService
+import re
 
 UserController = Blueprint('UserController', __name__)
 
@@ -21,6 +22,12 @@ def sign_up():
 
     #Check if user exists
     existing_user = UserService.get_by_email(User, email=email)
+    if existing_user: 
+        return jsonify({
+            'errorMessage': 'User already exists'
+        }), 409
+    
+    existing_user = UserService.get_by_username(User, username=username)
     if existing_user: 
         return jsonify({
             'errorMessage': 'User already exists'
@@ -46,18 +53,16 @@ def sign_up():
 def login():
     data = request.get_json()
 
-    username = data.get('username')
-    email = data.get('email')
+    identification = data.get('identification')
     password = data.get('password')
 
     import sys
 
-    if username:
-        user = UserService.get_by_username(User, username)
-        # print(user, file=sys.stderr)
-    if email:
-        user = UserService.get_by_email(User, email)
-        print(user, file=sys.stderr)
+    if re.match(r"^\S+@\S+\.\S+$", identification):
+        user = UserService.get_by_email(User, identification)
+        print(identification, file=sys.stderr)
+    else:
+        user = UserService.get_by_username(User, identification)
         
     if not user:
         return jsonify({'errorMessage': 'User not found'}), 404
