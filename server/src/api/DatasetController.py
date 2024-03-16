@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask import json, jsonify
+import sys 
 
 import src.api.__network_formatter__ as nw_formatter
 from src.api.__input_manager__ import InputManager
@@ -7,6 +8,7 @@ from src.api.__token_handler__ import token_required
 
 from src.models.DatasetModel import Dataset
 from src.services import DatasetService
+
 
 DatasetController = Blueprint('DatasetController', __name__)
 
@@ -43,9 +45,8 @@ def save_dataset(user):
         return jsonify(added_dataset), 200
     
     except Exception as e:
-        import sys 
         print(e, file=sys.stderr)
-        # return jsonify({"errorMessage": "Invalid .csv format"}), 400
+        return jsonify({"errorMessage": "Invalid .csv format"}), 400
     
 
 @DatasetController.route('/delete-dataset/<dataset_id>', methods=['DELETE'])
