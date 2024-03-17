@@ -32,7 +32,7 @@ services:
   # Backend
   backend:
     image: crazyhao/networkly-server
-    container_name: networkly-backend
+    container_name: networkly-server
     depends_on:
       - mysql_db
       - adminer
@@ -55,7 +55,7 @@ services:
   # Frontend
   frontend:
     image: crazyhao/networkly-client
-    container_name: networkly-frontend
+    container_name: networkly-client
 
     ports:
       - 8080:8080 

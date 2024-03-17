@@ -1,5 +1,5 @@
 import {postDatasetForExperiment, postExperimentToDB, postDatasetToDB, getExperimentExample} from '@/api'
-// import EventBus from '@/main'
+import EventBus from '@/main'
 import cloneDeep from 'lodash/cloneDeep'
 export default {
     namespaced: true,
