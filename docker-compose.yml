@@ -43,7 +43,7 @@ services:
       - ./server:/app/server:cached
     
     ports:  
-      - 5000:5000
+      - 8181:5000
     environment:
       MYSQL_DATABASE: "Networkly"
       MYSQL_USER: "user"
