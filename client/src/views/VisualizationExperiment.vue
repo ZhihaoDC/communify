@@ -110,8 +110,6 @@ export default {
     }
 
     #save-network-form{
-        min-height: 50vh;
-        max-height: 90vh;
         padding-top: 25px;
         border-top: 1em;
         border-radius: 15px;

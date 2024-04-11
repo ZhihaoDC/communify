@@ -35,16 +35,15 @@
         <label id="colorPickerLabel" for="colorPicker">Color de la comunidad</label>
         <b-form-input id="colorPicker" type="color" v-model="communityColor" @input="changeCommunityColor()" @blur="updateEdgesColor()"></b-form-input>
       </b-form-group>  
-    </b-form>
 
-    <div id="submit-experiment">
-    <b-button block size="lg" type="submit" :disabled="!(activateSubmitButton & isAuthenticated)" @click="handleSubmitNetwork" variant="primary"
+      <div id="submit-experiment">
+      <b-button id="submit-experiment" block size="lg" type="submit" :disabled="!(activateSubmitButton && isAuthenticated)" @click="handleSubmitNetwork" variant="primary"
         class="content-item submit-button mt-auto" >
         {{this.submitted_msg}}
       </b-button>
-    </div>
+      </div>
 
-    <b-popover v-if=!isAuthenticated target="submit-experiment" triggers="hover" placement="right">
+      <b-popover v-if=!isAuthenticated target="submit-experiment" triggers="hover" placement="right">
       <template #title>¿Sabías que...?</template>
       Si te <b> registras,</b> podrás guardar el resultado de tus experimentos. Además de poder guardar y gestionar tus datasets.
       <b-link to="/user-signup"> Crea una cuenta aquí.</b-link>
@@ -56,7 +55,10 @@
         ¡Experimento guardado! 
         <router-link to="/user-experiments" id="experiments-link">Ir a experimentos</router-link>
       </b-alert>
+
     </div>
+
+    </b-form>
     
   </b-container>
 
