@@ -19,7 +19,7 @@ from src.api.GirvanNewmanController import GirvanNewmanController
 from src.api.GraphVisualizationController import GraphVisualizationController
 from src.models.UserModel import User
 from src.models.DatasetModel import Dataset
-from src.services import UserService
+from src.services import UserService, DatasetService
 import src.api.__network_formatter__ as nw_formatter
 ############################################## APP #################################################
 
@@ -56,7 +56,6 @@ def create_app(env="PROD"):
         is_db_connected = False
         while retry_count >= 0 and not is_db_connected:
             try:
-                db.drop_all()
                 db.create_all()
                 is_db_connected = True
             except OperationalError:
@@ -64,8 +63,6 @@ def create_app(env="PROD"):
                 time.sleep(TIME_RETRY_SECS)
                 if retry_count == 0:
                     print(f"Connection failed. (Tried to reconnect {MAX_RETRIES} times")
-
-        # migrate = Migrate(app, db)
         
         init_database()
 
@@ -76,24 +73,33 @@ def create_app(env="PROD"):
 
 
 def init_database():
-    
-    default_user = UserService.add_instance(User, 
-        username="david19",
-        email="david19@gmail.com",
-        password= generate_password_hash('testpwd12345', method='sha256'),
-        firstname="david", 
-        lastname="fernandez", 
-        profile_description="data scientist")
+    default_user = UserService.get_by_username(User, "david19")
 
+    if not default_user:
+        default_user = UserService.add_instance(User, 
+            username="david19",
+            email="david19@gmail.com",
+            password= generate_password_hash('testpwd12345', method='sha256'),
+            firstname="david", 
+            lastname="fernandez", 
+            profile_description="data scientist")
+
+    
     columns = {'source':'source', 'target':'target', 'weight':'weight'}
     graph = nw_formatter.file_to_network("./static/game-of-thrones-books/book1.csv", columns)
     network_json = nw_formatter.network_to_json(graph)
     file_hash = hashlib.md5(json.dumps(network_json).encode()).hexdigest()
 
-    default_dataset = Dataset(id=file_hash, name="book1", json=network_json, user_id=default_user['id'])
-    db.session.add(default_dataset)
+    dataset = DatasetService.get_by_id(Dataset,
+                                       id=file_hash,
+                                       user_id=default_user['id'])
 
-    db.session.commit()
+    if not dataset:
+        DatasetService.add_instance(Dataset,
+                                    id=file_hash,
+                                    name="book1", 
+                                    json=network_json, 
+                                    user_id=default_user['id'])
 
 
 if __name__ == '__main__':

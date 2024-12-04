@@ -1,23 +1,18 @@
 <template>
   <div id="content-item">
     <label
+      id="file-upload-label"
       for="file-upload"
       class="upload-button"
       v-bind:class="{ file_selected: file }"
-      v-b-popover.hover.right="
-        'El contenido debe de ser una lista de enlaces (de la siguiente forma):‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ' +
-        '╔════════╤═══════╤══════╗\n' +
-        '║‎ ‎ ‎ ‎ ‎ ‎ ‎ from ‎ ‎ ‎ ‎ ‎ │‎ ‎ ‎ ‎ ‎ ‎ ‎ to ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎│ ‎ ‎ weight ‎ ║\n' +
-        '╠════════╪═══════╪══════╣\n' +
-        '║‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎‎ ‎foo‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‏‎‎│‏‏‎ ‏‏‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎ ‎‎‏‏‎ ‎bar‏‏‎ ‎‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎ ‎‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎4‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‎║\n' +
-        '╟────────┼───────┼──────╢\n' +
-        '║‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎ ‎‎‏‏‎bar‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎│‏‏‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎ ‎‎cat‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎│‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‏‏‎ ‎ ‎‏‏‎ ‎3‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‎‎║\n' +
-        '╟────────┼───────┼──────╢\n' +
-        '║‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎  ‎ ‎‎‎‎cat‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎‎‎│‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎dog‏‏‎ ‎‏‏‎ ‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎‎‎│‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎1‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‏‏‎ ‎‎‏‏‎ ‎‏‏‎ ‏‏‎ ‎‎‏‏‎║\n' +
-        '╚════════╧═══════╧══════╝'
-      "
-      title="Formato del csv"
+      
     >
+    <!-- v-b-popover.hover.right="'El contenido debe de ser una lista de enlaces (de la siguiente forma):\n' + 
+        '\nColumna 1: Nodo origen del enlace' +
+        '\nColumna 2: Nodo destino del enlace' +
+        '\nColumna 3: Peso del enlace'"
+      title="Formato del csv" -->
+    
       <span>
         {{
           file
@@ -27,6 +22,7 @@
         <small>{{ file ? "(" + bytesToSize(file.size) + ")" : "" }}</small>
       </span>
     </label>
+
     <b-form-file
       id="file-upload"
       plain
@@ -37,9 +33,20 @@
       @input="check_file()"
       ref="file_input"
     ></b-form-file>
+
+    <b-popover target="file-upload-label" triggers="hover" placement="bottom">
+      <template #title>Formato de input</template>
+      El input deberá ser una <b>lista de enlaces</b> en formato <b>.csv</b> conteniendo: 
+      <ul>
+        <li> <b>Columna 1:</b> Nodo origen del enlace.</li>
+        <li> <b>Columna 2:</b> Nodo destino del enlace. </li>
+        <li> <b>Columna 3:</b> Peso del enlace. </li>
+      </ul>
+    </b-popover>
     <br />
+
     <small>
-      Pon el cursor encima del botón anterior para ver el formato del .csv
+      Pon el cursor encima del botón para ver el formato del .csv
     </small>
     <br />
 
@@ -148,6 +155,8 @@
       class="m-5"
     ></b-spinner>
   </div>
+  
+
 </template>
 
 <script>

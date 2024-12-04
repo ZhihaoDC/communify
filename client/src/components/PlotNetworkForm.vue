@@ -31,7 +31,7 @@
       <PlotVisualizationParameters @updateVisualizationParameters="updateVisualizationParameters" :isCommunityDetection="isCommunityDetection"></PlotVisualizationParameters>
 
 
-      <b-form-group id="input-communityColor" class="mb-3">
+      <b-form-group v-if='isCommunityDetection' id="input-communityColor" class="mb-3" >
         <label id="colorPickerLabel" for="colorPicker">Color de la comunidad</label>
         <b-form-input id="colorPicker" type="color" v-model="communityColor" @input="changeCommunityColor()" @blur="updateEdgesColor()"></b-form-input>
       </b-form-group>       

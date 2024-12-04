@@ -24,11 +24,11 @@
 
         <b-row v-if="!example_submitted" class="mt-4">
           <b-button @click=showExample() size="lg" class="ml-auto" variant="primary">
-            Ver un ejemplo
+            ¡Pruébame!
           </b-button>
 
           <b-button @click=showLoginModal() size="lg" class="mr-auto ml-4" variant="outline-primary">
-            Iniciar sesión
+            Identifícate
           </b-button>
           <UserLoginModal :showModal="this.showModal" @hideLoginModal="hideLoginModal"/>
         </b-row>
@@ -53,10 +53,6 @@
                 <b-card-text>
                   Clusterizar un grafo y representarlo.
                 </b-card-text>
-                <!-- <b-button block to="/graph-visualization" variant="primary" id="go">Ir</b-button> -->
-                <template #footer>
-                  <small class="text-muted"></small>
-                </template>
               </b-card>
             </a>
 
@@ -66,10 +62,6 @@
                 <b-card-text>
                   Representar un grafo, cambiar los nodos de color y posición.
                 </b-card-text>
-                <!-- <b-button block to="/graph-visualization" variant="primary" id="go">Ir</b-button> -->
-                <template #footer>
-                  <small class="text-muted"></small>
-                </template>
               </b-card>
             </a>
 
@@ -80,10 +72,6 @@
                 <b-card-text>
                   Subir y gestionar datasets. Iniciar un experimento con un dataset existente.
                 </b-card-text>
-                <!-- <b-button block to="/user-datasets" variant="primary" id="go">Ir</b-button> -->
-                <template #footer>
-                  <small class="text-muted"></small>
-                </template>
               </b-card>
             </a>
 
@@ -93,10 +81,6 @@
                 <b-card-text>
                   Gestiona y visualiza de nuevo los experimentos que has creado.
                 </b-card-text>
-                <!-- <b-button block to="/user-experiments" variant="primary" id="go">Ir</b-button> -->
-              <template #footer>
-                <small class="text-muted"></small>
-              </template>
               </b-card>
             </a>
           </b-card-group>

@@ -14,16 +14,13 @@
         <b-col md-12>
           <div class="tools">
             <b-card-group deck>
+              
               <a href="/community-detection">
                 <b-card title="Detectar comunidades" img-src="../assets/static/webp/network-community.webp"
                   alt="Community Detection" size="sm" class="mb-4" img-height="300" img-width="100" id="b-card">
                   <b-card-text>
                     Clusterizar un grafo y representarlo.
                   </b-card-text>
-                  <!-- <b-button block to="/graph-visualization" variant="primary" id="go">Ir</b-button> -->
-                  <template #footer>
-                    <small class="text-muted"></small>
-                  </template>
                 </b-card>
               </a>
 
@@ -33,14 +30,8 @@
                   <b-card-text>
                     Representar un grafo, cambiar los nodos de color y posición.
                   </b-card-text>
-                  <!-- <b-button block to="/graph-visualization" variant="primary" id="go">Ir</b-button> -->
-
-                  <template #footer>
-                    <small class="text-muted"></small>
-                  </template>
                 </b-card>
               </a>
-
 
               <a href="/user-datasets">
                 <b-card v-if="isAuthenticated" title="Mis Datasets" img-src="../assets/static/webp/datasets.webp"
@@ -48,11 +39,6 @@
                   <b-card-text>
                     Subir y gestionar datasets. Iniciar un experimento con un dataset existente.
                   </b-card-text>
-                  <!-- <b-button block to="/user-datasets" variant="primary" id="go">Ir</b-button> -->
-
-                  <template #footer>
-                    <small class="text-muted"></small>
-                  </template>
                 </b-card>
               </a>
 
@@ -63,11 +49,6 @@
                   <b-card-text>
                     Gestiona y visualiza de nuevo los experimentos que has creado.
                   </b-card-text>
-                  <!-- <b-button block to="/user-experiments" variant="primary" id="go">Ir</b-button> -->
-
-                  <template #footer>
-                    <small class="text-muted"></small>
-                  </template>
                 </b-card>
               </a>
             </b-card-group>

@@ -4,7 +4,10 @@
         <h4> Introducir un dataset con formato y aplicar detección de comunidades.  </h4>
         <router-link to="/about" id="about-link">Aprende más sobre la detección de comunidades</router-link>
         <br/>
+        <br/>
+
         <div class="tools">
+          <h4> Elige un método de detección de comunidades:</h4>
           <b-card-group deck>
             <b-card
             title="Método de Louvain"
@@ -25,7 +28,7 @@
               </b-card-text>
               <b-button block to="/community-detection/girvan-newman" variant="primary" id="go">Ir</b-button>
             </b-card>
-  
+            
           </b-card-group>
         </div>
         
