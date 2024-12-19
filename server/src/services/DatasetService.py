@@ -2,8 +2,10 @@ from src import db
 
 
 def get_by_id(model, user_id, id):
-    result = model.query.filter_by(user_id=user_id, id=id).first()
-    return result.serialized
+    dataset = model.query.filter_by(user_id=user_id, id=id).first()
+    if dataset:
+        return dataset.serialized
+    return dataset
 
 def get_all(model):
     data = model.query.all()
