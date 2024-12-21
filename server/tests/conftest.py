@@ -2,15 +2,36 @@ import pytest
 from src import create_app
 from io import StringIO
 from csv import writer, QUOTE_NONNUMERIC
+from src.plugins.SQLAlchemy import db
+from testcontainers.mysql import MySqlContainer
+import time
+from sqlalchemy.exc import OperationalError
+import sys
 
+mysql = MySqlContainer()
 
-@pytest.fixture(scope='module')
-def client():
+@pytest.fixture(scope='session', autouse=True)
+def client(request):
+    def remove_container():
+        mysql.stop()
+
     app = create_app(env='TEST')
     app.config['TESTING'] = True
-    
+   
+    mysql.start()
+    request.addfinalizer(remove_container)
+    mysql_url = mysql.get_connection_url()
+    app.config['SQLALCHEMY_DATABASE_URI'] = mysql_url
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    app.app_context().push()
+    db.init_app(app)
+
+    db.create_all()
+
     with app.test_client() as client:
         yield client
+
 
 
 @pytest.fixture(scope='function')

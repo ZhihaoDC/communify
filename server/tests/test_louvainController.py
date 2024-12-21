@@ -10,7 +10,6 @@ def test_apply_louvain(client):
         AND contains graph's nodes
         AND contains communities
         AND contains modularity
-        AND me
     """
     #create mock csv for POST request
     mock_csv = BytesIO(b"""\

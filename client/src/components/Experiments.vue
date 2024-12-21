@@ -92,8 +92,7 @@ export default {
         visualize(experiment) {
             this.submitted = true
             this.$store.commit('experiment/setExperiment', experiment);
-            this.$store.commit('experiment/setIsNewExperiment', false);            
-            console.log(this.$store.getters['experiment/getExperiment'])
+            this.$store.commit('experiment/setIsNewExperiment', false);
             this.$router.push(`/community-detection/${experiment.category.toLowerCase()}/experiment`);
         },
 
