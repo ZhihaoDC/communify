@@ -1,5 +1,4 @@
-![build](https://github.com/ZhihaoDC/prueba/actions/workflows/test-backend.yml/badge.svg)
-
+![build](https://github.com/ZhihaoDC/network.ly/actions/workflows/test-backend.yml)
 
 # network.ly
 
