@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-![build](https://github.com/ZhihaoDC/docs/actions/workflows/test-backend.yml/badge.svg)
-=======
-![build](https://github.com/ZhihaoDC/prueba/actions/workflows/test-backend.yml/badge.svg)
->>>>>>> parent of f2e32ae (Update README.md)
 
+![build](https://github.com/ZhihaoDC/network.ly/actions/workflows/test-backend.yml/badge.svg)
 
 # network.ly
 
