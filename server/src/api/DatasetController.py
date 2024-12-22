@@ -37,7 +37,7 @@ def save_dataset(user):
 
         added_dataset = DatasetService.add_instance(Dataset,
             id=file_hash,
-            name=file_name,
+            name=file_name[:50],
             json=network_json,
             user_id=user['id']
         )

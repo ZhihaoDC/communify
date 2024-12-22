@@ -2,14 +2,13 @@
 import jwt
 from datetime import datetime, timedelta
 from src import app_config
-from src.services import ExperimentService, UserService
+from src.services import UserService, ExperimentService
 from src.models.UserModel import User
 from src.models.ExperimentModel import Experiment
 from werkzeug.security import generate_password_hash
-import sys
 import json
 
-def test_save_experiment(client):
+def test_save_experiment(client, auth):
     """
     GIVEN backend listens in route '/save-experiment'
     WHEN receives POST request with the experiment as payload
@@ -19,22 +18,7 @@ def test_save_experiment(client):
     """
     ENDPOINT = '/save-experiment/'
 
-    #Mock user
-    user_mock = UserService.add_instance(User,
-                                        username='test_user',
-                                        email='test_user@gmail.com',
-                                        password=generate_password_hash('test', method='sha256'))
-
-
-    #Mock logged user
-    token_mock = jwt.encode({"sub": user_mock['email'],
-                        "iat": datetime.utcnow(),
-                        "exp": datetime.utcnow() + timedelta(minutes=30)
-                        },
-                        app_config.SECRET_KEY)
-
-    headers_mock = {"Authorization": f"Bearer {token_mock}"}
-
+    user_mock, login_headers = auth
 
     mock_experiment = {'category': "Louvain",
                        'creation_date': "2024/02/20, 21:59",
@@ -54,11 +38,14 @@ def test_save_experiment(client):
     mock_experiment = json.dumps(mock_experiment)
     response = client.post(ENDPOINT, 
                            data= mock_experiment,
-                           headers=headers_mock,
+                           headers=login_headers,
                            content_type="application/json")
     
+    experiment_in_db = ExperimentService.get_all_by_user_id(Experiment, user_id=user_mock['id'])
+    
     response_json = response.get_json()
-    print(response_json, file=sys.stderr)
+    
+    assert experiment_in_db
     assert response.status_code == 200
     assert "experiment" in response_json
     assert "Louvain" == response_json['experiment']["category"]

@@ -3,10 +3,14 @@ from src import create_app
 from io import StringIO
 from csv import writer, QUOTE_NONNUMERIC
 from src.plugins.SQLAlchemy import db
+from src.services import UserService
+from src.models.UserModel import User
+from src import app_config
 from testcontainers.mysql import MySqlContainer
-import time
-from sqlalchemy.exc import OperationalError
-import sys
+import jwt
+from datetime import datetime, timedelta
+from werkzeug.security import generate_password_hash
+
 
 mysql = MySqlContainer()
 
@@ -32,6 +36,27 @@ def client(request):
     with app.test_client() as client:
         yield client
 
+@pytest.fixture(scope='session')
+def auth(request):
+    #Mock user
+    user_mock = UserService.add_instance(User,
+                                        username='test_user',
+                                        email='test_user@gmail.com',
+                                        password=generate_password_hash('test', method='sha256'))
+     #Mock logged user
+    token_mock = jwt.encode({"sub": user_mock['email'],
+                        "iat": datetime.utcnow(),
+                        "exp": datetime.utcnow() + timedelta(minutes=30)
+                        },
+                        app_config.SECRET_KEY)
+
+    headers_mock = {"Authorization": f"Bearer {token_mock}"}
+
+    def logout():
+        print("Logging out...")
+    request.addfinalizer(logout)
+
+    yield user_mock, headers_mock
 
 
 @pytest.fixture(scope='function')
