@@ -1,7 +1,7 @@
 from flask import request, Blueprint
 from flask.json import jsonify
 import sys
-
+from os.path import dirname, join, realpath
 #import custom modules
 from src.community_detection import louvain_algorithm as louvain
 import src.api.__network_formatter__ as nw_formatter
@@ -85,7 +85,8 @@ def apply_louvain_to_dataset(user, dataset_id):
 @LouvainController.route('/community-detection/louvain/example', methods=['GET'])
 def get_example():
         example_dataset = 'book1'
-        edge_list = read_csv(f"./static/game-of-thrones-books/{example_dataset}.csv")  
+        dir_path = dirname(dirname(dirname(realpath(__file__)))) #server directory
+        edge_list = read_csv(join(dir_path, "static", 'game-of-thrones-books', f"{example_dataset}.csv"))  
 
         graph = from_pandas_edgelist(edge_list, 
                                     source='Source', 
