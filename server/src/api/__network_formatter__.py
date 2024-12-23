@@ -5,7 +5,7 @@ from networkx import Graph, from_pandas_edgelist, get_node_attributes
 from networkx.relabel import convert_node_labels_to_integers
 from networkx.classes.function import set_node_attributes, set_edge_attributes
 from networkx.readwrite.json_graph import cytoscape_data, cytoscape_graph
-from matplotlib.cm import get_cmap
+from matplotlib.pyplot import get_cmap
 from matplotlib.colors import rgb2hex
 
 
