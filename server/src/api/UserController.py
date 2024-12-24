@@ -12,6 +12,10 @@ UserController = Blueprint('UserController', __name__)
 
 SESSION_TIME = 30
 
+def sanitize_user_data(user):
+    return {key: user[key] for key in user if key!= "password"}
+
+
 
 @UserController.route('/create-user', methods=['POST'])
 def sign_up():
@@ -37,13 +41,14 @@ def sign_up():
                                             username=username,
                                             email=email,
                                             password=generate_password_hash(password, method='sha256'))
+   
     #Login user
     token = jwt.encode({'sub': created_user['email'],
                         'iat': datetime.utcnow(),
                         'exp': datetime.utcnow() + timedelta(minutes=SESSION_TIME)},
                         app_config.SECRET_KEY)
 
-    return jsonify({'user': created_user, 
+    return jsonify({'user': sanitize_user_data(created_user), 
                     'jwt': token,
                     'successMsg': f'User {created_user["username"]} created.'
                     }), 200
@@ -82,7 +87,7 @@ def login():
                         'exp': datetime.utcnow() + timedelta(minutes=SESSION_TIME)
                         },
                         app_config.SECRET_KEY)
-    return jsonify({'user': user, 
+    return jsonify({'user': sanitize_user_data(user), 
                     'jwt': token,
                     'successMsg': f'User {user["username"]} successfully logged in.'
                     }), 200

@@ -99,7 +99,7 @@ export default{
             this.errorMessage = ""
         },        
         toast_on_login(){
-            let username = this.$store.getters['auth/user'].firstname
+            let username = this.$store.getters['auth/user'].username
             this.$bvToast.toast('Te has identificado con éxito.', {
             title: `Bienvenid@, ${username}.`,
             variant: 'success',
